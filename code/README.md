@@ -76,12 +76,3 @@ strategy. Each file contains:
   `category`, `prompt`, `answer`, `gold`, `correct`, `label_logprobs`, and
   strategy-specific diagnostics
 
-## Anonymous-Review Notes
-
-Before packaging, sanitize:
-
-- Slurm partition names and output filenames if they reveal local infrastructure
-- `HOST_MOUNT_SRC`, `CONTAINER_MOUNT_DST`, `WORKDIR_IN_CONTAINER`, and
-  `CONTAINER_IMAGE` in job scripts
-- any private checkpoint or model paths in examples
-- generated caches such as `__pycache__/`
