@@ -22,10 +22,6 @@ paper artifact.
 
 ## Job Scripts
 
-The `job_*.sh` files are Slurm/enroot entry points used for the original runs.
-They are useful as executable documentation of the run configuration, but they
-contain site-specific paths and should be sanitized before anonymous release.
-
 | Script | Run type |
 | --- | --- |
 | `job_checkpoints_eval_v4_genba_v2.sh` | Open-weight model output-level protocols. |

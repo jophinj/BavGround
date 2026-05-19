@@ -1,8 +1,7 @@
 # Results README
 
 This folder contains the item-level evaluation outputs used in the BavGround
-paper. Results are grouped by experiment type so reviewers can navigate the
-artifact without scanning thousands of JSON files at the repository root.
+paper. Results are grouped by experiment type.
 
 ## Folder Layout
 
@@ -36,7 +35,7 @@ list containing item-level predictions and diagnostics.
 
 Top-level fields generally include:
 
-- `run_timestamp`: anonymized run label, such as `run_open_models_1`
+- `run_timestamp`: run label, such as `run_open_models_1`
 - `target_name`: model or checkpoint name
 - `target_kind`: `named_model`, `closed_model`, or `checkpoint`
 - `dataset`: source dataset file

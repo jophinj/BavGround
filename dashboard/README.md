@@ -41,7 +41,7 @@ results/allmodels,results/closedmodels,results/genba_checkpoints
 
 You can also upload individual JSON files through the browser.
 
-## What Reviewers Can Inspect
+## Dashboard Views
 
 The dashboard supports:
 

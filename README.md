@@ -29,8 +29,7 @@ dashboard/
   Streamlit dashboard for browsing result files interactively.
 ```
 
-Each folder has its own README with schema details and reviewer-oriented usage
-notes.
+Each folder has its own README with schema details and usage notes.
 
 ## Paper Connection
 
@@ -45,7 +44,7 @@ The artifact supports the paper sections as follows:
 | GENBA checkpoint trajectories | `results/genba_checkpoints/`, `code/plot_genba_checkpoint_trajectories.py` |
 | Interactive error analysis dashboard | `dashboard/` |
 
-## Quick Start for Reviewers
+## Quick Start
 
 Inspect the benchmark:
 
