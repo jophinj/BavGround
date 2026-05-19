@@ -38,29 +38,18 @@ submitting the BavGround artifact with an anonymous paper.
 
 ## Still Review
 
-5. **Missing semantic runner**
-
-   The semantic job scripts refer to:
-
-   ```text
-   run_checkpoints_eval_v4_genba_v2_semantic_embed.py
-   ```
-
-   That file is not currently present in `code/`. Include it, update the job
-   scripts, or describe semantic outputs as precomputed result files only.
-
-6. **Closed-model API metadata**
+5. **Closed-model API metadata**
 
    `results_closedmodels/*.json` stores API token usage totals. No API keys were
    found, but decide whether token counts should remain.
 
-7. **Source metadata**
+6. **Source metadata**
 
    Grounded dataset items include public references under `item.meta.source`.
    Keep them for transparency unless any source points to unpublished, private,
    or identifying material.
 
-8. **Model aliases**
+7. **Model aliases**
 
    Public model names are needed for reproducibility. Check any internal model
    aliases, especially `genba-10b-it` and checkpoint naming, against the
@@ -68,7 +57,7 @@ submitting the BavGround artifact with an anonymous paper.
 
 ## Packaging Hygiene
 
-9. **Generated caches**
+8. **Generated caches**
 
    Exclude:
 
@@ -79,13 +68,13 @@ submitting the BavGround artifact with an anonymous paper.
    - Slurm `.out` files
    - downloaded model weights
 
-10. **README consistency**
+9. **README consistency**
 
    Ensure the artifact title, model names, and release statements match the
    anonymous paper. Avoid author names, affiliations, acknowledgments, and
    repository URLs that identify the authors.
 
-11. **Final scan command**
+10. **Final scan command**
 
    Run:
 

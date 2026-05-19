@@ -37,10 +37,9 @@ contain site-specific paths and should be sanitized before anonymous release.
 | `job_checkpoints_eval_v4_genba_v2_semantic_embed.sh` | Open-weight external semantic-embedding diagnostics. |
 | `job_checkpoints_eval_v4_genba_v2_semantic_embed_checkpoints.sh` | GENBA checkpoint external semantic-embedding diagnostics. |
 
-Note: the two semantic job scripts call
-`run_checkpoints_eval_v4_genba_v2_semantic_embed.py`. If this repository is
-submitted as a runnable artifact, include that runner or update these job
-scripts to call the available implementation.
+The two semantic job scripts call
+`run_checkpoints_eval_v4_genba_v2_semantic_embed.py`, which is included in this
+folder.
 
 ## Example Analysis Commands
 
