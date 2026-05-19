@@ -57,6 +57,9 @@ python -m json.tool dataset/arts_and_identity.json | head
 Run the dashboard:
 
 ```bash
+python -m venv .venv-bavground
+source .venv-bavground/bin/activate
+python -m pip install --upgrade pip
 pip install -r dashboard/requirements.txt
 streamlit run dashboard/app.py
 ```

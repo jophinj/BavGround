@@ -18,6 +18,9 @@ The dashboard reads existing JSON outputs. It does not run model inference.
 From the repository root:
 
 ```bash
+python -m venv .venv-bavground
+source .venv-bavground/bin/activate
+python -m pip install --upgrade pip
 pip install -r dashboard/requirements.txt
 streamlit run dashboard/app.py
 ```
@@ -70,4 +73,3 @@ Important fields:
 - per-item `answer`
 - per-item `gold`
 - per-item `correct`
-

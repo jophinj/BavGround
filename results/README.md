@@ -106,6 +106,10 @@ python code/plot_genba_checkpoint_trajectories.py \
 Dashboard:
 
 ```bash
+python -m venv .venv-bavground
+source .venv-bavground/bin/activate
+python -m pip install --upgrade pip
+pip install -r dashboard/requirements.txt
 streamlit run dashboard/app.py
 ```
 
