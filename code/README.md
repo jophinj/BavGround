@@ -1,0 +1,88 @@
+# Code README
+
+This folder contains the evaluation and analysis scripts used for the BavGround
+paper artifact.
+
+## Main Runners
+
+| Script | Purpose |
+| --- | --- |
+| `run_checkpoints_eval_v4.py` | Shared evaluation utilities: dataset loading, target resolution, prompting, model loading, and log-probability scoring helpers. |
+| `run_checkpoints_eval_v4_genba_v2.py` | Main output-level evaluator for open-weight models and checkpoints. Supports letter scoring, shuffled letters, option-text scoring, and generated-answer protocols. |
+| `run_checkpoints_eval_v4_genba_v2_embed_v3.py` | Evaluator for hidden-state alignment diagnostics: `embed_contextual_option` and `embed_isolated_option`. |
+| `run_closed_model_eval_openai.py` | Closed-model API evaluator for `letter` and `generate_letter_and_text`. |
+
+## Analysis Scripts
+
+| Script | Purpose |
+| --- | --- |
+| `bootstrap_biabav_ci.py` | Computes paired nonparametric bootstrap intervals used in the paper. |
+| `label_prior_diagnostic.py` | Computes answer-label prior diagnostics for canonical `letter` scoring. |
+| `merge_allmodels_outputs.py` | Copies/renames open-model result files into the stable `results_allmodels/` layout. |
+| `merge_checkpoint_outputs.py` | Copies/renames checkpoint result files into the stable `results_genba_checkpoints/` layout. |
+| `plot_genba_checkpoint_trajectories.py` | Produces checkpoint trajectory figures from `results_genba_checkpoints/`. |
+
+## Job Scripts
+
+The `job_*.sh` files are Slurm/enroot entry points used for the original runs.
+They are useful as executable documentation of the run configuration, but they
+contain site-specific paths and should be sanitized before anonymous release.
+
+| Script | Run type |
+| --- | --- |
+| `job_checkpoints_eval_v4_genba_v2.sh` | Open-weight model output-level protocols. |
+| `job_checkpoints_eval_v4_genba_checkpoints_v2.sh` | GENBA checkpoint output-level protocols. |
+| `job_checkpoints_eval_v4_genba_v2_embed_v3.sh` | Open-weight hidden-state embedding diagnostics. |
+| `job_checkpoints_eval_v4_genba_v2_checkpoint_embed_v3.sh` | GENBA checkpoint hidden-state embedding diagnostics. |
+| `job_checkpoints_eval_v4_genba_v2_semantic_embed.sh` | Open-weight external semantic-embedding diagnostics. |
+| `job_checkpoints_eval_v4_genba_v2_semantic_embed_checkpoints.sh` | GENBA checkpoint external semantic-embedding diagnostics. |
+
+Note: the two semantic job scripts call
+`run_checkpoints_eval_v4_genba_v2_semantic_embed.py`. If this repository is
+submitted as a runnable artifact, include that runner or update these job
+scripts to call the available implementation.
+
+## Example Analysis Commands
+
+Bootstrap intervals:
+
+```bash
+python code/bootstrap_biabav_ci.py \
+  --results-allmodels results_allmodels
+```
+
+Label-prior diagnostics:
+
+```bash
+python code/label_prior_diagnostic.py \
+  --results-allmodels results_allmodels
+```
+
+Checkpoint plots:
+
+```bash
+python code/plot_genba_checkpoint_trajectories.py \
+  --results-dir results_genba_checkpoints \
+  --out-dir images
+```
+
+## Result JSON Shape
+
+Evaluation runners write one JSON file per target, dataset/category, and
+strategy. Each file contains:
+
+- top-level run metadata: `run_timestamp`, `target_name`, `target_kind`,
+  `dataset`, `filters`, `generation_config`, and `diagnostic_config`
+- `results`: item-level outputs with fields such as `id`, `lang`, `type`,
+  `category`, `prompt`, `answer`, `gold`, `correct`, `label_logprobs`, and
+  strategy-specific diagnostics
+
+## Anonymous-Review Notes
+
+Before packaging, sanitize:
+
+- Slurm partition names and output filenames if they reveal local infrastructure
+- `HOST_MOUNT_SRC`, `CONTAINER_MOUNT_DST`, `WORKDIR_IN_CONTAINER`, and
+  `CONTAINER_IMAGE` in job scripts
+- any private checkpoint or model paths in examples
+- generated caches such as `__pycache__/`

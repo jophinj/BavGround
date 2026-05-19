@@ -1,17 +1,17 @@
 #!/bin/bash
 #SBATCH --job-name=genba_embed_eval_v3_models_run2
-#SBATCH --partition=lrz-hgx-h100-94x4
+#SBATCH --partition=<slurm-partition>
 #SBATCH --gres=gpu:1
 #SBATCH --time=01:00:00
 #SBATCH --output=ckpt_eval_genba_embed_v3_run3_pharia_%j.out
 
 set -euo pipefail
 
-DEFAULT_BASE="../../checkpoints/training"
+DEFAULT_BASE="/path/to/genba/checkpoints"
 DEFAULT_DATASET="./dataset"
 DEFAULT_OUTDIR="./out_ckpts_embed_v3_allmodels_run3"
 
-DEFAULT_MODELS_BASE="../other_models/"
+DEFAULT_MODELS_BASE="/path/to/open_weight_models"
 DEFAULT_MODELS="genba-10b-it"
 DEFAULT_MODE="checkpoint"
 MODE=models
@@ -31,11 +31,11 @@ DEFAULT_TOP_P=0.9
 DEFAULT_MCQ_STRATEGIES="embed_contextual_option,embed_isolated_option"
 #DEFAULT_MCQ_STRATEGIES="letter,option_text,option_text_avg,embed_contextual_option,embed_isolated_option,letter_shuffled,generate_letter,generate_option_text,generate_letter_and_text"
 
-CONTAINER_NAME="engeba_eval"
-CONTAINER_IMAGE="../enroot/engeba_eval.sqsh"
-HOST_MOUNT_SRC="/dss/dssfs03/pn69za/pn69za-dss-0005/engeba"
-CONTAINER_MOUNT_DST="/workspace/engeba"
-WORKDIR_IN_CONTAINER="/workspace/engeba/aisystem/checkpoint_work"
+CONTAINER_NAME="bavground_eval"
+CONTAINER_IMAGE="/path/to/container.sqsh"
+HOST_MOUNT_SRC="/path/to/bavground_workspace"
+CONTAINER_MOUNT_DST="/workspace/bavground"
+WORKDIR_IN_CONTAINER="/workspace/bavground"
 
 usage() {
   echo "Usage:"
@@ -127,7 +127,7 @@ else
   echo "==> Models base     : $MODELS_BASE"
 fi
 
-if [ ! -d "/raid/enroot/data/user-4236196/${CONTAINER_NAME}" ]; then
+if ! enroot list | grep -qx "${CONTAINER_NAME}"; then
   echo "Creating ${CONTAINER_NAME} container..."
   enroot create --name="${CONTAINER_NAME}" "${CONTAINER_IMAGE}"
 fi

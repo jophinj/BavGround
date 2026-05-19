@@ -8,12 +8,16 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 import pandas as pd
 
 
-DEFAULT_INPUTS = ["out_ckpts", "out_ckpts_it"]
+DEFAULT_INPUTS = ["results_allmodels"]
 PRESET_INPUTS = {
-    "Base checkpoints": ["out_ckpts"],
-    "Instruction-tuned checkpoints": ["out_ckpts_it"],
-    "Strategy evaluations": ["out_ckpts_genba_diag"],
-    "Legacy logs": ["logs"],
+    "Open-weight model results": ["results_allmodels"],
+    "Closed-model reference": ["results_closedmodels"],
+    "GENBA checkpoint results": ["results_genba_checkpoints"],
+    "All paper result folders": [
+        "results_allmodels",
+        "results_closedmodels",
+        "results_genba_checkpoints",
+    ],
 }
 
 

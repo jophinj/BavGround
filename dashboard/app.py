@@ -22,6 +22,7 @@ DISCOVERY_SKIP_DIRS = {
     "__pycache__",
     "ckpt_venv",
     "dashboard",
+    "dataset",
     "paper",
 }
 

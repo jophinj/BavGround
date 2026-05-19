@@ -30,14 +30,14 @@ FILENAME_RE = re.compile(
 
 def parse_file(path: Path):
     """
-    Parses:
-      answers_checkpoint41707_politics_option_text_avg_20260511_082248.json
+    Parses pre-anonymization working files of the form:
+      answers_checkpoint41707_politics_option_text_avg_<run_timestamp>.json
 
     Returns:
       checkpoint = 41707
       category   = politics
       strategy   = option_text_avg
-      timestamp  = 20260511_082248
+      timestamp  = <run_timestamp>
     """
     m = FILENAME_RE.match(path.name)
     if not m:

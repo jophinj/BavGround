@@ -1,47 +1,78 @@
-# Evaluation Dashboard
+# Dashboard README
 
-This dashboard is a Streamlit app for exploring evaluation outputs from:
+This folder contains a Streamlit dashboard for inspecting BavGround result
+files.
 
-- `out_ckpts`
-- `out_ckpts_it`
-- `out_ckpts_genba_diag`
-- any other folder or JSON file that follows the `run_checkpoints_eval_v4.py` output format
+The dashboard reads existing JSON outputs. It does not run model inference.
 
-## Features
+## Files
 
-- Select result folders/files from friendly presets
-- Upload one or many JSON result files from the browser
-- Add extra folders or JSON files manually, such as `logs` or a single checkpoint file
-- Filter by model/checkpoint target, dataset, language, and item type
-- Filter by run timestamp and evaluation strategy
-- Compare repeated runs and evaluation strategies as separate series
-- Use regex to focus on checkpoint runs such as `checkpoint(\d+)`
-- Compare target accuracy across datasets and languages
-- Compare strategy accuracy across datasets
-- Explore checkpoint trends over step number
-- Inspect a single question across many models
-- Inspect answer label scores, the chosen answer, and the runner-up score
+| File | Purpose |
+| --- | --- |
+| `app.py` | Streamlit user interface. |
+| `data.py` | JSON loading, normalization, and metric helpers. |
+| `requirements.txt` | Python dependencies for the dashboard. |
 
 ## Run
 
 From the repository root:
 
 ```bash
+pip install -r dashboard/requirements.txt
 streamlit run dashboard/app.py
 ```
 
-If you need dependencies:
+Then open the URL printed by Streamlit, usually:
 
-```bash
-pip install -r dashboard/requirements.txt
+```text
+http://localhost:8501
 ```
 
-## Notes
+## Recommended Inputs
 
-- The app defaults to loading `out_ckpts,out_ckpts_it`
-- The sidebar includes quick folder presets for `out_ckpts`, `out_ckpts_it`, `out_ckpts_genba_diag`, and `logs`
-- Extra input paths are comma-separated in the sidebar
-- Uploaded JSON files are combined with selected folders for the current session
-- Strategy outputs with `diagnostic_config.mcq_strategy` are shown with strategies such as `letter`, `option_text`, `letter_shuffled`, and `generate`
-- The app reads only existing JSON outputs; it does not run evaluations itself
-- Older checkpoint logs such as `logs/answers_checkpoint500.json` are supported; if `target_name` is missing, the app uses the checkpoint name or filename
+In the sidebar, enter one or more comma-separated folders:
+
+```text
+results_allmodels,results_closedmodels,results_genba_checkpoints
+```
+
+You can also upload individual JSON files through the browser.
+
+## What Reviewers Can Inspect
+
+The dashboard supports:
+
+- filtering by model or checkpoint
+- filtering by run timestamp
+- filtering by evaluation strategy
+- filtering by dataset/category
+- filtering by language
+- separating GEN and GRD subsets
+- aggregate accuracy tables
+- category and language breakdowns
+- checkpoint trajectories
+- answer-choice distributions
+- per-item prompts, predictions, gold labels, and diagnostics
+
+## Result Format
+
+The app expects JSON files with top-level metadata and a `results` list, as
+produced by the evaluation scripts in `code/`.
+
+Important fields:
+
+- top-level `target_name`
+- top-level `run_timestamp`
+- top-level `dataset`
+- top-level `diagnostic_config.mcq_strategy`
+- per-item `id`
+- per-item `lang`
+- per-item `answer`
+- per-item `gold`
+- per-item `correct`
+
+## Anonymous-Review Notes
+
+The dashboard displays metadata exactly as stored in the JSON files. If result
+metadata contains local paths or timestamps, sanitize the JSON files before
+using the dashboard in an anonymous artifact package.
