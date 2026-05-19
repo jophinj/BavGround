@@ -100,8 +100,3 @@ Useful scripts:
 python code/bootstrap_biabav_ci.py --results-allmodels results/allmodels
 python code/label_prior_diagnostic.py --results-allmodels results/allmodels
 ```
-
-## Anonymous-Review Notes
-
-The result files include anonymized metadata fields such as `hf_dir` and
-`source`, using stable `model://...` identifiers rather than local paths.

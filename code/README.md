@@ -18,8 +18,6 @@ paper artifact.
 | --- | --- |
 | `bootstrap_biabav_ci.py` | Computes paired nonparametric bootstrap intervals used in the paper. |
 | `label_prior_diagnostic.py` | Computes answer-label prior diagnostics for canonical `letter` scoring. |
-| `merge_allmodels_outputs.py` | Copies/renames open-model result files into the stable `results/allmodels/` layout. |
-| `merge_checkpoint_outputs.py` | Copies/renames checkpoint result files into the stable `results/genba_checkpoints/` layout. |
 | `plot_genba_checkpoint_trajectories.py` | Produces checkpoint trajectory figures from `results/genba_checkpoints/`. |
 
 ## Job Scripts
@@ -75,4 +73,3 @@ strategy. Each file contains:
 - `results`: item-level outputs with fields such as `id`, `lang`, `type`,
   `category`, `prompt`, `answer`, `gold`, `correct`, `label_logprobs`, and
   strategy-specific diagnostics
-

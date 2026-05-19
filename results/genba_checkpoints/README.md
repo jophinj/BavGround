@@ -78,8 +78,3 @@ Top-level fields include:
 
 Each `results` row stores item-level predictions, correctness, and
 strategy-specific diagnostics.
-
-## Anonymous-Review Notes
-
-The `hf_dir` and `source` fields use anonymized `checkpoint://...` identifiers
-rather than local checkpoint paths.

@@ -85,9 +85,3 @@ For example, `culinary_en_004` is `GEN`, while `culinary_en_014` is `GRD`.
 Grounded questions include source references under `item.meta.source`. These
 references include public news URLs and book/article references used for
 validation. The source text itself is not redistributed here.
-
-## Anonymous-Review Notes
-
-Review the `meta.source` fields before submission. They are intended for
-transparency, but they should not include private notes, unpublished material,
-annotator names, or institution-specific paths.

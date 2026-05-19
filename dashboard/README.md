@@ -71,8 +71,3 @@ Important fields:
 - per-item `gold`
 - per-item `correct`
 
-## Anonymous-Review Notes
-
-The dashboard displays metadata exactly as stored in the JSON files. If result
-metadata contains local paths or timestamps, sanitize the JSON files before
-using the dashboard in an anonymous artifact package.

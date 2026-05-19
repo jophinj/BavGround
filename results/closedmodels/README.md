@@ -53,9 +53,3 @@ The `api_usage_total` field stores token counts for the run.
 
 These files provide the closed-model reference point used to contextualize the
 open-weight 7B to 10B results.
-
-## Anonymous-Review Notes
-
-No API keys are stored in these outputs. Timestamps have been replaced with the
-anonymous run label `run_closed_model_1`. The files still include API usage
-totals for reproducibility.
