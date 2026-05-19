@@ -1,0 +1,3511 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "OLMo-2-1124-7B-Instruct",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/OLMo-2-1124-7B-Instruct",
+  "source": "../other_models/OLMo-2-1124-7B-Instruct",
+  "dataset": "dataset/language.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 100257,
+    "pad_token_id": 100277
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_option",
+    "mcq_strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 0.72,
+  "results": [
+    {
+      "id": "language_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What does the Bavarian expression \"Geh, hör auf!\" most likely mean in context?\n\nOptions:\nA: Go, listen up!\nB: Stop it / You're kidding me!\nC: Walk away and be quiet\nD: Please continue\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.27286386489868164,
+        "B": 0.2545230984687805,
+        "C": 0.1153603047132492,
+        "D": 0.17629307508468628
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the Bavarian expression \"Geh, hör auf!\" most likely mean in context?",
+        "semantic_anchor_text": "What does the Bavarian expression \"Geh, hör auf!\" most likely mean in context?",
+        "semantic_candidate_texts": {
+          "A": "Go, listen up!",
+          "B": "Stop it / You're kidding me!",
+          "C": "Walk away and be quiet",
+          "D": "Please continue"
+        },
+        "similarities": {
+          "A": 0.27286386489868164,
+          "B": 0.2545230984687805,
+          "C": 0.1153603047132492,
+          "D": 0.17629307508468628
+        },
+        "gold_similarity": 0.2545230984687805,
+        "best_distractor_similarity": 0.27286386489868164,
+        "gold_margin": -0.018340766429901123,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Which sentence is grammatically correct in Bavarian dialect?\n\nOptions:\nA: Ich habe es ihm gegeben\nB: I hob's eam geem\nC: Ich hab es ihn gegeben\nD: I hob es ihm gegebn\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.12465928494930267,
+        "B": 0.19520455598831177,
+        "C": 0.14925530552864075,
+        "D": 0.18091639876365662
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which sentence is grammatically correct in Bavarian dialect?",
+        "semantic_anchor_text": "Which sentence is grammatically correct in Bavarian dialect?",
+        "semantic_candidate_texts": {
+          "A": "Ich habe es ihm gegeben",
+          "B": "I hob's eam geem",
+          "C": "Ich hab es ihn gegeben",
+          "D": "I hob es ihm gegebn"
+        },
+        "similarities": {
+          "A": 0.12465928494930267,
+          "B": 0.19520455598831177,
+          "C": 0.14925530552864075,
+          "D": 0.18091639876365662
+        },
+        "gold_similarity": 0.19520455598831177,
+        "best_distractor_similarity": 0.18091639876365662,
+        "gold_margin": 0.014288157224655151,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "In Bavarian, Standard German \"ei\" (as in \"nein\") typically shifts to which sound?\n\nOptions:\nA: ee → neen\nB: oa → noa\nC: oi → noi\nD: aa → naan\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4711727797985077,
+        "B": 0.272305428981781,
+        "C": 0.40009570121765137,
+        "D": 0.20374131202697754
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Bavarian, Standard German \"ei\" (as in \"nein\") typically shifts to which sound?",
+        "semantic_anchor_text": "In Bavarian, Standard German \"ei\" (as in \"nein\") typically shifts to which sound?",
+        "semantic_candidate_texts": {
+          "A": "ee → neen",
+          "B": "oa → noa",
+          "C": "oi → noi",
+          "D": "aa → naan"
+        },
+        "similarities": {
+          "A": 0.4711727797985077,
+          "B": 0.272305428981781,
+          "C": 0.40009570121765137,
+          "D": 0.20374131202697754
+        },
+        "gold_similarity": 0.272305428981781,
+        "best_distractor_similarity": 0.4711727797985077,
+        "gold_margin": -0.19886735081672668,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What is a \"Brotzeit\" in Bavarian culture?\n\nOptions:\nA: The time bread is baked in rural communities\nB: A mid-morning or afternoon cold snack of bread, cheese, and cold cuts\nC: A formal dinner tradition on Sundays\nD: A word for breakfast eaten before church\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2552573084831238,
+        "B": 0.24156001210212708,
+        "C": 0.2297598272562027,
+        "D": 0.29629695415496826
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a \"Brotzeit\" in Bavarian culture?",
+        "semantic_anchor_text": "What is a \"Brotzeit\" in Bavarian culture?",
+        "semantic_candidate_texts": {
+          "A": "The time bread is baked in rural communities",
+          "B": "A mid-morning or afternoon cold snack of bread, cheese, and cold cuts",
+          "C": "A formal dinner tradition on Sundays",
+          "D": "A word for breakfast eaten before church"
+        },
+        "similarities": {
+          "A": 0.2552573084831238,
+          "B": 0.24156001210212708,
+          "C": 0.2297598272562027,
+          "D": 0.29629695415496826
+        },
+        "gold_similarity": 0.24156001210212708,
+        "best_distractor_similarity": 0.29629695415496826,
+        "gold_margin": -0.054736942052841187,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "If a Bavarian says \"Des is scho recht\" to your suggestion, how should you interpret it?\n\nOptions:\nA: Strong enthusiasm and agreement\nB: Polite but lukewarm acceptance — That'll do / Fine, I suppose\nC: Firm disagreement disguised as politeness\nD: A request to repeat the suggestion\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23294058442115784,
+        "B": 0.4024233818054199,
+        "C": 0.38461416959762573,
+        "D": 0.3636144995689392
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "If a Bavarian says \"Des is scho recht\" to your suggestion, how should you interpret it?",
+        "semantic_anchor_text": "If a Bavarian says \"Des is scho recht\" to your suggestion, how should you interpret it?",
+        "semantic_candidate_texts": {
+          "A": "Strong enthusiasm and agreement",
+          "B": "Polite but lukewarm acceptance — That'll do / Fine, I suppose",
+          "C": "Firm disagreement disguised as politeness",
+          "D": "A request to repeat the suggestion"
+        },
+        "similarities": {
+          "A": 0.23294058442115784,
+          "B": 0.4024233818054199,
+          "C": 0.38461416959762573,
+          "D": 0.3636144995689392
+        },
+        "gold_similarity": 0.4024233818054199,
+        "best_distractor_similarity": 0.38461416959762573,
+        "gold_margin": 0.01780921220779419,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Bavarian often drops the genitive case entirely. How would \"Das Haus meines Vaters\" appear in natural Bavarian speech?\n\nOptions:\nA: Des Haus mein Vater\nB: Des Haus vo meim Vatern\nC: Das Haus von meinem Vater\nD: Des Haus meines Vatern\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.12699788808822632,
+        "B": 0.13772854208946228,
+        "C": 0.10617449134588242,
+        "D": 0.12480491399765015
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bavarian often drops the genitive case entirely. How would \"Das Haus meines Vaters\" appear in natural Bavarian speech?",
+        "semantic_anchor_text": "Bavarian often drops the genitive case entirely. How would \"Das Haus meines Vaters\" appear in natural Bavarian speech?",
+        "semantic_candidate_texts": {
+          "A": "Des Haus mein Vater",
+          "B": "Des Haus vo meim Vatern",
+          "C": "Das Haus von meinem Vater",
+          "D": "Des Haus meines Vatern"
+        },
+        "similarities": {
+          "A": 0.12699788808822632,
+          "B": 0.13772854208946228,
+          "C": 0.10617449134588242,
+          "D": 0.12480491399765015
+        },
+        "gold_similarity": 0.13772854208946228,
+        "best_distractor_similarity": 0.12699788808822632,
+        "gold_margin": 0.010730654001235962,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What does \"Watschn\" mean in Bavarian?\n\nOptions:\nA: A type of traditional sausage\nB: A slap in the face\nC: A wooden bench at a beer garden\nD: An affectionate nickname for a child\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2450021505355835,
+        "B": 0.19735276699066162,
+        "C": 0.23555228114128113,
+        "D": 0.3023722469806671
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does \"Watschn\" mean in Bavarian?",
+        "semantic_anchor_text": "What does \"Watschn\" mean in Bavarian?",
+        "semantic_candidate_texts": {
+          "A": "A type of traditional sausage",
+          "B": "A slap in the face",
+          "C": "A wooden bench at a beer garden",
+          "D": "An affectionate nickname for a child"
+        },
+        "similarities": {
+          "A": 0.2450021505355835,
+          "B": 0.19735276699066162,
+          "C": 0.23555228114128113,
+          "D": 0.3023722469806671
+        },
+        "gold_similarity": 0.19735276699066162,
+        "best_distractor_similarity": 0.3023722469806671,
+        "gold_margin": -0.1050194799900055,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "How does Bavarian typically render the Standard German \"sp-\" cluster at the start of words like \"sprechen\"?\n\nOptions:\nA: Unchanged as shpr-\nB: As schbr-\nC: As str-\nD: The s is dropped entirely\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.21470525860786438,
+        "B": 0.5451998710632324,
+        "C": 0.3589663505554199,
+        "D": 0.21822592616081238
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How does Bavarian typically render the Standard German \"sp-\" cluster at the start of words like \"sprechen\"?",
+        "semantic_anchor_text": "How does Bavarian typically render the Standard German \"sp-\" cluster at the start of words like \"sprechen\"?",
+        "semantic_candidate_texts": {
+          "A": "Unchanged as shpr-",
+          "B": "As schbr-",
+          "C": "As str-",
+          "D": "The s is dropped entirely"
+        },
+        "similarities": {
+          "A": 0.21470525860786438,
+          "B": 0.5451998710632324,
+          "C": 0.3589663505554199,
+          "D": 0.21822592616081238
+        },
+        "gold_similarity": 0.5451998710632324,
+        "best_distractor_similarity": 0.3589663505554199,
+        "gold_margin": 0.1862335205078125,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "The Bavarian phrase \"I mog di\" differs from Standard German \"Ich mag dich\" in a subtle cultural way. What additional nuance does it carry in Bavarian usage?\n\nOptions:\nA: It is considered more formal and reserved than Standard German\nB: It can express deeper emotional warmth than the Standard German equivalent\nC: It only refers to platonic friendship, never romantic feeling\nD: It is used exclusively among family members\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.49288392066955566,
+        "B": 0.44800204038619995,
+        "C": 0.17427687346935272,
+        "D": 0.10019977390766144
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The Bavarian phrase \"I mog di\" differs from Standard German \"Ich mag dich\" in a subtle cultural way. What additional nuance does it carry in Bavarian usage?",
+        "semantic_anchor_text": "The Bavarian phrase \"I mog di\" differs from Standard German \"Ich mag dich\" in a subtle cultural way. What additional nuance does it carry in Bavarian usage?",
+        "semantic_candidate_texts": {
+          "A": "It is considered more formal and reserved than Standard German",
+          "B": "It can express deeper emotional warmth than the Standard German equivalent",
+          "C": "It only refers to platonic friendship, never romantic feeling",
+          "D": "It is used exclusively among family members"
+        },
+        "similarities": {
+          "A": 0.49288392066955566,
+          "B": 0.44800204038619995,
+          "C": 0.17427687346935272,
+          "D": 0.10019977390766144
+        },
+        "gold_similarity": 0.44800204038619995,
+        "best_distractor_similarity": 0.49288392066955566,
+        "gold_margin": -0.04488188028335571,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "In Bavarian, the diminutive suffix is typically \"-erl\" rather than Standard German \"-chen\". Which of the following is the correct Bavarian diminutive for \"Hund\" (dog)?\n\nOptions:\nA: Hündchen\nB: Hundl or Hunderl\nC: Hündlein\nD: Hundechen\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23467130959033966,
+        "B": 0.47539854049682617,
+        "C": 0.35795801877975464,
+        "D": 0.3557042181491852
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Bavarian, the diminutive suffix is typically \"-erl\" rather than Standard German \"-chen\". Which of the following is the correct Bavarian diminutive for \"Hund\" (dog)?",
+        "semantic_anchor_text": "In Bavarian, the diminutive suffix is typically \"-erl\" rather than Standard German \"-chen\". Which of the following is the correct Bavarian diminutive for \"Hund\" (dog)?",
+        "semantic_candidate_texts": {
+          "A": "Hündchen",
+          "B": "Hundl or Hunderl",
+          "C": "Hündlein",
+          "D": "Hundechen"
+        },
+        "similarities": {
+          "A": 0.23467130959033966,
+          "B": 0.47539854049682617,
+          "C": 0.35795801877975464,
+          "D": 0.3557042181491852
+        },
+        "gold_similarity": 0.47539854049682617,
+        "best_distractor_similarity": 0.35795801877975464,
+        "gold_margin": 0.11744052171707153,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was bedeutet die bairische Grußformel \"Hawadehre\"?\n\nOptions:\nA: Schön, dass du da bist – eine Willkommensformel unter Freunden\nB: Auf Wiedersehen – ein freundlicher Abschiedsgruß\nC: Habe die Ehre – ein förmlicher aber herzlicher Gruß\nD: Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.38853469491004944,
+        "B": 0.3851020336151123,
+        "C": 0.4777439832687378,
+        "D": 0.4692556858062744
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was bedeutet die bairische Grußformel \"Hawadehre\"?",
+        "semantic_anchor_text": "Was bedeutet die bairische Grußformel \"Hawadehre\"?",
+        "semantic_candidate_texts": {
+          "A": "Schön, dass du da bist – eine Willkommensformel unter Freunden",
+          "B": "Auf Wiedersehen – ein freundlicher Abschiedsgruß",
+          "C": "Habe die Ehre – ein förmlicher aber herzlicher Gruß",
+          "D": "Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird"
+        },
+        "similarities": {
+          "A": 0.38853469491004944,
+          "B": 0.3851020336151123,
+          "C": 0.4777439832687378,
+          "D": 0.4692556858062744
+        },
+        "gold_similarity": 0.4777439832687378,
+        "best_distractor_similarity": 0.4692556858062744,
+        "gold_margin": 0.008488297462463379,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was versteht man unter einer \"Zipfebritschn\"?\n\nOptions:\nA: Eine ältere Frau die viel kocht\nB: Eine bösartige, zänkische Frau\nC: Ein altes, zerrissenes Kleidungsstück\nD: Eine Frau die sehr langsam geht\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.18003350496292114,
+        "B": 0.30933505296707153,
+        "C": 0.34190598130226135,
+        "D": 0.1472836136817932
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was versteht man unter einer \"Zipfebritschn\"?",
+        "semantic_anchor_text": "Was versteht man unter einer \"Zipfebritschn\"?",
+        "semantic_candidate_texts": {
+          "A": "Eine ältere Frau die viel kocht",
+          "B": "Eine bösartige, zänkische Frau",
+          "C": "Ein altes, zerrissenes Kleidungsstück",
+          "D": "Eine Frau die sehr langsam geht"
+        },
+        "similarities": {
+          "A": 0.18003350496292114,
+          "B": 0.30933505296707153,
+          "C": 0.34190598130226135,
+          "D": 0.1472836136817932
+        },
+        "gold_similarity": 0.30933505296707153,
+        "best_distractor_similarity": 0.34190598130226135,
+        "gold_margin": -0.03257092833518982,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?\n\nOptions:\nA: Jemand der Brezeln verkauft\nB: Ein altes Salzrezept aus Bayern\nC: Einen dummen, einfältigen Menschen\nD: Eine besonders salzige Brezel\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3335714340209961,
+        "B": 0.3599507212638855,
+        "C": 0.3257181942462921,
+        "D": 0.388104647397995
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?",
+        "semantic_anchor_text": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?",
+        "semantic_candidate_texts": {
+          "A": "Jemand der Brezeln verkauft",
+          "B": "Ein altes Salzrezept aus Bayern",
+          "C": "Einen dummen, einfältigen Menschen",
+          "D": "Eine besonders salzige Brezel"
+        },
+        "similarities": {
+          "A": 0.3335714340209961,
+          "B": 0.3599507212638855,
+          "C": 0.3257181942462921,
+          "D": 0.388104647397995
+        },
+        "gold_similarity": 0.3257181942462921,
+        "best_distractor_similarity": 0.388104647397995,
+        "gold_margin": -0.06238645315170288,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?\n\nOptions:\nA: Komm sofort nach Hause\nB: Vergiss nicht, dich zu waschen\nC: Beeil dich, du bist zu spät\nD: Setz dich hin und ruh dich aus\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2248823195695877,
+        "B": 0.24477507174015045,
+        "C": 0.27833157777786255,
+        "D": 0.1837919056415558
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?",
+        "semantic_anchor_text": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?",
+        "semantic_candidate_texts": {
+          "A": "Komm sofort nach Hause",
+          "B": "Vergiss nicht, dich zu waschen",
+          "C": "Beeil dich, du bist zu spät",
+          "D": "Setz dich hin und ruh dich aus"
+        },
+        "similarities": {
+          "A": 0.2248823195695877,
+          "B": 0.24477507174015045,
+          "C": 0.27833157777786255,
+          "D": 0.1837919056415558
+        },
+        "gold_similarity": 0.24477507174015045,
+        "best_distractor_similarity": 0.27833157777786255,
+        "gold_margin": -0.0335565060377121,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Um was handelt es sich bei einem \"Stranitzl\"?\n\nOptions:\nA: Ein kleines Messer zum Brotschneiden\nB: Ein traditionelles Gebäck aus Oberbayern\nC: Eine Papiertüte\nD: Ein gefaltetes Taschentuch\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2869352102279663,
+        "B": 0.4407397508621216,
+        "C": 0.3255784511566162,
+        "D": 0.39086806774139404
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Um was handelt es sich bei einem \"Stranitzl\"?",
+        "semantic_anchor_text": "Um was handelt es sich bei einem \"Stranitzl\"?",
+        "semantic_candidate_texts": {
+          "A": "Ein kleines Messer zum Brotschneiden",
+          "B": "Ein traditionelles Gebäck aus Oberbayern",
+          "C": "Eine Papiertüte",
+          "D": "Ein gefaltetes Taschentuch"
+        },
+        "similarities": {
+          "A": 0.2869352102279663,
+          "B": 0.4407397508621216,
+          "C": 0.3255784511566162,
+          "D": 0.39086806774139404
+        },
+        "gold_similarity": 0.3255784511566162,
+        "best_distractor_similarity": 0.4407397508621216,
+        "gold_margin": -0.11516129970550537,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?\n\nOptions:\nA: Pass gut auf dich auf und bleib gesund\nB: Grüß alle Bekannten von mir\nC: Mach langsam, nur nichts überstürzen!\nD: Vergiss nicht, pünktlich zu sein\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.30940547585487366,
+        "B": 0.29260870814323425,
+        "C": 0.49373745918273926,
+        "D": 0.33758705854415894
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_anchor_text": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_candidate_texts": {
+          "A": "Pass gut auf dich auf und bleib gesund",
+          "B": "Grüß alle Bekannten von mir",
+          "C": "Mach langsam, nur nichts überstürzen!",
+          "D": "Vergiss nicht, pünktlich zu sein"
+        },
+        "similarities": {
+          "A": 0.30940547585487366,
+          "B": 0.29260870814323425,
+          "C": 0.49373745918273926,
+          "D": 0.33758705854415894
+        },
+        "gold_similarity": 0.49373745918273926,
+        "best_distractor_similarity": 0.33758705854415894,
+        "gold_margin": 0.15615040063858032,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist das hochdeutsche Wort für \"Gaggerla\"?\n\nOptions:\nA: Huhn\nB: Ei\nC: Küken\nD: Federn\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.33349984884262085,
+        "B": 0.25324559211730957,
+        "C": 0.2999028265476227,
+        "D": 0.3192744851112366
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_anchor_text": "Was ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_candidate_texts": {
+          "A": "Huhn",
+          "B": "Ei",
+          "C": "Küken",
+          "D": "Federn"
+        },
+        "similarities": {
+          "A": 0.33349984884262085,
+          "B": 0.25324559211730957,
+          "C": 0.2999028265476227,
+          "D": 0.3192744851112366
+        },
+        "gold_similarity": 0.25324559211730957,
+        "best_distractor_similarity": 0.33349984884262085,
+        "gold_margin": -0.08025425672531128,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Worum handelt es sich bei einem \"Gifthaferl\"?\n\nOptions:\nA: Ein alter Kochtopf der nicht mehr benutzt werden soll\nB: Ein Behälter für gefährliche Substanzen im Haushalt\nC: Eine Person die leicht giftige Pilze sammelt\nD: Eine Person die schnell zum Zorn neigt\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3066254258155823,
+        "B": 0.29378393292427063,
+        "C": 0.24715211987495422,
+        "D": 0.2091497927904129
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Worum handelt es sich bei einem \"Gifthaferl\"?",
+        "semantic_anchor_text": "Worum handelt es sich bei einem \"Gifthaferl\"?",
+        "semantic_candidate_texts": {
+          "A": "Ein alter Kochtopf der nicht mehr benutzt werden soll",
+          "B": "Ein Behälter für gefährliche Substanzen im Haushalt",
+          "C": "Eine Person die leicht giftige Pilze sammelt",
+          "D": "Eine Person die schnell zum Zorn neigt"
+        },
+        "similarities": {
+          "A": 0.3066254258155823,
+          "B": 0.29378393292427063,
+          "C": 0.24715211987495422,
+          "D": 0.2091497927904129
+        },
+        "gold_similarity": 0.2091497927904129,
+        "best_distractor_similarity": 0.3066254258155823,
+        "gold_margin": -0.09747563302516937,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?\n\nOptions:\nA: Sie sammelten Pfefferkörner auf dem Markt\nB: Sie rannten barfuß über nasse Wiesen\nC: Sie lernten das Fahrradfahren\nD: Sie spielten ein Wettlaufspiel auf der Straße\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3456369936466217,
+        "B": 0.3705654740333557,
+        "C": 0.35610875487327576,
+        "D": 0.3721255660057068
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?",
+        "semantic_anchor_text": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie sammelten Pfefferkörner auf dem Markt",
+          "B": "Sie rannten barfuß über nasse Wiesen",
+          "C": "Sie lernten das Fahrradfahren",
+          "D": "Sie spielten ein Wettlaufspiel auf der Straße"
+        },
+        "similarities": {
+          "A": 0.3456369936466217,
+          "B": 0.3705654740333557,
+          "C": 0.35610875487327576,
+          "D": 0.3721255660057068
+        },
+        "gold_similarity": 0.35610875487327576,
+        "best_distractor_similarity": 0.3721255660057068,
+        "gold_margin": -0.01601681113243103,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?\n\nOptions:\nA: Sie machen einen albernen Witz auf Kosten anderer\nB: Sie schauen mürrisch und weinerlich\nC: Sie essen hastig und ohne Manieren\nD: Sie reden hinter dem Rücken anderer\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4623599648475647,
+        "B": 0.48386484384536743,
+        "C": 0.4934801757335663,
+        "D": 0.4458855986595154
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_anchor_text": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie machen einen albernen Witz auf Kosten anderer",
+          "B": "Sie schauen mürrisch und weinerlich",
+          "C": "Sie essen hastig und ohne Manieren",
+          "D": "Sie reden hinter dem Rücken anderer"
+        },
+        "similarities": {
+          "A": 0.4623599648475647,
+          "B": 0.48386484384536743,
+          "C": 0.4934801757335663,
+          "D": 0.4458855986595154
+        },
+        "gold_similarity": 0.48386484384536743,
+        "best_distractor_similarity": 0.4934801757335663,
+        "gold_margin": -0.009615331888198853,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What does the word 'Dirndlschaft' refer to?\n\nOptions:\nA: A traditional Bavarian sewing and textile workshop\nB: A community of young women centred around the Dirndl dress and Bavarian festivals\nC: A regional competition for the best designed traditional costume\nD: A historical guild responsible for producing traditional bavarian clothing\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2577782869338989,
+        "B": 0.3718356490135193,
+        "C": 0.12367286533117294,
+        "D": 0.38967645168304443
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the word 'Dirndlschaft' refer to?",
+        "semantic_anchor_text": "What does the word 'Dirndlschaft' refer to?",
+        "semantic_candidate_texts": {
+          "A": "A traditional Bavarian sewing and textile workshop",
+          "B": "A community of young women centred around the Dirndl dress and Bavarian festivals",
+          "C": "A regional competition for the best designed traditional costume",
+          "D": "A historical guild responsible for producing traditional bavarian clothing"
+        },
+        "similarities": {
+          "A": 0.2577782869338989,
+          "B": 0.3718356490135193,
+          "C": 0.12367286533117294,
+          "D": 0.38967645168304443
+        },
+        "gold_similarity": 0.3718356490135193,
+        "best_distractor_similarity": 0.38967645168304443,
+        "gold_margin": -0.017840802669525146,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What is a 'Meierhof'?\n\nOptions:\nA: The farm of a person called Meier\nB: a common bavarian name\nC: it s a term that does not exist\nD: a major 'Hof' farm unit\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5373596549034119,
+        "B": 0.6635450720787048,
+        "C": 0.45032382011413574,
+        "D": 0.29648736119270325
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a 'Meierhof'?",
+        "semantic_anchor_text": "What is a 'Meierhof'?",
+        "semantic_candidate_texts": {
+          "A": "The farm of a person called Meier",
+          "B": "a common bavarian name",
+          "C": "it s a term that does not exist",
+          "D": "a major 'Hof' farm unit"
+        },
+        "similarities": {
+          "A": 0.5373596549034119,
+          "B": 0.6635450720787048,
+          "C": 0.45032382011413574,
+          "D": 0.29648736119270325
+        },
+        "gold_similarity": 0.29648736119270325,
+        "best_distractor_similarity": 0.6635450720787048,
+        "gold_margin": -0.3670577108860016,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What is a 'Stammtisch'?\n\nOptions:\nA: Regular's table\nB: Irregular's table\nC: A table for the family 'Stamm'\nD: A wooden table\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.21302993595600128,
+        "B": 0.1772831231355667,
+        "C": 0.35868343710899353,
+        "D": 0.16442161798477173
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a 'Stammtisch'?",
+        "semantic_anchor_text": "What is a 'Stammtisch'?",
+        "semantic_candidate_texts": {
+          "A": "Regular's table",
+          "B": "Irregular's table",
+          "C": "A table for the family 'Stamm'",
+          "D": "A wooden table"
+        },
+        "similarities": {
+          "A": 0.21302993595600128,
+          "B": 0.1772831231355667,
+          "C": 0.35868343710899353,
+          "D": 0.16442161798477173
+        },
+        "gold_similarity": 0.21302993595600128,
+        "best_distractor_similarity": 0.35868343710899353,
+        "gold_margin": -0.14565350115299225,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What is a 'Maibaum'?\n\nOptions:\nA: A type of Bavarian folk dance celebrated in spring\nB: A traditional bavarian harvest fest\nC: A tall decorated tree trunk in the middle of a village\nD: A seasonal beer brewed only in may\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.24188292026519775,
+        "B": 0.23392018675804138,
+        "C": 0.21317967772483826,
+        "D": 0.130964994430542
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a 'Maibaum'?",
+        "semantic_anchor_text": "What is a 'Maibaum'?",
+        "semantic_candidate_texts": {
+          "A": "A type of Bavarian folk dance celebrated in spring",
+          "B": "A traditional bavarian harvest fest",
+          "C": "A tall decorated tree trunk in the middle of a village",
+          "D": "A seasonal beer brewed only in may"
+        },
+        "similarities": {
+          "A": 0.24188292026519775,
+          "B": 0.23392018675804138,
+          "C": 0.21317967772483826,
+          "D": 0.130964994430542
+        },
+        "gold_similarity": 0.21317967772483826,
+        "best_distractor_similarity": 0.24188292026519775,
+        "gold_margin": -0.028703242540359497,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "What is a 'Schuhplattler'?\n\nOptions:\nA: A creme for polishing shoes\nB: A traditional folk dance\nC: A popular song in Bavaria\nD: A specific Bavarian dish\n\nReply with the exact option text only. No explanation.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.22073149681091309,
+        "B": 0.21426285803318024,
+        "C": 0.4295767545700073,
+        "D": 0.4820273816585541
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a 'Schuhplattler'?",
+        "semantic_anchor_text": "What is a 'Schuhplattler'?",
+        "semantic_candidate_texts": {
+          "A": "A creme for polishing shoes",
+          "B": "A traditional folk dance",
+          "C": "A popular song in Bavaria",
+          "D": "A specific Bavarian dish"
+        },
+        "similarities": {
+          "A": 0.22073149681091309,
+          "B": 0.21426285803318024,
+          "C": 0.4295767545700073,
+          "D": 0.4820273816585541
+        },
+        "gold_similarity": 0.21426285803318024,
+        "best_distractor_similarity": 0.4820273816585541,
+        "gold_margin": -0.26776452362537384,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was bedeutet der bayerische Ausdruck \"Geh, hör auf!\" am wahrscheinlichsten im Kontext?\n\nOptions:\nA: Geh, hör zu!\nB: Hör auf / Du machst Witze!\nC: Geh weg und sei still!\nD: Bitte mach weiter\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4836404025554657,
+        "B": 0.5002056956291199,
+        "C": 0.45398929715156555,
+        "D": 0.3351302444934845
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was bedeutet der bayerische Ausdruck \"Geh, hör auf!\" am wahrscheinlichsten im Kontext?",
+        "semantic_anchor_text": "Was bedeutet der bayerische Ausdruck \"Geh, hör auf!\" am wahrscheinlichsten im Kontext?",
+        "semantic_candidate_texts": {
+          "A": "Geh, hör zu!",
+          "B": "Hör auf / Du machst Witze!",
+          "C": "Geh weg und sei still!",
+          "D": "Bitte mach weiter"
+        },
+        "similarities": {
+          "A": 0.4836404025554657,
+          "B": 0.5002056956291199,
+          "C": 0.45398929715156555,
+          "D": 0.3351302444934845
+        },
+        "gold_similarity": 0.5002056956291199,
+        "best_distractor_similarity": 0.4836404025554657,
+        "gold_margin": 0.016565293073654175,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Welcher Satz ist grammatikalisch korrekt im bayerischen Dialekt?\n\nOptions:\nA: Ich habe es ihm gegeben\nB: I hob's eam geem\nC: Ich hab es ihn gegeben\nD: I hob es ihm gegebn\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.13528847694396973,
+        "B": 0.22491037845611572,
+        "C": 0.16105157136917114,
+        "D": 0.19546394050121307
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Satz ist grammatikalisch korrekt im bayerischen Dialekt?",
+        "semantic_anchor_text": "Welcher Satz ist grammatikalisch korrekt im bayerischen Dialekt?",
+        "semantic_candidate_texts": {
+          "A": "Ich habe es ihm gegeben",
+          "B": "I hob's eam geem",
+          "C": "Ich hab es ihn gegeben",
+          "D": "I hob es ihm gegebn"
+        },
+        "similarities": {
+          "A": 0.13528847694396973,
+          "B": 0.22491037845611572,
+          "C": 0.16105157136917114,
+          "D": 0.19546394050121307
+        },
+        "gold_similarity": 0.22491037845611572,
+        "best_distractor_similarity": 0.19546394050121307,
+        "gold_margin": 0.02944643795490265,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Im Bairischen verschiebt sich das standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welchem Laut?\n\nOptions:\nA: ee → neen\nB: oa → noa\nC: oi → noi\nD: aa → naan\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.577886164188385,
+        "B": 0.3630172610282898,
+        "C": 0.4502350389957428,
+        "D": 0.2050546109676361
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Bairischen verschiebt sich das standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welchem Laut?",
+        "semantic_anchor_text": "Im Bairischen verschiebt sich das standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welchem Laut?",
+        "semantic_candidate_texts": {
+          "A": "ee → neen",
+          "B": "oa → noa",
+          "C": "oi → noi",
+          "D": "aa → naan"
+        },
+        "similarities": {
+          "A": 0.577886164188385,
+          "B": 0.3630172610282898,
+          "C": 0.4502350389957428,
+          "D": 0.2050546109676361
+        },
+        "gold_similarity": 0.3630172610282898,
+        "best_distractor_similarity": 0.577886164188385,
+        "gold_margin": -0.21486890316009521,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist eine \"Brotzeit\" in der bayerischen Kultur?\n\nOptions:\nA: Die Zeit, zu der Brot in ländlichen Gemeinden gebacken wird\nB: Eine vormittägliche oder nachmittägliche kalte Zwischenmahlzeit aus Brot, Käse und Aufschnitt\nC: Eine formelle Sonntags-Dinertradition\nD: Ein Wort für das Frühstück vor dem Kirchgang\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4765065908432007,
+        "B": 0.4966925084590912,
+        "C": 0.5592696666717529,
+        "D": 0.49221181869506836
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist eine \"Brotzeit\" in der bayerischen Kultur?",
+        "semantic_anchor_text": "Was ist eine \"Brotzeit\" in der bayerischen Kultur?",
+        "semantic_candidate_texts": {
+          "A": "Die Zeit, zu der Brot in ländlichen Gemeinden gebacken wird",
+          "B": "Eine vormittägliche oder nachmittägliche kalte Zwischenmahlzeit aus Brot, Käse und Aufschnitt",
+          "C": "Eine formelle Sonntags-Dinertradition",
+          "D": "Ein Wort für das Frühstück vor dem Kirchgang"
+        },
+        "similarities": {
+          "A": 0.4765065908432007,
+          "B": 0.4966925084590912,
+          "C": 0.5592696666717529,
+          "D": 0.49221181869506836
+        },
+        "gold_similarity": 0.4966925084590912,
+        "best_distractor_similarity": 0.5592696666717529,
+        "gold_margin": -0.06257715821266174,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wenn ein Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie sollten Sie das interpretieren?\n\nOptions:\nA: Starke Begeisterung und Zustimmung\nB: Höfliche, aber lauwarme Akzeptanz — Wird schon passen / Ist ok, nehme ich an\nC: Entschiedene Ablehnung als Höflichkeit getarnt\nD: Eine Bitte, den Vorschlag zu wiederholen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.34864893555641174,
+        "B": 0.5510464906692505,
+        "C": 0.5213910341262817,
+        "D": 0.5731256008148193
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wenn ein Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie sollten Sie das interpretieren?",
+        "semantic_anchor_text": "Wenn ein Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie sollten Sie das interpretieren?",
+        "semantic_candidate_texts": {
+          "A": "Starke Begeisterung und Zustimmung",
+          "B": "Höfliche, aber lauwarme Akzeptanz — Wird schon passen / Ist ok, nehme ich an",
+          "C": "Entschiedene Ablehnung als Höflichkeit getarnt",
+          "D": "Eine Bitte, den Vorschlag zu wiederholen"
+        },
+        "similarities": {
+          "A": 0.34864893555641174,
+          "B": 0.5510464906692505,
+          "C": 0.5213910341262817,
+          "D": 0.5731256008148193
+        },
+        "gold_similarity": 0.5510464906692505,
+        "best_distractor_similarity": 0.5731256008148193,
+        "gold_margin": -0.022079110145568848,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Das Bairische lässt den Genitiv oft ganz weg. Wie würde \"Das Haus meines Vaters\" in natürlicher bairischer Sprache klingen?\n\nOptions:\nA: Des Haus mein Vater\nB: Des Haus vo meim Vatern\nC: Das Haus von meinem Vater\nD: Des Haus meines Vatern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5238646268844604,
+        "B": 0.5161269307136536,
+        "C": 0.5213302373886108,
+        "D": 0.5247204899787903
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Das Bairische lässt den Genitiv oft ganz weg. Wie würde \"Das Haus meines Vaters\" in natürlicher bairischer Sprache klingen?",
+        "semantic_anchor_text": "Das Bairische lässt den Genitiv oft ganz weg. Wie würde \"Das Haus meines Vaters\" in natürlicher bairischer Sprache klingen?",
+        "semantic_candidate_texts": {
+          "A": "Des Haus mein Vater",
+          "B": "Des Haus vo meim Vatern",
+          "C": "Das Haus von meinem Vater",
+          "D": "Des Haus meines Vatern"
+        },
+        "similarities": {
+          "A": 0.5238646268844604,
+          "B": 0.5161269307136536,
+          "C": 0.5213302373886108,
+          "D": 0.5247204899787903
+        },
+        "gold_similarity": 0.5161269307136536,
+        "best_distractor_similarity": 0.5247204899787903,
+        "gold_margin": -0.008593559265136719,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was bedeutet \"Watschn\" im Bairischen?\n\nOptions:\nA: Eine Art traditionelle Wurst\nB: Eine Ohrfeige\nC: Eine Holzbank im Biergarten\nD: Ein liebevoller Spitzname für ein Kind\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.39687514305114746,
+        "B": 0.3433017134666443,
+        "C": 0.3223411440849304,
+        "D": 0.4092903435230255
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was bedeutet \"Watschn\" im Bairischen?",
+        "semantic_anchor_text": "Was bedeutet \"Watschn\" im Bairischen?",
+        "semantic_candidate_texts": {
+          "A": "Eine Art traditionelle Wurst",
+          "B": "Eine Ohrfeige",
+          "C": "Eine Holzbank im Biergarten",
+          "D": "Ein liebevoller Spitzname für ein Kind"
+        },
+        "similarities": {
+          "A": 0.39687514305114746,
+          "B": 0.3433017134666443,
+          "C": 0.3223411440849304,
+          "D": 0.4092903435230255
+        },
+        "gold_similarity": 0.3433017134666443,
+        "best_distractor_similarity": 0.4092903435230255,
+        "gold_margin": -0.06598863005638123,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie gibt das Bairische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?\n\nOptions:\nA: Unverändert als shpr-\nB: Als schbr-\nC: Als str-\nD: Das s wird ganz weggelassen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3458995819091797,
+        "B": 0.5278778076171875,
+        "C": 0.3526911437511444,
+        "D": 0.2959672510623932
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie gibt das Bairische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?",
+        "semantic_anchor_text": "Wie gibt das Bairische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?",
+        "semantic_candidate_texts": {
+          "A": "Unverändert als shpr-",
+          "B": "Als schbr-",
+          "C": "Als str-",
+          "D": "Das s wird ganz weggelassen"
+        },
+        "similarities": {
+          "A": 0.3458995819091797,
+          "B": 0.5278778076171875,
+          "C": 0.3526911437511444,
+          "D": 0.2959672510623932
+        },
+        "gold_similarity": 0.5278778076171875,
+        "best_distractor_similarity": 0.3526911437511444,
+        "gold_margin": 0.1751866638660431,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Die bairische Phrase \"I mog di\" unterscheidet sich vom Standarddeutschen \"Ich mag dich\" durch eine subtile kulturelle Nuance. Welche zusätzliche Bedeutung trägt sie im bairischen Gebrauch?\n\nOptions:\nA: Sie gilt als formeller und zurückhaltender als Standarddeutsch\nB: Sie kann tiefere emotionale Wärme ausdrücken als das standarddeutsche Äquivalent\nC: Sie bezieht sich nur auf platonische Freundschaft, nie auf romantische Gefühle\nD: Sie wird ausschließlich unter Familienmitgliedern verwendet\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4487569332122803,
+        "B": 0.5522210597991943,
+        "C": 0.26503580808639526,
+        "D": 0.1501162052154541
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Die bairische Phrase \"I mog di\" unterscheidet sich vom Standarddeutschen \"Ich mag dich\" durch eine subtile kulturelle Nuance. Welche zusätzliche Bedeutung trägt sie im bairischen Gebrauch?",
+        "semantic_anchor_text": "Die bairische Phrase \"I mog di\" unterscheidet sich vom Standarddeutschen \"Ich mag dich\" durch eine subtile kulturelle Nuance. Welche zusätzliche Bedeutung trägt sie im bairischen Gebrauch?",
+        "semantic_candidate_texts": {
+          "A": "Sie gilt als formeller und zurückhaltender als Standarddeutsch",
+          "B": "Sie kann tiefere emotionale Wärme ausdrücken als das standarddeutsche Äquivalent",
+          "C": "Sie bezieht sich nur auf platonische Freundschaft, nie auf romantische Gefühle",
+          "D": "Sie wird ausschließlich unter Familienmitgliedern verwendet"
+        },
+        "similarities": {
+          "A": 0.4487569332122803,
+          "B": 0.5522210597991943,
+          "C": 0.26503580808639526,
+          "D": 0.1501162052154541
+        },
+        "gold_similarity": 0.5522210597991943,
+        "best_distractor_similarity": 0.4487569332122803,
+        "gold_margin": 0.10346412658691406,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Im Bairischen ist die Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Welche der folgenden ist die korrekte bairische Verkleinerungsform für \"Hund\"?\n\nOptions:\nA: Hündchen\nB: Hundl oder Hunderl\nC: Hündlein\nD: Hundechen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2753591239452362,
+        "B": 0.592704176902771,
+        "C": 0.3789770007133484,
+        "D": 0.25614291429519653
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Bairischen ist die Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Welche der folgenden ist die korrekte bairische Verkleinerungsform für \"Hund\"?",
+        "semantic_anchor_text": "Im Bairischen ist die Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Welche der folgenden ist die korrekte bairische Verkleinerungsform für \"Hund\"?",
+        "semantic_candidate_texts": {
+          "A": "Hündchen",
+          "B": "Hundl oder Hunderl",
+          "C": "Hündlein",
+          "D": "Hundechen"
+        },
+        "similarities": {
+          "A": 0.2753591239452362,
+          "B": 0.592704176902771,
+          "C": 0.3789770007133484,
+          "D": 0.25614291429519653
+        },
+        "gold_similarity": 0.592704176902771,
+        "best_distractor_similarity": 0.3789770007133484,
+        "gold_margin": 0.2137271761894226,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was bedeutet die bairische Grußformel \"Hawadehre\"?\n\nOptions:\nA: Schön, dass du da bist – eine Willkommensformel unter Freunden\nB: Auf Wiedersehen – ein freundlicher Abschiedsgruß\nC: Habe die Ehre – ein förmlicher aber herzlicher Gruß\nD: Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.38853469491004944,
+        "B": 0.3851020336151123,
+        "C": 0.4777439832687378,
+        "D": 0.4692556858062744
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was bedeutet die bairische Grußformel \"Hawadehre\"?",
+        "semantic_anchor_text": "Was bedeutet die bairische Grußformel \"Hawadehre\"?",
+        "semantic_candidate_texts": {
+          "A": "Schön, dass du da bist – eine Willkommensformel unter Freunden",
+          "B": "Auf Wiedersehen – ein freundlicher Abschiedsgruß",
+          "C": "Habe die Ehre – ein förmlicher aber herzlicher Gruß",
+          "D": "Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird"
+        },
+        "similarities": {
+          "A": 0.38853469491004944,
+          "B": 0.3851020336151123,
+          "C": 0.4777439832687378,
+          "D": 0.4692556858062744
+        },
+        "gold_similarity": 0.4777439832687378,
+        "best_distractor_similarity": 0.4692556858062744,
+        "gold_margin": 0.008488297462463379,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was versteht man unter einer \"Zipfebritschn\"?\n\nOptions:\nA: Eine ältere Frau die viel kocht\nB: Eine bösartige, zänkische Frau\nC: Ein altes, zerrissenes Kleidungsstück\nD: Eine Frau die sehr langsam geht\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.18003350496292114,
+        "B": 0.30933505296707153,
+        "C": 0.34190598130226135,
+        "D": 0.1472836136817932
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was versteht man unter einer \"Zipfebritschn\"?",
+        "semantic_anchor_text": "Was versteht man unter einer \"Zipfebritschn\"?",
+        "semantic_candidate_texts": {
+          "A": "Eine ältere Frau die viel kocht",
+          "B": "Eine bösartige, zänkische Frau",
+          "C": "Ein altes, zerrissenes Kleidungsstück",
+          "D": "Eine Frau die sehr langsam geht"
+        },
+        "similarities": {
+          "A": 0.18003350496292114,
+          "B": 0.30933505296707153,
+          "C": 0.34190598130226135,
+          "D": 0.1472836136817932
+        },
+        "gold_similarity": 0.30933505296707153,
+        "best_distractor_similarity": 0.34190598130226135,
+        "gold_margin": -0.03257092833518982,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?\n\nOptions:\nA: Jemand der Brezeln verkauft\nB: Ein altes Salzrezept aus Bayern\nC: Einen dummen, einfältigen Menschen\nD: Eine besonders salzige Brezel\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3335714340209961,
+        "B": 0.3599507212638855,
+        "C": 0.3257181942462921,
+        "D": 0.388104647397995
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?",
+        "semantic_anchor_text": "Wen oder was bezeichnet das Wort \"Breznsoiza\"?",
+        "semantic_candidate_texts": {
+          "A": "Jemand der Brezeln verkauft",
+          "B": "Ein altes Salzrezept aus Bayern",
+          "C": "Einen dummen, einfältigen Menschen",
+          "D": "Eine besonders salzige Brezel"
+        },
+        "similarities": {
+          "A": 0.3335714340209961,
+          "B": 0.3599507212638855,
+          "C": 0.3257181942462921,
+          "D": 0.388104647397995
+        },
+        "gold_similarity": 0.3257181942462921,
+        "best_distractor_similarity": 0.388104647397995,
+        "gold_margin": -0.06238645315170288,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?\n\nOptions:\nA: Komm sofort nach Hause\nB: Vergiss nicht, dich zu waschen\nC: Beeil dich, du bist zu spät\nD: Setz dich hin und ruh dich aus\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2248823195695877,
+        "B": 0.24477507174015045,
+        "C": 0.27833157777786255,
+        "D": 0.1837919056415558
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?",
+        "semantic_anchor_text": "Dua di fei zwoong!: Was ist zu tun, wenn man diesen Satz hört?",
+        "semantic_candidate_texts": {
+          "A": "Komm sofort nach Hause",
+          "B": "Vergiss nicht, dich zu waschen",
+          "C": "Beeil dich, du bist zu spät",
+          "D": "Setz dich hin und ruh dich aus"
+        },
+        "similarities": {
+          "A": 0.2248823195695877,
+          "B": 0.24477507174015045,
+          "C": 0.27833157777786255,
+          "D": 0.1837919056415558
+        },
+        "gold_similarity": 0.24477507174015045,
+        "best_distractor_similarity": 0.27833157777786255,
+        "gold_margin": -0.0335565060377121,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Um was handelt es sich bei einem \"Stranitzl\"?\n\nOptions:\nA: Ein kleines Messer zum Brotschneiden\nB: Ein traditionelles Gebäck aus Oberbayern\nC: Eine Papiertüte\nD: Ein gefaltetes Taschentuch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2869352102279663,
+        "B": 0.4407397508621216,
+        "C": 0.3255784511566162,
+        "D": 0.39086806774139404
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Um was handelt es sich bei einem \"Stranitzl\"?",
+        "semantic_anchor_text": "Um was handelt es sich bei einem \"Stranitzl\"?",
+        "semantic_candidate_texts": {
+          "A": "Ein kleines Messer zum Brotschneiden",
+          "B": "Ein traditionelles Gebäck aus Oberbayern",
+          "C": "Eine Papiertüte",
+          "D": "Ein gefaltetes Taschentuch"
+        },
+        "similarities": {
+          "A": 0.2869352102279663,
+          "B": 0.4407397508621216,
+          "C": 0.3255784511566162,
+          "D": 0.39086806774139404
+        },
+        "gold_similarity": 0.3255784511566162,
+        "best_distractor_similarity": 0.4407397508621216,
+        "gold_margin": -0.11516129970550537,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?\n\nOptions:\nA: Pass gut auf dich auf und bleib gesund\nB: Grüß alle Bekannten von mir\nC: Mach langsam, nur nichts überstürzen!\nD: Vergiss nicht, pünktlich zu sein\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.30940547585487366,
+        "B": 0.29260870814323425,
+        "C": 0.49373745918273926,
+        "D": 0.33758705854415894
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_anchor_text": "Wie soll man sich verhalten, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_candidate_texts": {
+          "A": "Pass gut auf dich auf und bleib gesund",
+          "B": "Grüß alle Bekannten von mir",
+          "C": "Mach langsam, nur nichts überstürzen!",
+          "D": "Vergiss nicht, pünktlich zu sein"
+        },
+        "similarities": {
+          "A": 0.30940547585487366,
+          "B": 0.29260870814323425,
+          "C": 0.49373745918273926,
+          "D": 0.33758705854415894
+        },
+        "gold_similarity": 0.49373745918273926,
+        "best_distractor_similarity": 0.33758705854415894,
+        "gold_margin": 0.15615040063858032,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist das hochdeutsche Wort für \"Gaggerla\"?\n\nOptions:\nA: Huhn\nB: Ei\nC: Küken\nD: Federn\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.33349984884262085,
+        "B": 0.25324559211730957,
+        "C": 0.2999028265476227,
+        "D": 0.3192744851112366
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_anchor_text": "Was ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_candidate_texts": {
+          "A": "Huhn",
+          "B": "Ei",
+          "C": "Küken",
+          "D": "Federn"
+        },
+        "similarities": {
+          "A": 0.33349984884262085,
+          "B": 0.25324559211730957,
+          "C": 0.2999028265476227,
+          "D": 0.3192744851112366
+        },
+        "gold_similarity": 0.25324559211730957,
+        "best_distractor_similarity": 0.33349984884262085,
+        "gold_margin": -0.08025425672531128,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Worum handelt es sich bei einem \"Gifthaferl\"?\n\nOptions:\nA: Ein alter Kochtopf der nicht mehr benutzt werden soll\nB: Ein Behälter für gefährliche Substanzen im Haushalt\nC: Eine Person die leicht giftige Pilze sammelt\nD: Eine Person die schnell zum Zorn neigt\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3066254258155823,
+        "B": 0.29378393292427063,
+        "C": 0.24715211987495422,
+        "D": 0.2091497927904129
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Worum handelt es sich bei einem \"Gifthaferl\"?",
+        "semantic_anchor_text": "Worum handelt es sich bei einem \"Gifthaferl\"?",
+        "semantic_candidate_texts": {
+          "A": "Ein alter Kochtopf der nicht mehr benutzt werden soll",
+          "B": "Ein Behälter für gefährliche Substanzen im Haushalt",
+          "C": "Eine Person die leicht giftige Pilze sammelt",
+          "D": "Eine Person die schnell zum Zorn neigt"
+        },
+        "similarities": {
+          "A": 0.3066254258155823,
+          "B": 0.29378393292427063,
+          "C": 0.24715211987495422,
+          "D": 0.2091497927904129
+        },
+        "gold_similarity": 0.2091497927904129,
+        "best_distractor_similarity": 0.3066254258155823,
+        "gold_margin": -0.09747563302516937,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?\n\nOptions:\nA: Sie sammelten Pfefferkörner auf dem Markt\nB: Sie rannten barfuß über nasse Wiesen\nC: Sie lernten das Fahrradfahren\nD: Sie spielten ein Wettlaufspiel auf der Straße\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3456369936466217,
+        "B": 0.3705654740333557,
+        "C": 0.35610875487327576,
+        "D": 0.3721255660057068
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?",
+        "semantic_anchor_text": "Was taten Kinder früher, wenn sie \"pfefferwetzten\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie sammelten Pfefferkörner auf dem Markt",
+          "B": "Sie rannten barfuß über nasse Wiesen",
+          "C": "Sie lernten das Fahrradfahren",
+          "D": "Sie spielten ein Wettlaufspiel auf der Straße"
+        },
+        "similarities": {
+          "A": 0.3456369936466217,
+          "B": 0.3705654740333557,
+          "C": 0.35610875487327576,
+          "D": 0.3721255660057068
+        },
+        "gold_similarity": 0.35610875487327576,
+        "best_distractor_similarity": 0.3721255660057068,
+        "gold_margin": -0.01601681113243103,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?\n\nOptions:\nA: Sie machen einen albernen Witz auf Kosten anderer\nB: Sie schauen mürrisch und weinerlich\nC: Sie essen hastig und ohne Manieren\nD: Sie reden hinter dem Rücken anderer\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4623599648475647,
+        "B": 0.48386484384536743,
+        "C": 0.4934801757335663,
+        "D": 0.4458855986595154
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_anchor_text": "Wie verhalten sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie machen einen albernen Witz auf Kosten anderer",
+          "B": "Sie schauen mürrisch und weinerlich",
+          "C": "Sie essen hastig und ohne Manieren",
+          "D": "Sie reden hinter dem Rücken anderer"
+        },
+        "similarities": {
+          "A": 0.4623599648475647,
+          "B": 0.48386484384536743,
+          "C": 0.4934801757335663,
+          "D": 0.4458855986595154
+        },
+        "gold_similarity": 0.48386484384536743,
+        "best_distractor_similarity": 0.4934801757335663,
+        "gold_margin": -0.009615331888198853,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wofür steht das Wort 'Dirndlschaft'?\n\nOptions:\nA: Eine traditionelle bayerische Näh- und Textilwerkstatt\nB: Eine Gemeinschaft junger Frauen rund um das Dirndlkleid und bayerische Feste\nC: Ein regionaler Wettbewerb für die beste gestaltete Tracht\nD: Eine historische Zunft, die für die Herstellung traditioneller bayerischer Kleidung zuständig war\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.242007315158844,
+        "B": 0.28993573784828186,
+        "C": 0.24125882983207703,
+        "D": 0.31483420729637146
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wofür steht das Wort 'Dirndlschaft'?",
+        "semantic_anchor_text": "Wofür steht das Wort 'Dirndlschaft'?",
+        "semantic_candidate_texts": {
+          "A": "Eine traditionelle bayerische Näh- und Textilwerkstatt",
+          "B": "Eine Gemeinschaft junger Frauen rund um das Dirndlkleid und bayerische Feste",
+          "C": "Ein regionaler Wettbewerb für die beste gestaltete Tracht",
+          "D": "Eine historische Zunft, die für die Herstellung traditioneller bayerischer Kleidung zuständig war"
+        },
+        "similarities": {
+          "A": 0.242007315158844,
+          "B": 0.28993573784828186,
+          "C": 0.24125882983207703,
+          "D": 0.31483420729637146
+        },
+        "gold_similarity": 0.28993573784828186,
+        "best_distractor_similarity": 0.31483420729637146,
+        "gold_margin": -0.0248984694480896,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist ein 'Meierhof'?\n\nOptions:\nA: Der Bauernhof einer Person namens Meier\nB: Ein verbreiteter bayerischer Name\nC: Ein Begriff, der nicht existiert\nD: Eine große 'Hof'-Bauerneinheit\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.49801701307296753,
+        "B": 0.5433404445648193,
+        "C": 0.581699013710022,
+        "D": 0.5728155970573425
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist ein 'Meierhof'?",
+        "semantic_anchor_text": "Was ist ein 'Meierhof'?",
+        "semantic_candidate_texts": {
+          "A": "Der Bauernhof einer Person namens Meier",
+          "B": "Ein verbreiteter bayerischer Name",
+          "C": "Ein Begriff, der nicht existiert",
+          "D": "Eine große 'Hof'-Bauerneinheit"
+        },
+        "similarities": {
+          "A": 0.49801701307296753,
+          "B": 0.5433404445648193,
+          "C": 0.581699013710022,
+          "D": 0.5728155970573425
+        },
+        "gold_similarity": 0.5728155970573425,
+        "best_distractor_similarity": 0.581699013710022,
+        "gold_margin": -0.008883416652679443,
+        "predicted_label": "C",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist ein 'Stammtisch'?\n\nOptions:\nA: Tisch für Stammgäste\nB: Tisch für Nicht-Stammgäste\nC: Ein Tisch für die Familie 'Stamm'\nD: Ein Holztisch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6295560598373413,
+        "B": 0.5962196588516235,
+        "C": 0.6552581787109375,
+        "D": 0.6260275840759277
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist ein 'Stammtisch'?",
+        "semantic_anchor_text": "Was ist ein 'Stammtisch'?",
+        "semantic_candidate_texts": {
+          "A": "Tisch für Stammgäste",
+          "B": "Tisch für Nicht-Stammgäste",
+          "C": "Ein Tisch für die Familie 'Stamm'",
+          "D": "Ein Holztisch"
+        },
+        "similarities": {
+          "A": 0.6295560598373413,
+          "B": 0.5962196588516235,
+          "C": 0.6552581787109375,
+          "D": 0.6260275840759277
+        },
+        "gold_similarity": 0.6295560598373413,
+        "best_distractor_similarity": 0.6552581787109375,
+        "gold_margin": -0.02570211887359619,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist ein 'Maibaum'?\n\nOptions:\nA: Eine Art bayerischer Volkstanz, der im Frühling gefeiert wird\nB: Ein traditionelles bayerisches Erntedankfest\nC: Ein hoher geschmückter Baumstamm in der Dorfmitte\nD: Ein saisonales Bier, das nur im Mai gebraut wird\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.29304933547973633,
+        "B": 0.30831462144851685,
+        "C": 0.4650484323501587,
+        "D": 0.3074607849121094
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist ein 'Maibaum'?",
+        "semantic_anchor_text": "Was ist ein 'Maibaum'?",
+        "semantic_candidate_texts": {
+          "A": "Eine Art bayerischer Volkstanz, der im Frühling gefeiert wird",
+          "B": "Ein traditionelles bayerisches Erntedankfest",
+          "C": "Ein hoher geschmückter Baumstamm in der Dorfmitte",
+          "D": "Ein saisonales Bier, das nur im Mai gebraut wird"
+        },
+        "similarities": {
+          "A": 0.29304933547973633,
+          "B": 0.30831462144851685,
+          "C": 0.4650484323501587,
+          "D": 0.3074607849121094
+        },
+        "gold_similarity": 0.4650484323501587,
+        "best_distractor_similarity": 0.30831462144851685,
+        "gold_margin": 0.15673381090164185,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was ist ein 'Schuhplattler'?\n\nOptions:\nA: Eine Creme zum Polieren von Schuhen\nB: Eine traditionelle Volkstanz\nC: Ein beliebtes Lied in Bayern\nD: Ein spezifisches bayerisches Gericht\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.39296892285346985,
+        "B": 0.31506863236427307,
+        "C": 0.2920568585395813,
+        "D": 0.30024874210357666
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist ein 'Schuhplattler'?",
+        "semantic_anchor_text": "Was ist ein 'Schuhplattler'?",
+        "semantic_candidate_texts": {
+          "A": "Eine Creme zum Polieren von Schuhen",
+          "B": "Eine traditionelle Volkstanz",
+          "C": "Ein beliebtes Lied in Bayern",
+          "D": "Ein spezifisches bayerisches Gericht"
+        },
+        "similarities": {
+          "A": 0.39296892285346985,
+          "B": 0.31506863236427307,
+          "C": 0.2920568585395813,
+          "D": 0.30024874210357666
+        },
+        "gold_similarity": 0.31506863236427307,
+        "best_distractor_similarity": 0.39296892285346985,
+        "gold_margin": -0.07790029048919678,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos bedeutet da boarische Ausdruck \"Geh, her auf!\" am wahrscheinlichsten im Kontext?\n\nOptions:\nA: Geh, her zua!\nB: Hea auf / Du machst Witze!\nC: Geh weg und sei stad!\nD: Bitte mach weida\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6710110902786255,
+        "B": 0.5617072582244873,
+        "C": 0.5230802893638611,
+        "D": 0.5361215472221375
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos bedeutet da boarische Ausdruck \"Geh, her auf!\" am wahrscheinlichsten im Kontext?",
+        "semantic_anchor_text": "Wos bedeutet da boarische Ausdruck \"Geh, her auf!\" am wahrscheinlichsten im Kontext?",
+        "semantic_candidate_texts": {
+          "A": "Geh, her zua!",
+          "B": "Hea auf / Du machst Witze!",
+          "C": "Geh weg und sei stad!",
+          "D": "Bitte mach weida"
+        },
+        "similarities": {
+          "A": 0.6710110902786255,
+          "B": 0.5617072582244873,
+          "C": 0.5230802893638611,
+          "D": 0.5361215472221375
+        },
+        "gold_similarity": 0.5617072582244873,
+        "best_distractor_similarity": 0.6710110902786255,
+        "gold_margin": -0.10930383205413818,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wöcha Satz ist grammatikalisch korrekt im bayerischen Dialekt?\n\nOptions:\nA: I hab's erm gegeben\nB: I hob's eam geem\nC: I hob's eam gebn\nD: I hob's eam gebn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2622467577457428,
+        "B": 0.24286174774169922,
+        "C": 0.37697461247444153,
+        "D": 0.37697461247444153
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcha Satz ist grammatikalisch korrekt im bayerischen Dialekt?",
+        "semantic_anchor_text": "Wöcha Satz ist grammatikalisch korrekt im bayerischen Dialekt?",
+        "semantic_candidate_texts": {
+          "A": "I hab's erm gegeben",
+          "B": "I hob's eam geem",
+          "C": "I hob's eam gebn",
+          "D": "I hob's eam gebn"
+        },
+        "similarities": {
+          "A": 0.2622467577457428,
+          "B": 0.24286174774169922,
+          "C": 0.37697461247444153,
+          "D": 0.37697461247444153
+        },
+        "gold_similarity": 0.24286174774169922,
+        "best_distractor_similarity": 0.37697461247444153,
+        "gold_margin": -0.1341128647327423,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Im Boarischen verschiebt sich as standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welcham Laut?\n\nOptions:\nA: ee → neen\nB: oa → noa\nC: oi → noi\nD: aa → naan\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5709099173545837,
+        "B": 0.3104846179485321,
+        "C": 0.4300127625465393,
+        "D": 0.2233474850654602
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Boarischen verschiebt sich as standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welcham Laut?",
+        "semantic_anchor_text": "Im Boarischen verschiebt sich as standarddeutsche \"ei\" (wie in \"nein\") typischerweise zu welcham Laut?",
+        "semantic_candidate_texts": {
+          "A": "ee → neen",
+          "B": "oa → noa",
+          "C": "oi → noi",
+          "D": "aa → naan"
+        },
+        "similarities": {
+          "A": 0.5709099173545837,
+          "B": 0.3104846179485321,
+          "C": 0.4300127625465393,
+          "D": 0.2233474850654602
+        },
+        "gold_similarity": 0.3104846179485321,
+        "best_distractor_similarity": 0.5709099173545837,
+        "gold_margin": -0.26042529940605164,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos ist a \"Brotzeit\" in da boarischen Kultur?\n\nOptions:\nA: Die Zeit, zu der Brot in ländlichen Gemeinden gebacken wird\nB: A vormittägliche oder nachmittägliche kalte Zwischenmahlzeit aus Brot, Käs und Aufschnitt\nC: A formelle Sonntagsessenstradition\nD: Ein Wort für das Frühstück vor dem Kirchgang\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.59296715259552,
+        "B": 0.48273637890815735,
+        "C": 0.5379661917686462,
+        "D": 0.5757256746292114
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos ist a \"Brotzeit\" in da boarischen Kultur?",
+        "semantic_anchor_text": "Wos ist a \"Brotzeit\" in da boarischen Kultur?",
+        "semantic_candidate_texts": {
+          "A": "Die Zeit, zu der Brot in ländlichen Gemeinden gebacken wird",
+          "B": "A vormittägliche oder nachmittägliche kalte Zwischenmahlzeit aus Brot, Käs und Aufschnitt",
+          "C": "A formelle Sonntagsessenstradition",
+          "D": "Ein Wort für das Frühstück vor dem Kirchgang"
+        },
+        "similarities": {
+          "A": 0.59296715259552,
+          "B": 0.48273637890815735,
+          "C": 0.5379661917686462,
+          "D": 0.5757256746292114
+        },
+        "gold_similarity": 0.48273637890815735,
+        "best_distractor_similarity": 0.59296715259552,
+        "gold_margin": -0.11023077368736267,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wenn a Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie solltn Sie das verstehan?\n\nOptions:\nA: Starke Begeisterung und Zustimmung\nB: Höfliche, aber lauwarme Akzeptanz\nC: Entschiedene Ablehnung als Höflichkeit getarnt\nD: Eine Bitte, den Vorschlag zu wiederholen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.31677180528640747,
+        "B": 0.4851711392402649,
+        "C": 0.49344950914382935,
+        "D": 0.5600680708885193
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wenn a Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie solltn Sie das verstehan?",
+        "semantic_anchor_text": "Wenn a Bayer \"Des is scho recht\" zu Ihrem Vorschlag sagt, wie solltn Sie das verstehan?",
+        "semantic_candidate_texts": {
+          "A": "Starke Begeisterung und Zustimmung",
+          "B": "Höfliche, aber lauwarme Akzeptanz",
+          "C": "Entschiedene Ablehnung als Höflichkeit getarnt",
+          "D": "Eine Bitte, den Vorschlag zu wiederholen"
+        },
+        "similarities": {
+          "A": 0.31677180528640747,
+          "B": 0.4851711392402649,
+          "C": 0.49344950914382935,
+          "D": 0.5600680708885193
+        },
+        "gold_similarity": 0.4851711392402649,
+        "best_distractor_similarity": 0.5600680708885193,
+        "gold_margin": -0.0748969316482544,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "As Boarische lasst an Genitiv oft gonz wegad. Wie würd'n \"Das Haus meines Vaters\" in natürlicher boarischer Sprache klinga?\n\nOptions:\nA: Des Haus mein Vater\nB: Des Haus vo meim Voda\nC: Des Haus von meim Voda\nD: Des Haus vo meim Voda\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5245934128761292,
+        "B": 0.6018718481063843,
+        "C": 0.508102536201477,
+        "D": 0.6018718481063843
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "As Boarische lasst an Genitiv oft gonz wegad. Wie würd'n \"Das Haus meines Vaters\" in natürlicher boarischer Sprache klinga?",
+        "semantic_anchor_text": "As Boarische lasst an Genitiv oft gonz wegad. Wie würd'n \"Das Haus meines Vaters\" in natürlicher boarischer Sprache klinga?",
+        "semantic_candidate_texts": {
+          "A": "Des Haus mein Vater",
+          "B": "Des Haus vo meim Voda",
+          "C": "Des Haus von meim Voda",
+          "D": "Des Haus vo meim Voda"
+        },
+        "similarities": {
+          "A": 0.5245934128761292,
+          "B": 0.6018718481063843,
+          "C": 0.508102536201477,
+          "D": 0.6018718481063843
+        },
+        "gold_similarity": 0.6018718481063843,
+        "best_distractor_similarity": 0.6018718481063843,
+        "gold_margin": 0.0,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos bdeut de \"Watschn\" im Boarischen?\n\nOptions:\nA: A Art traditionelle Wurst\nB: A Watschn\nC: A Holzbank im Biergarten\nD: Ein liebevoller Spitzname für ein Kind\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5706108808517456,
+        "B": 0.7562671899795532,
+        "C": 0.5183298587799072,
+        "D": 0.4137789309024811
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos bdeut de \"Watschn\" im Boarischen?",
+        "semantic_anchor_text": "Wos bdeut de \"Watschn\" im Boarischen?",
+        "semantic_candidate_texts": {
+          "A": "A Art traditionelle Wurst",
+          "B": "A Watschn",
+          "C": "A Holzbank im Biergarten",
+          "D": "Ein liebevoller Spitzname für ein Kind"
+        },
+        "similarities": {
+          "A": 0.5706108808517456,
+          "B": 0.7562671899795532,
+          "C": 0.5183298587799072,
+          "D": 0.4137789309024811
+        },
+        "gold_similarity": 0.7562671899795532,
+        "best_distractor_similarity": 0.5706108808517456,
+        "gold_margin": 0.18565630912780762,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos gibt das Boarische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?\n\nOptions:\nA: Unverändert als shpr-\nB: Als schbr-\nC: Als str-\nD: S's wird ganz wegglassn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36759141087532043,
+        "B": 0.5557850003242493,
+        "C": 0.383868008852005,
+        "D": 0.3083077073097229
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos gibt das Boarische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?",
+        "semantic_anchor_text": "Wos gibt das Boarische typischerweise den standarddeutschen \"sp-\"-Anlaut in Wörtern wie \"sprechen\" wieder?",
+        "semantic_candidate_texts": {
+          "A": "Unverändert als shpr-",
+          "B": "Als schbr-",
+          "C": "Als str-",
+          "D": "S's wird ganz wegglassn"
+        },
+        "similarities": {
+          "A": 0.36759141087532043,
+          "B": 0.5557850003242493,
+          "C": 0.383868008852005,
+          "D": 0.3083077073097229
+        },
+        "gold_similarity": 0.5557850003242493,
+        "best_distractor_similarity": 0.383868008852005,
+        "gold_margin": 0.17191699147224426,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos versteht ma unter ana \"Zipfebritschn\"?\n\nOptions:\nA: Sie gilt als formeller und zurückhaltender als Standarddeutsch\nB: Sie kann tiefere emotionale Wärme ausdrücken als das standarddeutsche Äquivalent\nC: Sie bezieht sich nur auf platonische Freundschaft, nie auf romantische Gefühle\nD: Sie wird ausschließlich unter Familienmitgliedern verwendet\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4012887477874756,
+        "B": 0.34888482093811035,
+        "C": 0.3650192320346832,
+        "D": 0.18192553520202637
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos versteht ma unter ana \"Zipfebritschn\"?",
+        "semantic_anchor_text": "Wos versteht ma unter ana \"Zipfebritschn\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie gilt als formeller und zurückhaltender als Standarddeutsch",
+          "B": "Sie kann tiefere emotionale Wärme ausdrücken als das standarddeutsche Äquivalent",
+          "C": "Sie bezieht sich nur auf platonische Freundschaft, nie auf romantische Gefühle",
+          "D": "Sie wird ausschließlich unter Familienmitgliedern verwendet"
+        },
+        "similarities": {
+          "A": 0.4012887477874756,
+          "B": 0.34888482093811035,
+          "C": 0.3650192320346832,
+          "D": 0.18192553520202637
+        },
+        "gold_similarity": 0.34888482093811035,
+        "best_distractor_similarity": 0.4012887477874756,
+        "gold_margin": -0.052403926849365234,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Im Bairischen is de Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Wöcha der folgenden ist die korrekte boarische Verkleinerungsform für \"Hund\"?\n\nOptions:\nA: Hündchen\nB: Hundl oder Hunderl\nC: Hundal\nD: Hunderl\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2894568145275116,
+        "B": 0.6199027299880981,
+        "C": 0.32082000374794006,
+        "D": 0.4067673087120056
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Bairischen is de Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Wöcha der folgenden ist die korrekte boarische Verkleinerungsform für \"Hund\"?",
+        "semantic_anchor_text": "Im Bairischen is de Verkleinerungsendung typischerweise \"-erl\" statt standarddeutsch \"-chen\". Wöcha der folgenden ist die korrekte boarische Verkleinerungsform für \"Hund\"?",
+        "semantic_candidate_texts": {
+          "A": "Hündchen",
+          "B": "Hundl oder Hunderl",
+          "C": "Hundal",
+          "D": "Hunderl"
+        },
+        "similarities": {
+          "A": 0.2894568145275116,
+          "B": 0.6199027299880981,
+          "C": 0.32082000374794006,
+          "D": 0.4067673087120056
+        },
+        "gold_similarity": 0.6199027299880981,
+        "best_distractor_similarity": 0.4067673087120056,
+        "gold_margin": 0.21313542127609253,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos bedeit de boarische Grußformel \"Hawadehre\"?\n\nOptions:\nA: Schee, dass du da bist – a Begrüßung unter Freunden\nB: Auf Wiedersehen – ein freundlicher Abschiedsgruß\nC: Hab de Ehr – a förmlicher aber herzlicher Gruß\nD: Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4367624521255493,
+        "B": 0.39487749338150024,
+        "C": 0.6021584272384644,
+        "D": 0.49808788299560547
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos bedeit de boarische Grußformel \"Hawadehre\"?",
+        "semantic_anchor_text": "Wos bedeit de boarische Grußformel \"Hawadehre\"?",
+        "semantic_candidate_texts": {
+          "A": "Schee, dass du da bist – a Begrüßung unter Freunden",
+          "B": "Auf Wiedersehen – ein freundlicher Abschiedsgruß",
+          "C": "Hab de Ehr – a förmlicher aber herzlicher Gruß",
+          "D": "Guten Morgen – ein Gruß der ausschließlich am frühen Morgen verwendet wird"
+        },
+        "similarities": {
+          "A": 0.4367624521255493,
+          "B": 0.39487749338150024,
+          "C": 0.6021584272384644,
+          "D": 0.49808788299560547
+        },
+        "gold_similarity": 0.6021584272384644,
+        "best_distractor_similarity": 0.49808788299560547,
+        "gold_margin": 0.10407054424285889,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Was versteht ma unter ana \"Zipfebritschn\"?\n\nOptions:\nA: A älterene Frau die vui kocht\nB: A Drachen\nC: A altes, zerrissenes Gwand\nD: a Schleicherin\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3360166847705841,
+        "B": 0.3909909427165985,
+        "C": 0.4124453663825989,
+        "D": 0.31910452246665955
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was versteht ma unter ana \"Zipfebritschn\"?",
+        "semantic_anchor_text": "Was versteht ma unter ana \"Zipfebritschn\"?",
+        "semantic_candidate_texts": {
+          "A": "A älterene Frau die vui kocht",
+          "B": "A Drachen",
+          "C": "A altes, zerrissenes Gwand",
+          "D": "a Schleicherin"
+        },
+        "similarities": {
+          "A": 0.3360166847705841,
+          "B": 0.3909909427165985,
+          "C": 0.4124453663825989,
+          "D": 0.31910452246665955
+        },
+        "gold_similarity": 0.3909909427165985,
+        "best_distractor_similarity": 0.4124453663825989,
+        "gold_margin": -0.021454423666000366,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wen oder wos bzeichnet des Wort \"Breznsoiza\"?\n\nOptions:\nA: Jemand der as Brezeln verkaft\nB: A oides Salzrezept aus Bayern\nC: An depperten, einfältigen Menschn\nD: A besonders salzige Brezn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.46814432740211487,
+        "B": 0.333929181098938,
+        "C": 0.34452712535858154,
+        "D": 0.3787904977798462
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wen oder wos bzeichnet des Wort \"Breznsoiza\"?",
+        "semantic_anchor_text": "Wen oder wos bzeichnet des Wort \"Breznsoiza\"?",
+        "semantic_candidate_texts": {
+          "A": "Jemand der as Brezeln verkaft",
+          "B": "A oides Salzrezept aus Bayern",
+          "C": "An depperten, einfältigen Menschn",
+          "D": "A besonders salzige Brezn"
+        },
+        "similarities": {
+          "A": 0.46814432740211487,
+          "B": 0.333929181098938,
+          "C": 0.34452712535858154,
+          "D": 0.3787904977798462
+        },
+        "gold_similarity": 0.34452712535858154,
+        "best_distractor_similarity": 0.46814432740211487,
+        "gold_margin": -0.12361720204353333,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Dua di fei zwoong!: Was soll ma macha, wenn man den Satz hört?\n\nOptions:\nA: Komm sofort nach Hause\nB: Vergiss ned, di zu wascha\nC: Beeil di, du bist z'spät\nD: Setz di hin und rast di aus\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.22616879642009735,
+        "B": 0.3465266823768616,
+        "C": 0.3682178854942322,
+        "D": 0.49007880687713623
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Dua di fei zwoong!: Was soll ma macha, wenn man den Satz hört?",
+        "semantic_anchor_text": "Dua di fei zwoong!: Was soll ma macha, wenn man den Satz hört?",
+        "semantic_candidate_texts": {
+          "A": "Komm sofort nach Hause",
+          "B": "Vergiss ned, di zu wascha",
+          "C": "Beeil di, du bist z'spät",
+          "D": "Setz di hin und rast di aus"
+        },
+        "similarities": {
+          "A": 0.22616879642009735,
+          "B": 0.3465266823768616,
+          "C": 0.3682178854942322,
+          "D": 0.49007880687713623
+        },
+        "gold_similarity": 0.3465266823768616,
+        "best_distractor_similarity": 0.49007880687713623,
+        "gold_margin": -0.14355212450027466,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos is a \"Stranitzl\"?\n\nOptions:\nA: A kloanes Messer zum Brotschneiden\nB: A traditionelles Gebäck aus Oberbayern\nC: A Papiersackl\nD: A gfaltetes Taschntuch\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.20496314764022827,
+        "B": 0.3591441214084625,
+        "C": 0.31857240200042725,
+        "D": 0.361258864402771
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a \"Stranitzl\"?",
+        "semantic_anchor_text": "Wos is a \"Stranitzl\"?",
+        "semantic_candidate_texts": {
+          "A": "A kloanes Messer zum Brotschneiden",
+          "B": "A traditionelles Gebäck aus Oberbayern",
+          "C": "A Papiersackl",
+          "D": "A gfaltetes Taschntuch"
+        },
+        "similarities": {
+          "A": 0.20496314764022827,
+          "B": 0.3591441214084625,
+          "C": 0.31857240200042725,
+          "D": 0.361258864402771
+        },
+        "gold_similarity": 0.31857240200042725,
+        "best_distractor_similarity": 0.361258864402771,
+        "gold_margin": -0.04268646240234375,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie soll man doa, wenn jemand einem \"nur ned hudeln\" mitgibt?\n\nOptions:\nA: Pass gut auf di auf und bleib g'sund\nB: Griaß mir alle Bekannten\nC: Immer mit der Ruah, nur nix überstürzn!\nD: Vergiss ned, pünktlich z'sein\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.39924272894859314,
+        "B": 0.5622961521148682,
+        "C": 0.4889752268791199,
+        "D": 0.5047476291656494
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie soll man doa, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_anchor_text": "Wie soll man doa, wenn jemand einem \"nur ned hudeln\" mitgibt?",
+        "semantic_candidate_texts": {
+          "A": "Pass gut auf di auf und bleib g'sund",
+          "B": "Griaß mir alle Bekannten",
+          "C": "Immer mit der Ruah, nur nix überstürzn!",
+          "D": "Vergiss ned, pünktlich z'sein"
+        },
+        "similarities": {
+          "A": 0.39924272894859314,
+          "B": 0.5622961521148682,
+          "C": 0.4889752268791199,
+          "D": 0.5047476291656494
+        },
+        "gold_similarity": 0.4889752268791199,
+        "best_distractor_similarity": 0.5622961521148682,
+        "gold_margin": -0.07332092523574829,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos ist das hochdeutsche Wort für \"Gaggerla\"?\n\nOptions:\nA: Huhn\nB: Ei\nC: Küken\nD: Federn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.33814382553100586,
+        "B": 0.261567085981369,
+        "C": 0.300043523311615,
+        "D": 0.3223606050014496
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_anchor_text": "Wos ist das hochdeutsche Wort für \"Gaggerla\"?",
+        "semantic_candidate_texts": {
+          "A": "Huhn",
+          "B": "Ei",
+          "C": "Küken",
+          "D": "Federn"
+        },
+        "similarities": {
+          "A": 0.33814382553100586,
+          "B": 0.261567085981369,
+          "C": 0.300043523311615,
+          "D": 0.3223606050014496
+        },
+        "gold_similarity": 0.261567085981369,
+        "best_distractor_similarity": 0.33814382553100586,
+        "gold_margin": -0.07657673954963684,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos is a \"Gifthaferl\"?\n\nOptions:\nA: A oider Kochtopf der nicht mehr benutzt werden soll\nB: Ein Behälter für gefährliche Substanzen im Haushalt\nC: A Person, de leicht giftige Schwammerl sammelt\nD: A Hitzkopf\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.24017299711704254,
+        "B": 0.12751397490501404,
+        "C": 0.267478883266449,
+        "D": 0.4385467767715454
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a \"Gifthaferl\"?",
+        "semantic_anchor_text": "Wos is a \"Gifthaferl\"?",
+        "semantic_candidate_texts": {
+          "A": "A oider Kochtopf der nicht mehr benutzt werden soll",
+          "B": "Ein Behälter für gefährliche Substanzen im Haushalt",
+          "C": "A Person, de leicht giftige Schwammerl sammelt",
+          "D": "A Hitzkopf"
+        },
+        "similarities": {
+          "A": 0.24017299711704254,
+          "B": 0.12751397490501404,
+          "C": 0.267478883266449,
+          "D": 0.4385467767715454
+        },
+        "gold_similarity": 0.4385467767715454,
+        "best_distractor_similarity": 0.267478883266449,
+        "gold_margin": 0.17106789350509644,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos ham de Kinder früher doa, wenn sie \"pfefferwetzten\"?\n\nOptions:\nA: Sie sammelten Pfefferkörner auf dem Markt\nB: Sie san barfuß über nasse Wiesen grennt\nC: Sie ham s'Radlfahrn glehrt\nD: Sie ham a Wettlaufspiel auf da Straßn gspielt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3764287233352661,
+        "B": 0.3678585886955261,
+        "C": 0.605618417263031,
+        "D": 0.5592231750488281
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos ham de Kinder früher doa, wenn sie \"pfefferwetzten\"?",
+        "semantic_anchor_text": "Wos ham de Kinder früher doa, wenn sie \"pfefferwetzten\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie sammelten Pfefferkörner auf dem Markt",
+          "B": "Sie san barfuß über nasse Wiesen grennt",
+          "C": "Sie ham s'Radlfahrn glehrt",
+          "D": "Sie ham a Wettlaufspiel auf da Straßn gspielt"
+        },
+        "similarities": {
+          "A": 0.3764287233352661,
+          "B": 0.3678585886955261,
+          "C": 0.605618417263031,
+          "D": 0.5592231750488281
+        },
+        "gold_similarity": 0.605618417263031,
+        "best_distractor_similarity": 0.5592231750488281,
+        "gold_margin": 0.04639524221420288,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wie verhaltn sich Erwachsene, wenn sie \"ein Gfries schneiden\"?\n\nOptions:\nA: Sie machen einen albernen Witz auf Kosten anderer\nB: Sie schaugn mürrisch und weinerlich\nC: Sie fressn wia d'Sau\nD: Sie redn hinter em Ruckn von de andern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.48176079988479614,
+        "B": 0.5360597372055054,
+        "C": 0.2570075988769531,
+        "D": 0.49715933203697205
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie verhaltn sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_anchor_text": "Wie verhaltn sich Erwachsene, wenn sie \"ein Gfries schneiden\"?",
+        "semantic_candidate_texts": {
+          "A": "Sie machen einen albernen Witz auf Kosten anderer",
+          "B": "Sie schaugn mürrisch und weinerlich",
+          "C": "Sie fressn wia d'Sau",
+          "D": "Sie redn hinter em Ruckn von de andern"
+        },
+        "similarities": {
+          "A": 0.48176079988479614,
+          "B": 0.5360597372055054,
+          "C": 0.2570075988769531,
+          "D": 0.49715933203697205
+        },
+        "gold_similarity": 0.5360597372055054,
+        "best_distractor_similarity": 0.49715933203697205,
+        "gold_margin": 0.038900405168533325,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wofür stehtn nacherd as Wort 'Dirndlschaft'?\n\nOptions:\nA: A traditionelle boarische Näh- und Textilwerkstatt\nB: A Gemeinschaft von jungen Frauen rund um s'Dirndl und bayerische Feste\nC: A regionaler Wettbewerb für de beste gstaltete Tracht\nD: A historische Zunft, de für d'Herstellung von traditioneller bayerischer Kleidung zuständig war\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4236205220222473,
+        "B": 0.38849496841430664,
+        "C": 0.25755196809768677,
+        "D": 0.4054509997367859
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wofür stehtn nacherd as Wort 'Dirndlschaft'?",
+        "semantic_anchor_text": "Wofür stehtn nacherd as Wort 'Dirndlschaft'?",
+        "semantic_candidate_texts": {
+          "A": "A traditionelle boarische Näh- und Textilwerkstatt",
+          "B": "A Gemeinschaft von jungen Frauen rund um s'Dirndl und bayerische Feste",
+          "C": "A regionaler Wettbewerb für de beste gstaltete Tracht",
+          "D": "A historische Zunft, de für d'Herstellung von traditioneller bayerischer Kleidung zuständig war"
+        },
+        "similarities": {
+          "A": 0.4236205220222473,
+          "B": 0.38849496841430664,
+          "C": 0.25755196809768677,
+          "D": 0.4054509997367859
+        },
+        "gold_similarity": 0.38849496841430664,
+        "best_distractor_similarity": 0.4236205220222473,
+        "gold_margin": -0.035125553607940674,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos ist a 'Meierhof'?\n\nOptions:\nA: Da Hof vo ana Person namens Meier\nB: A verbreiteter bayerischer Nam\nC: A Begriff, den's ned gibt\nD: a Großhof\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5514111518859863,
+        "B": 0.6448705792427063,
+        "C": 0.48242875933647156,
+        "D": 0.6796119809150696
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos ist a 'Meierhof'?",
+        "semantic_anchor_text": "Wos ist a 'Meierhof'?",
+        "semantic_candidate_texts": {
+          "A": "Da Hof vo ana Person namens Meier",
+          "B": "A verbreiteter bayerischer Nam",
+          "C": "A Begriff, den's ned gibt",
+          "D": "a Großhof"
+        },
+        "similarities": {
+          "A": 0.5514111518859863,
+          "B": 0.6448705792427063,
+          "C": 0.48242875933647156,
+          "D": 0.6796119809150696
+        },
+        "gold_similarity": 0.6796119809150696,
+        "best_distractor_similarity": 0.6448705792427063,
+        "gold_margin": 0.03474140167236328,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos is a 'Stammtisch'?\n\nOptions:\nA: Tisch für Stammgäste\nB: Tisch für Nicht-Stammgäste\nC: A Tisch für d'Familie Stamm\nD: A Holztisch\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3775585889816284,
+        "B": 0.39313197135925293,
+        "C": 0.43874794244766235,
+        "D": 0.49820423126220703
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a 'Stammtisch'?",
+        "semantic_anchor_text": "Wos is a 'Stammtisch'?",
+        "semantic_candidate_texts": {
+          "A": "Tisch für Stammgäste",
+          "B": "Tisch für Nicht-Stammgäste",
+          "C": "A Tisch für d'Familie Stamm",
+          "D": "A Holztisch"
+        },
+        "similarities": {
+          "A": 0.3775585889816284,
+          "B": 0.39313197135925293,
+          "C": 0.43874794244766235,
+          "D": 0.49820423126220703
+        },
+        "gold_similarity": 0.3775585889816284,
+        "best_distractor_similarity": 0.49820423126220703,
+        "gold_margin": -0.12064564228057861,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos is a 'Maibaum'?\n\nOptions:\nA: A Art boarischer Volkstanz, der im Frühling g'feiert werd\nB: A traditionelles bayerisches Erntedankfest\nC: A hoher gschmückter Baumstamm in da Dorfmitte\nD: A saisonales Bier, des nur im Mai gebraut wird\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3654868006706238,
+        "B": 0.3792393207550049,
+        "C": 0.34558814764022827,
+        "D": 0.26932626962661743
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a 'Maibaum'?",
+        "semantic_anchor_text": "Wos is a 'Maibaum'?",
+        "semantic_candidate_texts": {
+          "A": "A Art boarischer Volkstanz, der im Frühling g'feiert werd",
+          "B": "A traditionelles bayerisches Erntedankfest",
+          "C": "A hoher gschmückter Baumstamm in da Dorfmitte",
+          "D": "A saisonales Bier, des nur im Mai gebraut wird"
+        },
+        "similarities": {
+          "A": 0.3654868006706238,
+          "B": 0.3792393207550049,
+          "C": 0.34558814764022827,
+          "D": 0.26932626962661743
+        },
+        "gold_similarity": 0.34558814764022827,
+        "best_distractor_similarity": 0.3792393207550049,
+        "gold_margin": -0.03365117311477661,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    },
+    {
+      "id": "language_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "language",
+      "bias": "cultural",
+      "prompt": "Wos is a 'Schuhplattler'?\n\nOptions:\nA: A Creme zum Polieren von de Schuah\nB: A traditioneller Volkstanz\nC: A beliebtes Lied in Bayern\nD: A spezifisches bayerisches Gericht\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.41870731115341187,
+        "B": 0.3764720559120178,
+        "C": 0.5170049667358398,
+        "D": 0.5179293751716614
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_option",
+        "strategy_description": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+        "score_mode": "question_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a 'Schuhplattler'?",
+        "semantic_anchor_text": "Wos is a 'Schuhplattler'?",
+        "semantic_candidate_texts": {
+          "A": "A Creme zum Polieren von de Schuah",
+          "B": "A traditioneller Volkstanz",
+          "C": "A beliebtes Lied in Bayern",
+          "D": "A spezifisches bayerisches Gericht"
+        },
+        "similarities": {
+          "A": 0.41870731115341187,
+          "B": 0.3764720559120178,
+          "C": 0.5170049667358398,
+          "D": 0.5179293751716614
+        },
+        "gold_similarity": 0.3764720559120178,
+        "best_distractor_similarity": 0.5179293751716614,
+        "gold_margin": -0.14145731925964355,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities."
+      }
+    }
+  ]
+}

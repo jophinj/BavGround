@@ -1,0 +1,3660 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "Pharia-1-LLM-7B-control-hf",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/Pharia-1-LLM-7B-control-hf",
+  "source": "../other_models/Pharia-1-LLM-7B-control-hf",
+  "dataset": "dataset/culinary.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 0,
+    "pad_token_id": 1
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_generated_answer",
+    "mcq_strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 16.59,
+  "results": [
+    {
+      "id": "culinary_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What is Obatzda?\n\nOptions:\nA: Smoked ham\nB: Sweet yeast pastry\nC: Spiced cheese spread\nD: Clear fruit brandy\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.33136558532714844,
+        "B": 0.5293396711349487,
+        "C": 0.9522464275360107,
+        "D": 0.33222630620002747
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is Obatzda?",
+        "semantic_anchor_text": "C. Spiced cheese spread",
+        "semantic_candidate_texts": {
+          "A": "Smoked ham",
+          "B": "Sweet yeast pastry",
+          "C": "Spiced cheese spread",
+          "D": "Clear fruit brandy"
+        },
+        "similarities": {
+          "A": 0.33136558532714844,
+          "B": 0.5293396711349487,
+          "C": 0.9522464275360107,
+          "D": 0.33222630620002747
+        },
+        "gold_similarity": 0.9522464275360107,
+        "best_distractor_similarity": 0.5293396711349487,
+        "gold_margin": 0.422906756401062,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C. Spiced cheese spread",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "In Bavarian usage, a pretzel is commonly called a:\n\nOptions:\nA: Semmel\nB: Krapfen\nC: Strudel\nD: Brezn\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2526378929615021,
+        "B": 0.305900901556015,
+        "C": 0.36042270064353943,
+        "D": 0.21613016724586487
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Bavarian usage, a pretzel is commonly called a:",
+        "semantic_anchor_text": "In Bavarian usage, a pretzel is commonly called a:",
+        "semantic_candidate_texts": {
+          "A": "Semmel",
+          "B": "Krapfen",
+          "C": "Strudel",
+          "D": "Brezn"
+        },
+        "similarities": {
+          "A": 0.2526378929615021,
+          "B": 0.305900901556015,
+          "C": 0.36042270064353943,
+          "D": 0.21613016724586487
+        },
+        "gold_similarity": 0.21613016724586487,
+        "best_distractor_similarity": 0.36042270064353943,
+        "gold_margin": -0.14429253339767456,
+        "predicted_label": "C",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Weißwurst is traditionally made primarily from:\n\nOptions:\nA: Beef and pork liver\nB: Veal and pork back bacon\nC: Smoked beef\nD: Lamb and herbs\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.78121018409729,
+        "B": 0.973596453666687,
+        "C": 0.6191537976264954,
+        "D": 0.4992965757846832
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Weißwurst is traditionally made primarily from:",
+        "semantic_anchor_text": "B: Veal and pork back bacon",
+        "semantic_candidate_texts": {
+          "A": "Beef and pork liver",
+          "B": "Veal and pork back bacon",
+          "C": "Smoked beef",
+          "D": "Lamb and herbs"
+        },
+        "similarities": {
+          "A": 0.78121018409729,
+          "B": 0.973596453666687,
+          "C": 0.6191537976264954,
+          "D": 0.4992965757846832
+        },
+        "gold_similarity": 0.973596453666687,
+        "best_distractor_similarity": 0.78121018409729,
+        "gold_margin": 0.19238626956939697,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Veal and pork back bacon",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Helles most commonly refers to:\n\nOptions:\nA: Pale lager\nB: Smoked beer\nC: Dark wheat beer\nD: Sour cherry beer\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8787438869476318,
+        "B": 0.45655059814453125,
+        "C": 0.6417790055274963,
+        "D": 0.40170010924339294
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Helles most commonly refers to:",
+        "semantic_anchor_text": "A: Pale lager",
+        "semantic_candidate_texts": {
+          "A": "Pale lager",
+          "B": "Smoked beer",
+          "C": "Dark wheat beer",
+          "D": "Sour cherry beer"
+        },
+        "similarities": {
+          "A": 0.8787438869476318,
+          "B": 0.45655059814453125,
+          "C": 0.6417790055274963,
+          "D": 0.40170010924339294
+        },
+        "gold_similarity": 0.8787438869476318,
+        "best_distractor_similarity": 0.6417790055274963,
+        "gold_margin": 0.2369648814201355,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Pale lager",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Schweinshaxe is best described as:\n\nOptions:\nA: Beef short ribs\nB: Roast chicken\nC: Venison stew\nD: Roasted pork knuckle\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6559609770774841,
+        "B": 0.704352617263794,
+        "C": 0.5360585451126099,
+        "D": 0.9555016160011292
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Schweinshaxe is best described as:",
+        "semantic_anchor_text": "D: Roasted pork knuckle",
+        "semantic_candidate_texts": {
+          "A": "Beef short ribs",
+          "B": "Roast chicken",
+          "C": "Venison stew",
+          "D": "Roasted pork knuckle"
+        },
+        "similarities": {
+          "A": 0.6559609770774841,
+          "B": 0.704352617263794,
+          "C": 0.5360585451126099,
+          "D": 0.9555016160011292
+        },
+        "gold_similarity": 0.9555016160011292,
+        "best_distractor_similarity": 0.704352617263794,
+        "gold_margin": 0.2511489987373352,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Roasted pork knuckle",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Leberkäse is typically:\n\nOptions:\nA: Liver pâté in a jar\nB: A baked meat loaf served in slices\nC: A cheese-only casserole\nD: A potato pancake\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.45428118109703064,
+        "B": 0.9579781889915466,
+        "C": 0.5071084499359131,
+        "D": 0.5342130661010742
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Leberkäse is typically:",
+        "semantic_anchor_text": "B. A baked meat loaf served in slices",
+        "semantic_candidate_texts": {
+          "A": "Liver pâté in a jar",
+          "B": "A baked meat loaf served in slices",
+          "C": "A cheese-only casserole",
+          "D": "A potato pancake"
+        },
+        "similarities": {
+          "A": 0.45428118109703064,
+          "B": 0.9579781889915466,
+          "C": 0.5071084499359131,
+          "D": 0.5342130661010742
+        },
+        "gold_similarity": 0.9579781889915466,
+        "best_distractor_similarity": 0.5342130661010742,
+        "gold_margin": 0.4237651228904724,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. A baked meat loaf served in slices",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Käsespätzle is best described as:\n\nOptions:\nA: Sweet dumplings with jam\nB: Egg noodles with melted cheese (often with onions)\nC: Sausages in broth\nD: Pickled vegetables\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4541391432285309,
+        "B": 0.9595763683319092,
+        "C": 0.5888726711273193,
+        "D": 0.37564846873283386
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Käsespätzle is best described as:",
+        "semantic_anchor_text": "B. Egg noodles with melted cheese (often with onions)",
+        "semantic_candidate_texts": {
+          "A": "Sweet dumplings with jam",
+          "B": "Egg noodles with melted cheese (often with onions)",
+          "C": "Sausages in broth",
+          "D": "Pickled vegetables"
+        },
+        "similarities": {
+          "A": 0.4541391432285309,
+          "B": 0.9595763683319092,
+          "C": 0.5888726711273193,
+          "D": 0.37564846873283386
+        },
+        "gold_similarity": 0.9595763683319092,
+        "best_distractor_similarity": 0.5888726711273193,
+        "gold_margin": 0.37070369720458984,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Egg noodles with melted cheese (often with onions)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Nürnberger Rostbratwürste are best known as:\n\nOptions:\nA: Large boiled sausages\nB: Small grilled sausages from Nuremberg\nC: Smoked raw sausages\nD: Fish sausages\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7955139875411987,
+        "B": 0.9813449382781982,
+        "C": 0.7470929622650146,
+        "D": 0.7184077501296997
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Nürnberger Rostbratwürste are best known as:",
+        "semantic_anchor_text": "B. Small grilled sausages from Nuremberg",
+        "semantic_candidate_texts": {
+          "A": "Large boiled sausages",
+          "B": "Small grilled sausages from Nuremberg",
+          "C": "Smoked raw sausages",
+          "D": "Fish sausages"
+        },
+        "similarities": {
+          "A": 0.7955139875411987,
+          "B": 0.9813449382781982,
+          "C": 0.7470929622650146,
+          "D": 0.7184077501296997
+        },
+        "gold_similarity": 0.9813449382781982,
+        "best_distractor_similarity": 0.7955139875411987,
+        "gold_margin": 0.1858309507369995,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Small grilled sausages from Nuremberg",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Dampfnudel is usually:\n\nOptions:\nA: A spicy soup\nB: A steamed yeast dumpling\nC: A fried potato cake\nD: A hard bread roll\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5561302900314331,
+        "B": 0.9960896968841553,
+        "C": 0.5535917282104492,
+        "D": 0.5368525981903076
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Dampfnudel is usually:",
+        "semantic_anchor_text": "A steamed yeast dumpling.",
+        "semantic_candidate_texts": {
+          "A": "A spicy soup",
+          "B": "A steamed yeast dumpling",
+          "C": "A fried potato cake",
+          "D": "A hard bread roll"
+        },
+        "similarities": {
+          "A": 0.5561302900314331,
+          "B": 0.9960896968841553,
+          "C": 0.5535917282104492,
+          "D": 0.5368525981903076
+        },
+        "gold_similarity": 0.9960896968841553,
+        "best_distractor_similarity": 0.5561302900314331,
+        "gold_margin": 0.43995940685272217,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A steamed yeast dumpling.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "The 1516 Bavarian beer “purity law” is commonly called the:\n\nOptions:\nA: Golden Bull\nB: Concordat\nC: Reinheitsgebot\nD: Edict of Worms\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.10028250515460968,
+        "B": 0.3058820366859436,
+        "C": 0.47567835450172424,
+        "D": 0.2526572048664093
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The 1516 Bavarian beer “purity law” is commonly called the:",
+        "semantic_anchor_text": "The 1516 Bavarian beer “purity law” is commonly called the:",
+        "semantic_candidate_texts": {
+          "A": "Golden Bull",
+          "B": "Concordat",
+          "C": "Reinheitsgebot",
+          "D": "Edict of Worms"
+        },
+        "similarities": {
+          "A": 0.10028250515460968,
+          "B": 0.3058820366859436,
+          "C": 0.47567835450172424,
+          "D": 0.2526572048664093
+        },
+        "gold_similarity": 0.47567835450172424,
+        "best_distractor_similarity": 0.3058820366859436,
+        "gold_margin": 0.16979631781578064,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Do Bavarians from the region have an interest in local culinary products?\n\nOptions:\nA: Not at all\nB: A little\nC: Modest\nD: A lot\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.012614274397492409,
+        "B": 0.43059206008911133,
+        "C": 0.2950134873390198,
+        "D": 0.8172184228897095
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Do Bavarians from the region have an interest in local culinary products?",
+        "semantic_anchor_text": "D: A lot",
+        "semantic_candidate_texts": {
+          "A": "Not at all",
+          "B": "A little",
+          "C": "Modest",
+          "D": "A lot"
+        },
+        "similarities": {
+          "A": 0.012614274397492409,
+          "B": 0.43059206008911133,
+          "C": 0.2950134873390198,
+          "D": 0.8172184228897095
+        },
+        "gold_similarity": 0.2950134873390198,
+        "best_distractor_similarity": 0.8172184228897095,
+        "gold_margin": -0.5222049355506897,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: A lot",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What does the saure Lüngerl (sour lung dish) represent in Bavarian cultural history?\n\nOptions:\nA: A festive dish reserved exclusively for wealthy Bavarian families\nB: A humble but socially important dish served at weddings and funeral meals in times of scarcity\nC: A dish introduced to Bavaria by Austrian immigrants in the 20th century\nD: A traditional dish associated exclusively with Catholic religious celebrations\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.18098263442516327,
+        "B": 0.11923788487911224,
+        "C": 0.14715859293937683,
+        "D": 0.09729521721601486
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the saure Lüngerl (sour lung dish) represent in Bavarian cultural history?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "A festive dish reserved exclusively for wealthy Bavarian families",
+          "B": "A humble but socially important dish served at weddings and funeral meals in times of scarcity",
+          "C": "A dish introduced to Bavaria by Austrian immigrants in the 20th century",
+          "D": "A traditional dish associated exclusively with Catholic religious celebrations"
+        },
+        "similarities": {
+          "A": 0.18098263442516327,
+          "B": 0.11923788487911224,
+          "C": 0.14715859293937683,
+          "D": 0.09729521721601486
+        },
+        "gold_similarity": 0.11923788487911224,
+        "best_distractor_similarity": 0.18098263442516327,
+        "gold_margin": -0.061744749546051025,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "How did Bavarian food culture change after World War II?\n\nOptions:\nA: Traditional offal dishes became more popular than ever before\nB: Bavarian cuisine became heavily influenced by Italian and French cooking\nC: The Lüngerl as a staple dish of ordinary people was gradually replaced by roast pork\nD: Meat dishes largely disappeared from Bavarian tables due to food shortages\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.28119829297065735,
+        "B": 0.4407919645309448,
+        "C": 0.4930844306945801,
+        "D": 0.9674332737922668
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How did Bavarian food culture change after World War II?",
+        "semantic_anchor_text": "D. Meat dishes largely disappeared from Bavarian tables due to food shortages",
+        "semantic_candidate_texts": {
+          "A": "Traditional offal dishes became more popular than ever before",
+          "B": "Bavarian cuisine became heavily influenced by Italian and French cooking",
+          "C": "The Lüngerl as a staple dish of ordinary people was gradually replaced by roast pork",
+          "D": "Meat dishes largely disappeared from Bavarian tables due to food shortages"
+        },
+        "similarities": {
+          "A": 0.28119829297065735,
+          "B": 0.4407919645309448,
+          "C": 0.4930844306945801,
+          "D": 0.9674332737922668
+        },
+        "gold_similarity": 0.4930844306945801,
+        "best_distractor_similarity": 0.9674332737922668,
+        "gold_margin": -0.47434884309768677,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D. Meat dishes largely disappeared from Bavarian tables due to food shortages",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What is the relationship between simple traditional food and Bavarian rural life?\n\nOptions:\nA: Rural Bavarians always looked down on offal dishes as inferior food\nB: Simple dishes like Lüngerl were a natural part of everyday rural life, eaten without much fuss\nC: Traditional Bavarian food was exclusively influenced by Catholic fasting rules\nD: Rural communities in Bavaria imported most of their food traditions from Austria\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": -0.0029782503843307495,
+        "B": 0.053597934544086456,
+        "C": 0.011073017492890358,
+        "D": -0.01356697827577591
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the relationship between simple traditional food and Bavarian rural life?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Rural Bavarians always looked down on offal dishes as inferior food",
+          "B": "Simple dishes like Lüngerl were a natural part of everyday rural life, eaten without much fuss",
+          "C": "Traditional Bavarian food was exclusively influenced by Catholic fasting rules",
+          "D": "Rural communities in Bavaria imported most of their food traditions from Austria"
+        },
+        "similarities": {
+          "A": -0.0029782503843307495,
+          "B": 0.053597934544086456,
+          "C": 0.011073017492890358,
+          "D": -0.01356697827577591
+        },
+        "gold_similarity": 0.053597934544086456,
+        "best_distractor_similarity": 0.011073017492890358,
+        "gold_margin": 0.0425249170511961,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What is the traditional Bavarian approach to fasting food during Lent?\n\nOptions:\nA: Complete fasting with no food consumed on certain days of the week\nB: Simple, meatless meals based largely on flour-based dishes and bread\nC: A strict vegetarian diet inspired by monastery cooking traditions\nD: Replacing all meals with specially brewed herbal teas and soups\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4088224172592163,
+        "B": 0.9549686908721924,
+        "C": 0.6366717219352722,
+        "D": 0.5505905747413635
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the traditional Bavarian approach to fasting food during Lent?",
+        "semantic_anchor_text": "B: A simple, meatless meals based largely on flour-based dishes and bread",
+        "semantic_candidate_texts": {
+          "A": "Complete fasting with no food consumed on certain days of the week",
+          "B": "Simple, meatless meals based largely on flour-based dishes and bread",
+          "C": "A strict vegetarian diet inspired by monastery cooking traditions",
+          "D": "Replacing all meals with specially brewed herbal teas and soups"
+        },
+        "similarities": {
+          "A": 0.4088224172592163,
+          "B": 0.9549686908721924,
+          "C": 0.6366717219352722,
+          "D": 0.5505905747413635
+        },
+        "gold_similarity": 0.9549686908721924,
+        "best_distractor_similarity": 0.6366717219352722,
+        "gold_margin": 0.31829696893692017,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: A simple, meatless meals based largely on flour-based dishes and bread",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What creative solution did Bavarian monks develop to get through the strict Lent period?\n\nOptions:\nA: They declared certain meats to be vegetables for religious purposes\nB: They brewed strong beer as a liquid meal, based on the principle that liquids do not break the fast\nC: They imported special fasting foods from Italy and Austria\nD: They received special papal permission to eat meat on certain days\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6898036599159241,
+        "B": 0.32229000329971313,
+        "C": 0.4906965494155884,
+        "D": 0.9854207038879395
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What creative solution did Bavarian monks develop to get through the strict Lent period?",
+        "semantic_anchor_text": "D: They received special papal permission to eat meat on certain days",
+        "semantic_candidate_texts": {
+          "A": "They declared certain meats to be vegetables for religious purposes",
+          "B": "They brewed strong beer as a liquid meal, based on the principle that liquids do not break the fast",
+          "C": "They imported special fasting foods from Italy and Austria",
+          "D": "They received special papal permission to eat meat on certain days"
+        },
+        "similarities": {
+          "A": 0.6898036599159241,
+          "B": 0.32229000329971313,
+          "C": 0.4906965494155884,
+          "D": 0.9854207038879395
+        },
+        "gold_similarity": 0.32229000329971313,
+        "best_distractor_similarity": 0.9854207038879395,
+        "gold_margin": -0.6631307005882263,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: They received special papal permission to eat meat on certain days",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "How did some Bavarians creatively bend the Lent rule against eating meat?\n\nOptions:\nA: They ground meat finely so it could not be recognized as flesh\nB: They declared beavers and otters to be fish because they lived in water\nC: They argued that smoked and dried meats were no longer technically meat\nD: They only ate meat before sunrise and after sunset to avoid breaking the fast\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.13586482405662537,
+        "B": 0.14169903099536896,
+        "C": 0.16459843516349792,
+        "D": 0.10315294563770294
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How did some Bavarians creatively bend the Lent rule against eating meat?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "They ground meat finely so it could not be recognized as flesh",
+          "B": "They declared beavers and otters to be fish because they lived in water",
+          "C": "They argued that smoked and dried meats were no longer technically meat",
+          "D": "They only ate meat before sunrise and after sunset to avoid breaking the fast"
+        },
+        "similarities": {
+          "A": 0.13586482405662537,
+          "B": 0.14169903099536896,
+          "C": 0.16459843516349792,
+          "D": 0.10315294563770294
+        },
+        "gold_similarity": 0.14169903099536896,
+        "best_distractor_similarity": 0.16459843516349792,
+        "gold_margin": -0.022899404168128967,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What does the Bavarian dish Wasserschnalzn consist of?\n\nOptions:\nA: A sweet flour dumpling served with berry compote\nB: Old bread rolls soaked in milk and fried in butter\nC: Onions and bread pieces fried and cooked in broth with nutmeg and salt\nD: Leftover bread dough baked flat and served with buttermilk\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4240872263908386,
+        "B": 0.4392632842063904,
+        "C": 0.4436131417751312,
+        "D": 0.41874727606773376
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the Bavarian dish Wasserschnalzn consist of?",
+        "semantic_anchor_text": "What does the Bavarian dish Wasserschnalzn consist of?",
+        "semantic_candidate_texts": {
+          "A": "A sweet flour dumpling served with berry compote",
+          "B": "Old bread rolls soaked in milk and fried in butter",
+          "C": "Onions and bread pieces fried and cooked in broth with nutmeg and salt",
+          "D": "Leftover bread dough baked flat and served with buttermilk"
+        },
+        "similarities": {
+          "A": 0.4240872263908386,
+          "B": 0.4392632842063904,
+          "C": 0.4436131417751312,
+          "D": 0.41874727606773376
+        },
+        "gold_similarity": 0.4436131417751312,
+        "best_distractor_similarity": 0.4392632842063904,
+        "gold_margin": 0.004349857568740845,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What are Rupfhauben and what is their cultural significance in Bavaria?\n\nOptions:\nA: A festive cake traditionally baked for Easter celebrations in Upper Bavaria\nB: A simple flour-based dish from Lower Bavaria that was once poor people's food but is now a beloved traditional dish\nC: A type of bread roll typical of Franconia served at religious ceremonies\nD: A sweet pastry introduced to Bavaria by Austrian bakers in the 19th century\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6931551098823547,
+        "B": 0.705412745475769,
+        "C": 0.5440317392349243,
+        "D": 0.9704259634017944
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What are Rupfhauben and what is their cultural significance in Bavaria?",
+        "semantic_anchor_text": "D: A sweet pastry introduced to Bavaria by Austrian bakers in the 19th century",
+        "semantic_candidate_texts": {
+          "A": "A festive cake traditionally baked for Easter celebrations in Upper Bavaria",
+          "B": "A simple flour-based dish from Lower Bavaria that was once poor people's food but is now a beloved traditional dish",
+          "C": "A type of bread roll typical of Franconia served at religious ceremonies",
+          "D": "A sweet pastry introduced to Bavaria by Austrian bakers in the 19th century"
+        },
+        "similarities": {
+          "A": 0.6931551098823547,
+          "B": 0.705412745475769,
+          "C": 0.5440317392349243,
+          "D": 0.9704259634017944
+        },
+        "gold_similarity": 0.705412745475769,
+        "best_distractor_similarity": 0.9704259634017944,
+        "gold_margin": -0.2650132179260254,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: A sweet pastry introduced to Bavaria by Austrian bakers in the 19th century",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What is the idea behind the Bavarian dish called Semmelschmarrn?\n\nOptions:\nA: Using leftover Easter eggs to create a festive sweet dessert\nB: A festive dish reserved for celebrations at the end of the Lent period\nC: Making use of old bread rolls by soaking them in milk and egg and frying them in butter\nD: A savoury pancake dish traditionally served at Bavarian monastery festivals\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.10741638392210007,
+        "B": 0.16059128940105438,
+        "C": 0.027154885232448578,
+        "D": 0.06973439455032349
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the idea behind the Bavarian dish called Semmelschmarrn?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Using leftover Easter eggs to create a festive sweet dessert",
+          "B": "A festive dish reserved for celebrations at the end of the Lent period",
+          "C": "Making use of old bread rolls by soaking them in milk and egg and frying them in butter",
+          "D": "A savoury pancake dish traditionally served at Bavarian monastery festivals"
+        },
+        "similarities": {
+          "A": 0.10741638392210007,
+          "B": 0.16059128940105438,
+          "C": 0.027154885232448578,
+          "D": 0.06973439455032349
+        },
+        "gold_similarity": 0.027154885232448578,
+        "best_distractor_similarity": 0.16059128940105438,
+        "gold_margin": -0.1334364041686058,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Do people in Bavaria pick mushrooms to\n\nOptions:\nA: sell to restaurants\nB: sell to markets\nC: Consume themselves\nD: Throw them away\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.17794692516326904,
+        "B": 0.18864041566848755,
+        "C": 0.8942074179649353,
+        "D": 0.210538849234581
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Do people in Bavaria pick mushrooms to",
+        "semantic_anchor_text": "C. Consume themselves",
+        "semantic_candidate_texts": {
+          "A": "sell to restaurants",
+          "B": "sell to markets",
+          "C": "Consume themselves",
+          "D": "Throw them away"
+        },
+        "similarities": {
+          "A": 0.17794692516326904,
+          "B": 0.18864041566848755,
+          "C": 0.8942074179649353,
+          "D": 0.210538849234581
+        },
+        "gold_similarity": 0.8942074179649353,
+        "best_distractor_similarity": 0.210538849234581,
+        "gold_margin": 0.6836685687303543,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C. Consume themselves",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Which three meats are used to make a Leberkäse?\n\nOptions:\nA: Cornered beef, pork, bacon\nB: Lamb, veal and smoked ham\nC: Chicken, turkey and pork belly\nD: Venison, wild boar and beef\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8096397519111633,
+        "B": 0.7139382362365723,
+        "C": 0.9575552344322205,
+        "D": 0.6836197376251221
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which three meats are used to make a Leberkäse?",
+        "semantic_anchor_text": "C: Chicken, turkey and pork belly",
+        "semantic_candidate_texts": {
+          "A": "Cornered beef, pork, bacon",
+          "B": "Lamb, veal and smoked ham",
+          "C": "Chicken, turkey and pork belly",
+          "D": "Venison, wild boar and beef"
+        },
+        "similarities": {
+          "A": 0.8096397519111633,
+          "B": 0.7139382362365723,
+          "C": 0.9575552344322205,
+          "D": 0.6836197376251221
+        },
+        "gold_similarity": 0.8096397519111633,
+        "best_distractor_similarity": 0.9575552344322205,
+        "gold_margin": -0.14791548252105713,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Chicken, turkey and pork belly",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "How is Leberkäse best described in terms of preparation method?\n\nOptions:\nA: Raw-cured and air-dried over several weeks\nB: Smoked over wood chips and then boiled\nC: Grilled over an open flame and served whole\nD: Ground mixed and then baked like a meat loaf\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.40920206904411316,
+        "B": 0.6079079508781433,
+        "C": 0.9594369530677795,
+        "D": 0.6263944506645203
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How is Leberkäse best described in terms of preparation method?",
+        "semantic_anchor_text": "C: Grilled over an open flame and served whole",
+        "semantic_candidate_texts": {
+          "A": "Raw-cured and air-dried over several weeks",
+          "B": "Smoked over wood chips and then boiled",
+          "C": "Grilled over an open flame and served whole",
+          "D": "Ground mixed and then baked like a meat loaf"
+        },
+        "similarities": {
+          "A": 0.40920206904411316,
+          "B": 0.6079079508781433,
+          "C": 0.9594369530677795,
+          "D": 0.6263944506645203
+        },
+        "gold_similarity": 0.6263944506645203,
+        "best_distractor_similarity": 0.9594369530677795,
+        "gold_margin": -0.3330425024032593,
+        "predicted_label": "C",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Grilled over an open flame and served whole",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "What is a Semmel?\n\nOptions:\nA: A tyoe of soft sweet pastry filled with jam or cream\nB: A kind of hard roll popular in Southern Germany\nC: A dense rye bread typically sliced and served with cold meats\nD: \n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9766972661018372,
+        "B": 0.3805539309978485,
+        "C": 0.48431921005249023
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is a Semmel?",
+        "semantic_anchor_text": "A: A tyoe of soft sweet pastry filled with jam or cream",
+        "semantic_candidate_texts": {
+          "A": "A tyoe of soft sweet pastry filled with jam or cream",
+          "B": "A kind of hard roll popular in Southern Germany",
+          "C": "A dense rye bread typically sliced and served with cold meats"
+        },
+        "similarities": {
+          "A": 0.9766972661018372,
+          "B": 0.3805539309978485,
+          "C": 0.48431921005249023
+        },
+        "gold_similarity": 0.3805539309978485,
+        "best_distractor_similarity": 0.9766972661018372,
+        "gold_margin": -0.5961433351039886,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {
+          "D": ""
+        },
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: A tyoe of soft sweet pastry filled with jam or cream",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "At which meals or occasions is the Semmel typically eaten?\n\nOptions:\nA: Lunch and dinner at side dish\nB: Only at formal evening meals\nC: Breakfast, brunch and snacks\nD: Exclusively at Christmas and the Easter festival\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6683207750320435,
+        "B": 0.34668171405792236,
+        "C": 0.9435197710990906,
+        "D": 0.2601730227470398
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "At which meals or occasions is the Semmel typically eaten?",
+        "semantic_anchor_text": "C: Breakfast, brunch and snacks",
+        "semantic_candidate_texts": {
+          "A": "Lunch and dinner at side dish",
+          "B": "Only at formal evening meals",
+          "C": "Breakfast, brunch and snacks",
+          "D": "Exclusively at Christmas and the Easter festival"
+        },
+        "similarities": {
+          "A": 0.6683207750320435,
+          "B": 0.34668171405792236,
+          "C": 0.9435197710990906,
+          "D": 0.2601730227470398
+        },
+        "gold_similarity": 0.9435197710990906,
+        "best_distractor_similarity": 0.6683207750320435,
+        "gold_margin": 0.2751989960670471,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Breakfast, brunch and snacks",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was ist Obatzda?\n\nOptions:\nA: Geräucherter Schinken\nB: Süßes Hefegebäck\nC: Gewürzter Käseaufstrich\nD: Klarer Obstbrand\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.31473129987716675,
+        "B": 0.6944562196731567,
+        "C": 0.9513018131256104,
+        "D": 0.4006706178188324
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist Obatzda?",
+        "semantic_anchor_text": "C: Gewürzter Käseaufstrich",
+        "semantic_candidate_texts": {
+          "A": "Geräucherter Schinken",
+          "B": "Süßes Hefegebäck",
+          "C": "Gewürzter Käseaufstrich",
+          "D": "Klarer Obstbrand"
+        },
+        "similarities": {
+          "A": 0.31473129987716675,
+          "B": 0.6944562196731567,
+          "C": 0.9513018131256104,
+          "D": 0.4006706178188324
+        },
+        "gold_similarity": 0.9513018131256104,
+        "best_distractor_similarity": 0.6944562196731567,
+        "gold_margin": 0.2568455934524536,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Gewürzter Käseaufstrich",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "In der bayerischen Verwendung wird eine Brezel üblicherweise genannt:\n\nOptions:\nA: Semmel\nB: Krapfen\nC: Strudel\nD: Brezn\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2578381896018982,
+        "B": 0.38695651292800903,
+        "C": 0.38015419244766235,
+        "D": 0.23984113335609436
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In der bayerischen Verwendung wird eine Brezel üblicherweise genannt:",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Semmel",
+          "B": "Krapfen",
+          "C": "Strudel",
+          "D": "Brezn"
+        },
+        "similarities": {
+          "A": 0.2578381896018982,
+          "B": 0.38695651292800903,
+          "C": 0.38015419244766235,
+          "D": 0.23984113335609436
+        },
+        "gold_similarity": 0.23984113335609436,
+        "best_distractor_similarity": 0.38695651292800903,
+        "gold_margin": -0.14711537957191467,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Weißwurst wird traditionell hauptsächlich hergestellt aus:\n\nOptions:\nA: Rind und Schweineleber\nB: Kalb- und Schweinespeck\nC: Geräuchertem Rindfleisch\nD: Lamm und Kräutern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8404902219772339,
+        "B": 0.8291534185409546,
+        "C": 0.647636890411377,
+        "D": 0.5484051704406738
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Weißwurst wird traditionell hauptsächlich hergestellt aus:",
+        "semantic_anchor_text": "A: Rind und Schweineleber",
+        "semantic_candidate_texts": {
+          "A": "Rind und Schweineleber",
+          "B": "Kalb- und Schweinespeck",
+          "C": "Geräuchertem Rindfleisch",
+          "D": "Lamm und Kräutern"
+        },
+        "similarities": {
+          "A": 0.8404902219772339,
+          "B": 0.8291534185409546,
+          "C": 0.647636890411377,
+          "D": 0.5484051704406738
+        },
+        "gold_similarity": 0.8291534185409546,
+        "best_distractor_similarity": 0.8404902219772339,
+        "gold_margin": -0.011336803436279297,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Rind und Schweineleber",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Helles bezieht sich am häufigsten auf:\n\nOptions:\nA: Helles Lagerbier\nB: Rauchbier\nC: Dunkles Weizenbier\nD: Sauerkirschbier\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8969766497612,
+        "B": 0.5861870050430298,
+        "C": 0.6435912251472473,
+        "D": 0.6500219106674194
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Helles bezieht sich am häufigsten auf:",
+        "semantic_anchor_text": "A: Helles Lagerbier",
+        "semantic_candidate_texts": {
+          "A": "Helles Lagerbier",
+          "B": "Rauchbier",
+          "C": "Dunkles Weizenbier",
+          "D": "Sauerkirschbier"
+        },
+        "similarities": {
+          "A": 0.8969766497612,
+          "B": 0.5861870050430298,
+          "C": 0.6435912251472473,
+          "D": 0.6500219106674194
+        },
+        "gold_similarity": 0.8969766497612,
+        "best_distractor_similarity": 0.6500219106674194,
+        "gold_margin": 0.24695473909378052,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Helles Lagerbier",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Schweinshaxe wird am besten beschrieben als:\n\nOptions:\nA: Rinder-Shortribs\nB: Brathähnchen\nC: Wildeintopf\nD: Gebratene Schweinshaxe\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.271683007478714,
+        "B": 0.41764017939567566,
+        "C": 0.2768711447715759,
+        "D": 0.22780361771583557
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Schweinshaxe wird am besten beschrieben als:",
+        "semantic_anchor_text": "#### Antwort:",
+        "semantic_candidate_texts": {
+          "A": "Rinder-Shortribs",
+          "B": "Brathähnchen",
+          "C": "Wildeintopf",
+          "D": "Gebratene Schweinshaxe"
+        },
+        "similarities": {
+          "A": 0.271683007478714,
+          "B": 0.41764017939567566,
+          "C": 0.2768711447715759,
+          "D": 0.22780361771583557
+        },
+        "gold_similarity": 0.22780361771583557,
+        "best_distractor_similarity": 0.41764017939567566,
+        "gold_margin": -0.1898365616798401,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "#### Antwort:",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Leberkäse ist typischerweise:\n\nOptions:\nA: Leberpastete im Glas\nB: Ein gebackener Fleischkäse in Scheiben serviert\nC: Ein reiner Käseauflauf\nD: Ein Kartoffelpuffer\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4719390273094177,
+        "B": 0.9615963697433472,
+        "C": 0.6875699758529663,
+        "D": 0.5920171141624451
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Leberkäse ist typischerweise:",
+        "semantic_anchor_text": "B: Ein gebackener Fleischkäse in Scheiben serviert",
+        "semantic_candidate_texts": {
+          "A": "Leberpastete im Glas",
+          "B": "Ein gebackener Fleischkäse in Scheiben serviert",
+          "C": "Ein reiner Käseauflauf",
+          "D": "Ein Kartoffelpuffer"
+        },
+        "similarities": {
+          "A": 0.4719390273094177,
+          "B": 0.9615963697433472,
+          "C": 0.6875699758529663,
+          "D": 0.5920171141624451
+        },
+        "gold_similarity": 0.9615963697433472,
+        "best_distractor_similarity": 0.6875699758529663,
+        "gold_margin": 0.27402639389038086,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Ein gebackener Fleischkäse in Scheiben serviert",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Käsespätzle werden am besten beschrieben als:\n\nOptions:\nA: Süße Knödel mit Marmelade\nB: Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)\nC: Würste in Brühe\nD: Eingelegtes Gemüse\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6642581820487976,
+        "B": 0.9628233313560486,
+        "C": 0.5016930103302002,
+        "D": 0.5404984354972839
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Käsespätzle werden am besten beschrieben als:",
+        "semantic_anchor_text": "B: Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)",
+        "semantic_candidate_texts": {
+          "A": "Süße Knödel mit Marmelade",
+          "B": "Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)",
+          "C": "Würste in Brühe",
+          "D": "Eingelegtes Gemüse"
+        },
+        "similarities": {
+          "A": 0.6642581820487976,
+          "B": 0.9628233313560486,
+          "C": 0.5016930103302002,
+          "D": 0.5404984354972839
+        },
+        "gold_similarity": 0.9628233313560486,
+        "best_distractor_similarity": 0.6642581820487976,
+        "gold_margin": 0.298565149307251,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Nürnberger Rostbratwürste sind am besten bekannt als:\n\nOptions:\nA: Große gekochte Würste\nB: Kleine gegrillte Würste aus Nürnberg\nC: Geräucherte Rohwürste\nD: Fischwürste\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7770297527313232,
+        "B": 0.9742163419723511,
+        "C": 0.3919141888618469,
+        "D": 0.4965960681438446
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Nürnberger Rostbratwürste sind am besten bekannt als:",
+        "semantic_anchor_text": "B: Kleine gegrillte Würste aus Nürnberg",
+        "semantic_candidate_texts": {
+          "A": "Große gekochte Würste",
+          "B": "Kleine gegrillte Würste aus Nürnberg",
+          "C": "Geräucherte Rohwürste",
+          "D": "Fischwürste"
+        },
+        "similarities": {
+          "A": 0.7770297527313232,
+          "B": 0.9742163419723511,
+          "C": 0.3919141888618469,
+          "D": 0.4965960681438446
+        },
+        "gold_similarity": 0.9742163419723511,
+        "best_distractor_similarity": 0.7770297527313232,
+        "gold_margin": 0.19718658924102783,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Kleine gegrillte Würste aus Nürnberg",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Dampfnudel ist normalerweise:\n\nOptions:\nA: Eine würzige Suppe\nB: Ein gedämpfter Hefekloß\nC: Ein gebratener Kartoffelpuffer\nD: Eine harte Semmel\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3968659043312073,
+        "B": 0.8984181880950928,
+        "C": 0.3826692998409271,
+        "D": 0.6928418874740601
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Dampfnudel ist normalerweise:",
+        "semantic_anchor_text": "B: Ein gedämpfter Hefekloß",
+        "semantic_candidate_texts": {
+          "A": "Eine würzige Suppe",
+          "B": "Ein gedämpfter Hefekloß",
+          "C": "Ein gebratener Kartoffelpuffer",
+          "D": "Eine harte Semmel"
+        },
+        "similarities": {
+          "A": 0.3968659043312073,
+          "B": 0.8984181880950928,
+          "C": 0.3826692998409271,
+          "D": 0.6928418874740601
+        },
+        "gold_similarity": 0.8984181880950928,
+        "best_distractor_similarity": 0.6928418874740601,
+        "gold_margin": 0.20557630062103271,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Ein gedämpfter Hefekloß",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Das bayerische Bier-\"Reinheitsgebot\" von 1516 wird üblicherweise genannt:\n\nOptions:\nA: Goldene Bulle\nB: Konkordat\nC: Reinheitsgebot\nD: Edikt von Worms\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3004041016101837,
+        "B": 0.4860902428627014,
+        "C": 0.3888378143310547,
+        "D": 0.2892875075340271
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Das bayerische Bier-\"Reinheitsgebot\" von 1516 wird üblicherweise genannt:",
+        "semantic_anchor_text": "###",
+        "semantic_candidate_texts": {
+          "A": "Goldene Bulle",
+          "B": "Konkordat",
+          "C": "Reinheitsgebot",
+          "D": "Edikt von Worms"
+        },
+        "similarities": {
+          "A": 0.3004041016101837,
+          "B": 0.4860902428627014,
+          "C": 0.3888378143310547,
+          "D": 0.2892875075340271
+        },
+        "gold_similarity": 0.3888378143310547,
+        "best_distractor_similarity": 0.4860902428627014,
+        "gold_margin": -0.09725242853164673,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "###",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Haben Bayern aus der Region ein Interesse an lokalen kulinarischen Produkten?\n\nOptions:\nA: Überhaupt nicht\nB: Ein wenig\nC: Mäßig\nD: Sehr\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.18188665807247162,
+        "B": 0.4098507761955261,
+        "C": 0.5242061614990234,
+        "D": 0.4244876801967621
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Haben Bayern aus der Region ein Interesse an lokalen kulinarischen Produkten?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Überhaupt nicht",
+          "B": "Ein wenig",
+          "C": "Mäßig",
+          "D": "Sehr"
+        },
+        "similarities": {
+          "A": 0.18188665807247162,
+          "B": 0.4098507761955261,
+          "C": 0.5242061614990234,
+          "D": 0.4244876801967621
+        },
+        "gold_similarity": 0.5242061614990234,
+        "best_distractor_similarity": 0.4244876801967621,
+        "gold_margin": 0.09971848130226135,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was repräsentiert das saure Lüngerl in der bayerischen Kulturgeschichte?\n\nOptions:\nA: Ein Festtagsgericht, das ausschließlich wohlhabenden bayerischen Familien vorbehalten war\nB: Ein bescheidenes, aber sozial wichtiges Gericht, das bei Hochzeiten und Leichenmählern in Zeiten der Knappheit serviert wurde\nC: Ein Gericht, das im 20. Jahrhundert von österreichischen Einwanderern nach Bayern gebracht wurde\nD: Ein traditionelles Gericht, das ausschließlich mit katholischen religiösen Feiern verbunden ist\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.1931867003440857,
+        "B": 0.2089388370513916,
+        "C": 0.3038959503173828,
+        "D": 0.1474054604768753
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was repräsentiert das saure Lüngerl in der bayerischen Kulturgeschichte?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Ein Festtagsgericht, das ausschließlich wohlhabenden bayerischen Familien vorbehalten war",
+          "B": "Ein bescheidenes, aber sozial wichtiges Gericht, das bei Hochzeiten und Leichenmählern in Zeiten der Knappheit serviert wurde",
+          "C": "Ein Gericht, das im 20. Jahrhundert von österreichischen Einwanderern nach Bayern gebracht wurde",
+          "D": "Ein traditionelles Gericht, das ausschließlich mit katholischen religiösen Feiern verbunden ist"
+        },
+        "similarities": {
+          "A": 0.1931867003440857,
+          "B": 0.2089388370513916,
+          "C": 0.3038959503173828,
+          "D": 0.1474054604768753
+        },
+        "gold_similarity": 0.2089388370513916,
+        "best_distractor_similarity": 0.3038959503173828,
+        "gold_margin": -0.09495711326599121,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wie veränderte sich die bayerische Esskultur nach dem Zweiten Weltkrieg?\n\nOptions:\nA: Traditionelle Innereiengerichte wurden beliebter als je zuvor\nB: Die bayerische Küche wurde stark von italienischer und französischer Kochkunst beeinflusst\nC: Das Lüngerl als Hauptgericht einfacher Leute wurde allmählich durch Schweinebraten ersetzt\nD: Fleischgerichte verschwanden aufgrund von Lebensmittelknappheit weitgehend von bayerischen Tischen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23205170035362244,
+        "B": 0.23346510529518127,
+        "C": 0.973648726940155,
+        "D": 0.4314918518066406
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie veränderte sich die bayerische Esskultur nach dem Zweiten Weltkrieg?",
+        "semantic_anchor_text": "C: Das Lüngerl als Hauptgericht einfacher Leute wurde allmählich durch Schweinebraten ersetzt",
+        "semantic_candidate_texts": {
+          "A": "Traditionelle Innereiengerichte wurden beliebter als je zuvor",
+          "B": "Die bayerische Küche wurde stark von italienischer und französischer Kochkunst beeinflusst",
+          "C": "Das Lüngerl als Hauptgericht einfacher Leute wurde allmählich durch Schweinebraten ersetzt",
+          "D": "Fleischgerichte verschwanden aufgrund von Lebensmittelknappheit weitgehend von bayerischen Tischen"
+        },
+        "similarities": {
+          "A": 0.23205170035362244,
+          "B": 0.23346510529518127,
+          "C": 0.973648726940155,
+          "D": 0.4314918518066406
+        },
+        "gold_similarity": 0.973648726940155,
+        "best_distractor_similarity": 0.4314918518066406,
+        "gold_margin": 0.5421568751335144,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Das Lüngerl als Hauptgericht einfacher Leute wurde allmählich durch Schweinebraten ersetzt",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Welche Beziehung besteht zwischen einfachen traditionellen Gerichten und dem bayerischen Landleben?\n\nOptions:\nA: Ländliche Bayern sahen Innereiengerichte stets als minderwertiges Essen an\nB: Einfache Gerichte wie Lüngerl waren ein natürlicher Bestandteil des ländlichen Alltags und wurden ohne viel Aufhebens gegessen\nC: Traditionelles bayerisches Essen wurde ausschließlich von katholischen Fastenregeln beeinflusst\nD: Ländliche Gemeinden in Bayern importierten die meisten ihrer Esstraditionen aus Österreich\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.08333537727594376,
+        "B": 0.04026981443166733,
+        "C": 0.07508768141269684,
+        "D": 0.034928128123283386
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Beziehung besteht zwischen einfachen traditionellen Gerichten und dem bayerischen Landleben?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Ländliche Bayern sahen Innereiengerichte stets als minderwertiges Essen an",
+          "B": "Einfache Gerichte wie Lüngerl waren ein natürlicher Bestandteil des ländlichen Alltags und wurden ohne viel Aufhebens gegessen",
+          "C": "Traditionelles bayerisches Essen wurde ausschließlich von katholischen Fastenregeln beeinflusst",
+          "D": "Ländliche Gemeinden in Bayern importierten die meisten ihrer Esstraditionen aus Österreich"
+        },
+        "similarities": {
+          "A": 0.08333537727594376,
+          "B": 0.04026981443166733,
+          "C": 0.07508768141269684,
+          "D": 0.034928128123283386
+        },
+        "gold_similarity": 0.04026981443166733,
+        "best_distractor_similarity": 0.08333537727594376,
+        "gold_margin": -0.04306556284427643,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was ist der traditionelle bayerische Ansatz für Fastenessen während der Fastenzeit?\n\nOptions:\nA: Vollständiges Fasten ohne Nahrungsaufnahme an bestimmten Wochentagen\nB: Einfache, fleischlose Mahlzeiten, die hauptsächlich auf mehlbasierten Gerichten und Brot basieren\nC: Eine streng vegetarische Ernährung, inspiriert von Klostertradition\nD: Ersetzen aller Mahlzeiten durch speziell gebraute Kräutertees und Suppen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4296788275241852,
+        "B": 0.961717426776886,
+        "C": 0.6242060661315918,
+        "D": 0.696262538433075
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist der traditionelle bayerische Ansatz für Fastenessen während der Fastenzeit?",
+        "semantic_anchor_text": "B: Einfache, fleischlose Mahlzeiten, die hauptsächlich auf mehlbasierten Gerichten und Brot basieren",
+        "semantic_candidate_texts": {
+          "A": "Vollständiges Fasten ohne Nahrungsaufnahme an bestimmten Wochentagen",
+          "B": "Einfache, fleischlose Mahlzeiten, die hauptsächlich auf mehlbasierten Gerichten und Brot basieren",
+          "C": "Eine streng vegetarische Ernährung, inspiriert von Klostertradition",
+          "D": "Ersetzen aller Mahlzeiten durch speziell gebraute Kräutertees und Suppen"
+        },
+        "similarities": {
+          "A": 0.4296788275241852,
+          "B": 0.961717426776886,
+          "C": 0.6242060661315918,
+          "D": 0.696262538433075
+        },
+        "gold_similarity": 0.961717426776886,
+        "best_distractor_similarity": 0.696262538433075,
+        "gold_margin": 0.26545488834381104,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Einfache, fleischlose Mahlzeiten, die hauptsächlich auf mehlbasierten Gerichten und Brot basieren",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Welche kreative Lösung entwickelten bayerische Mönche, um die strenge Fastenzeit zu überstehen?\n\nOptions:\nA: Sie erklärten bestimmte Fleischsorten zu Gemüse für religiöse Zwecke\nB: Sie brauten starkes Bier als flüssige Mahlzeit, basierend auf dem Prinzip, dass Flüssigkeiten das Fasten nicht brechen\nC: Sie importierten spezielle Fastenspeisen aus Italien und Österreich\nD: Sie erhielten spezielle päpstliche Erlaubnis, an bestimmten Tagen Fleisch zu essen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.11132663488388062,
+        "B": 0.21174469590187073,
+        "C": 0.10495976358652115,
+        "D": 0.1364368349313736
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche kreative Lösung entwickelten bayerische Mönche, um die strenge Fastenzeit zu überstehen?",
+        "semantic_anchor_text": "Antwort: B",
+        "semantic_candidate_texts": {
+          "A": "Sie erklärten bestimmte Fleischsorten zu Gemüse für religiöse Zwecke",
+          "B": "Sie brauten starkes Bier als flüssige Mahlzeit, basierend auf dem Prinzip, dass Flüssigkeiten das Fasten nicht brechen",
+          "C": "Sie importierten spezielle Fastenspeisen aus Italien und Österreich",
+          "D": "Sie erhielten spezielle päpstliche Erlaubnis, an bestimmten Tagen Fleisch zu essen"
+        },
+        "similarities": {
+          "A": 0.11132663488388062,
+          "B": 0.21174469590187073,
+          "C": 0.10495976358652115,
+          "D": 0.1364368349313736
+        },
+        "gold_similarity": 0.21174469590187073,
+        "best_distractor_similarity": 0.1364368349313736,
+        "gold_margin": 0.07530786097049713,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Antwort: B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wie bogen einige Bayern kreativ die Fastenregel gegen Fleischkonsum?\n\nOptions:\nA: Sie zerkleinerten Fleisch fein, damit es nicht als Fleisch erkannt werden konnte\nB: Sie erklärten Biber und Otter zu Fischen, weil sie im Wasser lebten\nC: Sie argumentierten, dass geräuchertes und getrocknetes Fleisch technisch gesehen kein Fleisch mehr sei\nD: Sie aßen Fleisch nur vor Sonnenaufgang und nach Sonnenuntergang, um das Fasten nicht zu brechen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.17929422855377197,
+        "B": 0.1772480458021164,
+        "C": 0.17852306365966797,
+        "D": 0.13652607798576355
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie bogen einige Bayern kreativ die Fastenregel gegen Fleischkonsum?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Sie zerkleinerten Fleisch fein, damit es nicht als Fleisch erkannt werden konnte",
+          "B": "Sie erklärten Biber und Otter zu Fischen, weil sie im Wasser lebten",
+          "C": "Sie argumentierten, dass geräuchertes und getrocknetes Fleisch technisch gesehen kein Fleisch mehr sei",
+          "D": "Sie aßen Fleisch nur vor Sonnenaufgang und nach Sonnenuntergang, um das Fasten nicht zu brechen"
+        },
+        "similarities": {
+          "A": 0.17929422855377197,
+          "B": 0.1772480458021164,
+          "C": 0.17852306365966797,
+          "D": 0.13652607798576355
+        },
+        "gold_similarity": 0.1772480458021164,
+        "best_distractor_similarity": 0.17929422855377197,
+        "gold_margin": -0.0020461827516555786,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Woraus besteht das bayerische Gericht Wasserschnalzn?\n\nOptions:\nA: Ein süßer Mehlknödel serviert mit Beerenkompott\nB: Alte Semmeln in Milch eingeweicht und in Butter gebraten\nC: Zwiebeln und Brotstücke gebraten und in Brühe mit Muskat und Salz gekocht\nD: Übrig gebliebener Brotteig flach gebacken und mit Buttermilch serviert\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.17482027411460876,
+        "B": 0.09490463882684708,
+        "C": 0.021283097565174103,
+        "D": 0.08499033004045486
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Woraus besteht das bayerische Gericht Wasserschnalzn?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Ein süßer Mehlknödel serviert mit Beerenkompott",
+          "B": "Alte Semmeln in Milch eingeweicht und in Butter gebraten",
+          "C": "Zwiebeln und Brotstücke gebraten und in Brühe mit Muskat und Salz gekocht",
+          "D": "Übrig gebliebener Brotteig flach gebacken und mit Buttermilch serviert"
+        },
+        "similarities": {
+          "A": 0.17482027411460876,
+          "B": 0.09490463882684708,
+          "C": 0.021283097565174103,
+          "D": 0.08499033004045486
+        },
+        "gold_similarity": 0.021283097565174103,
+        "best_distractor_similarity": 0.17482027411460876,
+        "gold_margin": -0.15353717654943466,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was sind Rupfhauben und welche kulturelle Bedeutung haben sie in Bayern?\n\nOptions:\nA: Ein festlicher Kuchen, der traditionell zu Ostern in Oberbayern gebacken wird\nB: Ein einfaches mehlbasiertes Gericht aus Niederbayern, das einst Arme-Leute-Essen war, aber heute ein beliebtes traditionelles Gericht ist\nC: Eine Art Semmel typisch für Franken, die bei religiösen Zeremonien serviert wird\nD: Ein süßes Gebäck, das im 19. Jahrhundert von österreichischen Bäckern nach Bayern gebracht wurde\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.20794588327407837,
+        "B": 0.08671721071004868,
+        "C": 0.18465644121170044,
+        "D": 0.2665577530860901
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was sind Rupfhauben und welche kulturelle Bedeutung haben sie in Bayern?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Ein festlicher Kuchen, der traditionell zu Ostern in Oberbayern gebacken wird",
+          "B": "Ein einfaches mehlbasiertes Gericht aus Niederbayern, das einst Arme-Leute-Essen war, aber heute ein beliebtes traditionelles Gericht ist",
+          "C": "Eine Art Semmel typisch für Franken, die bei religiösen Zeremonien serviert wird",
+          "D": "Ein süßes Gebäck, das im 19. Jahrhundert von österreichischen Bäckern nach Bayern gebracht wurde"
+        },
+        "similarities": {
+          "A": 0.20794588327407837,
+          "B": 0.08671721071004868,
+          "C": 0.18465644121170044,
+          "D": 0.2665577530860901
+        },
+        "gold_similarity": 0.08671721071004868,
+        "best_distractor_similarity": 0.2665577530860901,
+        "gold_margin": -0.1798405423760414,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was ist die Idee hinter dem bayerischen Gericht Semmelschmarrn?\n\nOptions:\nA: Übrig gebliebene Ostereier verwenden, um ein festliches süßes Dessert zu kreieren\nB: Ein Festtagsgericht, das für Feiern am Ende der Fastenzeit reserviert ist\nC: Alte Semmeln verwerten, indem man sie in Milch und Ei einweicht und in Butter brät\nD: Ein herzhaftes Pfannkuchengericht, das traditionell bei bayerischen Klosterfesten serviert wird\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6920297741889954,
+        "B": 0.5175416469573975,
+        "C": 0.3857356309890747,
+        "D": 0.9749224185943604
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist die Idee hinter dem bayerischen Gericht Semmelschmarrn?",
+        "semantic_anchor_text": "C: Ein herzhaftes Pfannkuchengericht, das traditionell bei bayerischen Klosterfesten serviert wird",
+        "semantic_candidate_texts": {
+          "A": "Übrig gebliebene Ostereier verwenden, um ein festliches süßes Dessert zu kreieren",
+          "B": "Ein Festtagsgericht, das für Feiern am Ende der Fastenzeit reserviert ist",
+          "C": "Alte Semmeln verwerten, indem man sie in Milch und Ei einweicht und in Butter brät",
+          "D": "Ein herzhaftes Pfannkuchengericht, das traditionell bei bayerischen Klosterfesten serviert wird"
+        },
+        "similarities": {
+          "A": 0.6920297741889954,
+          "B": 0.5175416469573975,
+          "C": 0.3857356309890747,
+          "D": 0.9749224185943604
+        },
+        "gold_similarity": 0.3857356309890747,
+        "best_distractor_similarity": 0.9749224185943604,
+        "gold_margin": -0.5891867876052856,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Ein herzhaftes Pfannkuchengericht, das traditionell bei bayerischen Klosterfesten serviert wird",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Sammeln Menschen in Bayern Pilze, um sie\n\nOptions:\nA: an Restaurants zu verkaufen\nB: an Märkte zu verkaufen\nC: selbst zu verzehren\nD: wegzuwerfen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.29270708560943604,
+        "B": 0.20839494466781616,
+        "C": 0.8042930364608765,
+        "D": 0.2650437355041504
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Sammeln Menschen in Bayern Pilze, um sie",
+        "semantic_anchor_text": "C: selbst zu verzehren",
+        "semantic_candidate_texts": {
+          "A": "an Restaurants zu verkaufen",
+          "B": "an Märkte zu verkaufen",
+          "C": "selbst zu verzehren",
+          "D": "wegzuwerfen"
+        },
+        "similarities": {
+          "A": 0.29270708560943604,
+          "B": 0.20839494466781616,
+          "C": 0.8042930364608765,
+          "D": 0.2650437355041504
+        },
+        "gold_similarity": 0.8042930364608765,
+        "best_distractor_similarity": 0.29270708560943604,
+        "gold_margin": 0.5115859508514404,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: selbst zu verzehren",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Welche drei Fleischsorten werden für einen Leberkäse verwendet?\n\nOptions:\nA: Corned Beef, Schweinefleisch, Speck\nB: Lamm, Kalb und geräucherter Schinken\nC: Hähnchen, Pute und Schweinebauch\nD: Wild, Wildschwein und Rindfleisch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.10647456347942352,
+        "B": 0.2493249922990799,
+        "C": 0.22503888607025146,
+        "D": 0.16199886798858643
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche drei Fleischsorten werden für einen Leberkäse verwendet?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Corned Beef, Schweinefleisch, Speck",
+          "B": "Lamm, Kalb und geräucherter Schinken",
+          "C": "Hähnchen, Pute und Schweinebauch",
+          "D": "Wild, Wildschwein und Rindfleisch"
+        },
+        "similarities": {
+          "A": 0.10647456347942352,
+          "B": 0.2493249922990799,
+          "C": 0.22503888607025146,
+          "D": 0.16199886798858643
+        },
+        "gold_similarity": 0.10647456347942352,
+        "best_distractor_similarity": 0.2493249922990799,
+        "gold_margin": -0.14285042881965637,
+        "predicted_label": "B",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wie wird Leberkäse am besten in Bezug auf die Zubereitungsmethode beschrieben?\n\nOptions:\nA: Roh gepökelt und über mehrere Wochen luftgetrocknet\nB: Über Holzspänen geräuchert und dann gekocht\nC: Über offenem Feuer gegrillt und im Ganzen serviert\nD: Gemahlen, gemischt und dann wie ein Fleischkäse gebacken\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4040148854255676,
+        "B": 0.6818349361419678,
+        "C": 0.6862637996673584,
+        "D": 0.907393753528595
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie wird Leberkäse am besten in Bezug auf die Zubereitungsmethode beschrieben?",
+        "semantic_anchor_text": "# D: Gemahlen, gemischt und dann wie ein Fleischkäse gebacken",
+        "semantic_candidate_texts": {
+          "A": "Roh gepökelt und über mehrere Wochen luftgetrocknet",
+          "B": "Über Holzspänen geräuchert und dann gekocht",
+          "C": "Über offenem Feuer gegrillt und im Ganzen serviert",
+          "D": "Gemahlen, gemischt und dann wie ein Fleischkäse gebacken"
+        },
+        "similarities": {
+          "A": 0.4040148854255676,
+          "B": 0.6818349361419678,
+          "C": 0.6862637996673584,
+          "D": 0.907393753528595
+        },
+        "gold_similarity": 0.907393753528595,
+        "best_distractor_similarity": 0.6862637996673584,
+        "gold_margin": 0.22112995386123657,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "# D: Gemahlen, gemischt und dann wie ein Fleischkäse gebacken",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was ist eine Semmel?\n\nOptions:\nA: Eine Art weiches süßes Gebäck gefüllt mit Marmelade oder Sahne\nB: Eine Art hartes Brötchen, beliebt in Süddeutschland\nC: Ein dichtes Roggenbrot, typischerweise geschnitten und mit Aufschnitt serviert\nD: Ein mit Käse gefülltes Fladenbrot\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4841921925544739,
+        "B": 0.9582717418670654,
+        "C": 0.5022594928741455,
+        "D": 0.5277745723724365
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist eine Semmel?",
+        "semantic_anchor_text": "B: Eine Art hartes Brötchen, beliebt in Süddeutschland",
+        "semantic_candidate_texts": {
+          "A": "Eine Art weiches süßes Gebäck gefüllt mit Marmelade oder Sahne",
+          "B": "Eine Art hartes Brötchen, beliebt in Süddeutschland",
+          "C": "Ein dichtes Roggenbrot, typischerweise geschnitten und mit Aufschnitt serviert",
+          "D": "Ein mit Käse gefülltes Fladenbrot"
+        },
+        "similarities": {
+          "A": 0.4841921925544739,
+          "B": 0.9582717418670654,
+          "C": 0.5022594928741455,
+          "D": 0.5277745723724365
+        },
+        "gold_similarity": 0.9582717418670654,
+        "best_distractor_similarity": 0.5277745723724365,
+        "gold_margin": 0.4304971694946289,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Eine Art hartes Brötchen, beliebt in Süddeutschland",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Bei welchen Mahlzeiten oder Gelegenheiten wird die Semmel typischerweise gegessen?\n\nOptions:\nA: Mittag- und Abendessen als Beilage\nB: Nur bei formellen Abendessen\nC: Frühstück, Brunch und Snacks\nD: Ausschließlich zu Weihnachten und Ostern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8437514305114746,
+        "B": 0.47896304726600647,
+        "C": 0.9497781991958618,
+        "D": 0.34455299377441406
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bei welchen Mahlzeiten oder Gelegenheiten wird die Semmel typischerweise gegessen?",
+        "semantic_anchor_text": "C: Frühstück, Brunch und Snacks",
+        "semantic_candidate_texts": {
+          "A": "Mittag- und Abendessen als Beilage",
+          "B": "Nur bei formellen Abendessen",
+          "C": "Frühstück, Brunch und Snacks",
+          "D": "Ausschließlich zu Weihnachten und Ostern"
+        },
+        "similarities": {
+          "A": 0.8437514305114746,
+          "B": 0.47896304726600647,
+          "C": 0.9497781991958618,
+          "D": 0.34455299377441406
+        },
+        "gold_similarity": 0.9497781991958618,
+        "best_distractor_similarity": 0.8437514305114746,
+        "gold_margin": 0.10602676868438721,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Frühstück, Brunch und Snacks",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wos is a Obatzda?\n\nOptions:\nA: Graucherter Schinken\nB: Süßes Hefegebäck\nC: Gewürzter Käseaufstrich\nD: Klarer Obstbrand\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4690037965774536,
+        "B": 0.6944562196731567,
+        "C": 0.9513018131256104,
+        "D": 0.4006706178188324
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a Obatzda?",
+        "semantic_anchor_text": "C: Gewürzter Käseaufstrich",
+        "semantic_candidate_texts": {
+          "A": "Graucherter Schinken",
+          "B": "Süßes Hefegebäck",
+          "C": "Gewürzter Käseaufstrich",
+          "D": "Klarer Obstbrand"
+        },
+        "similarities": {
+          "A": 0.4690037965774536,
+          "B": 0.6944562196731567,
+          "C": 0.9513018131256104,
+          "D": 0.4006706178188324
+        },
+        "gold_similarity": 0.9513018131256104,
+        "best_distractor_similarity": 0.6944562196731567,
+        "gold_margin": 0.2568455934524536,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Gewürzter Käseaufstrich",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "In da bayerischen Verwendung wird a Brezel üblicherweise gnannt:\n\nOptions:\nA: Semmel\nB: Krapfen\nC: Strudel\nD: Brezn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.2578381896018982,
+        "B": 0.38695651292800903,
+        "C": 0.38015419244766235,
+        "D": 0.23984113335609436
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In da bayerischen Verwendung wird a Brezel üblicherweise gnannt:",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Semmel",
+          "B": "Krapfen",
+          "C": "Strudel",
+          "D": "Brezn"
+        },
+        "similarities": {
+          "A": 0.2578381896018982,
+          "B": 0.38695651292800903,
+          "C": 0.38015419244766235,
+          "D": 0.23984113335609436
+        },
+        "gold_similarity": 0.23984113335609436,
+        "best_distractor_similarity": 0.38695651292800903,
+        "gold_margin": -0.14711537957191467,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "D'Weißwuascht wird traditionell hauptsächlich hergstellt aus:\n\nOptions:\nA: Rind und Schweineleber\nB: Kalb- und Schweinespeck\nC: Geräuchertem Rindfleisch\nD: Lamm und Kräutern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8404902219772339,
+        "B": 0.8291534185409546,
+        "C": 0.647636890411377,
+        "D": 0.5484051704406738
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "D'Weißwuascht wird traditionell hauptsächlich hergstellt aus:",
+        "semantic_anchor_text": "A: Rind und Schweineleber",
+        "semantic_candidate_texts": {
+          "A": "Rind und Schweineleber",
+          "B": "Kalb- und Schweinespeck",
+          "C": "Geräuchertem Rindfleisch",
+          "D": "Lamm und Kräutern"
+        },
+        "similarities": {
+          "A": 0.8404902219772339,
+          "B": 0.8291534185409546,
+          "C": 0.647636890411377,
+          "D": 0.5484051704406738
+        },
+        "gold_similarity": 0.8291534185409546,
+        "best_distractor_similarity": 0.8404902219772339,
+        "gold_margin": -0.011336803436279297,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Rind und Schweineleber",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Helles bezieht si am meisten auf:\n\nOptions:\nA: Helles Lagerbier\nB: Rauchbier\nC: Dunkles Weizenbier\nD: Sauerkirschbier\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7548391819000244,
+        "B": 0.6230154037475586,
+        "C": 0.6970324516296387,
+        "D": 0.8784353733062744
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Helles bezieht si am meisten auf:",
+        "semantic_anchor_text": "D: Sauerkirschbier",
+        "semantic_candidate_texts": {
+          "A": "Helles Lagerbier",
+          "B": "Rauchbier",
+          "C": "Dunkles Weizenbier",
+          "D": "Sauerkirschbier"
+        },
+        "similarities": {
+          "A": 0.7548391819000244,
+          "B": 0.6230154037475586,
+          "C": 0.6970324516296387,
+          "D": 0.8784353733062744
+        },
+        "gold_similarity": 0.7548391819000244,
+        "best_distractor_similarity": 0.8784353733062744,
+        "gold_margin": -0.12359619140625,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Sauerkirschbier",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "A Schweinshaxn is a :\n\nOptions:\nA: Rinder-Shortribs\nB: Brathähnchen\nC: Wildeintopf\nD: Gebratene Schweinshaxe\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36509984731674194,
+        "B": 0.6641390323638916,
+        "C": 0.4340505599975586,
+        "D": 0.9333138465881348
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "A Schweinshaxn is a :",
+        "semantic_anchor_text": "D: Gebratene Schweinshaxe",
+        "semantic_candidate_texts": {
+          "A": "Rinder-Shortribs",
+          "B": "Brathähnchen",
+          "C": "Wildeintopf",
+          "D": "Gebratene Schweinshaxe"
+        },
+        "similarities": {
+          "A": 0.36509984731674194,
+          "B": 0.6641390323638916,
+          "C": 0.4340505599975586,
+          "D": 0.9333138465881348
+        },
+        "gold_similarity": 0.9333138465881348,
+        "best_distractor_similarity": 0.6641390323638916,
+        "gold_margin": 0.26917481422424316,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Gebratene Schweinshaxe",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Leberkas is normalerweis a:\n\nOptions:\nA: Leberpastete im Glas\nB: A gebackener Fleischkäse in Scheiben serviert\nC: A reiner Käseauflauf\nD: A Kartoffelpuffer\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.32705801725387573,
+        "B": 0.11548586934804916,
+        "C": 0.305973619222641,
+        "D": 0.2333984076976776
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Leberkas is normalerweis a:",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Leberpastete im Glas",
+          "B": "A gebackener Fleischkäse in Scheiben serviert",
+          "C": "A reiner Käseauflauf",
+          "D": "A Kartoffelpuffer"
+        },
+        "similarities": {
+          "A": 0.32705801725387573,
+          "B": 0.11548586934804916,
+          "C": 0.305973619222641,
+          "D": 0.2333984076976776
+        },
+        "gold_similarity": 0.11548586934804916,
+        "best_distractor_similarity": 0.32705801725387573,
+        "gold_margin": -0.21157214790582657,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Kasspotzn san:\n\nOptions:\nA: Süße Knödel mit Marmelade\nB: Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)\nC: Würste in Brühe\nD: Oag'legtes Gemüse\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9756402373313904,
+        "B": 0.6749704480171204,
+        "C": 0.44480443000793457,
+        "D": 0.4487046003341675
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Kasspotzn san:",
+        "semantic_anchor_text": "A: Süße Knödel mit Marmelade",
+        "semantic_candidate_texts": {
+          "A": "Süße Knödel mit Marmelade",
+          "B": "Eiernudeln mit geschmolzenem Käse (oft mit Zwiebeln)",
+          "C": "Würste in Brühe",
+          "D": "Oag'legtes Gemüse"
+        },
+        "similarities": {
+          "A": 0.9756402373313904,
+          "B": 0.6749704480171204,
+          "C": 0.44480443000793457,
+          "D": 0.4487046003341675
+        },
+        "gold_similarity": 0.6749704480171204,
+        "best_distractor_similarity": 0.9756402373313904,
+        "gold_margin": -0.30066978931427,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Süße Knödel mit Marmelade",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Nürnberger Rostbratwürste sind am besten bekannt ois:\n\nOptions:\nA: Große kochte Würste\nB: Kloane gegrillte Würste aus Nürnberg\nC: Gereicherte Rohwürste\nD: Fischwürste\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6842880845069885,
+        "B": 0.9781944751739502,
+        "C": 0.6044474840164185,
+        "D": 0.5127941966056824
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Nürnberger Rostbratwürste sind am besten bekannt ois:",
+        "semantic_anchor_text": "B: Kloane gegrillte Würste aus Nürnberg",
+        "semantic_candidate_texts": {
+          "A": "Große kochte Würste",
+          "B": "Kloane gegrillte Würste aus Nürnberg",
+          "C": "Gereicherte Rohwürste",
+          "D": "Fischwürste"
+        },
+        "similarities": {
+          "A": 0.6842880845069885,
+          "B": 0.9781944751739502,
+          "C": 0.6044474840164185,
+          "D": 0.5127941966056824
+        },
+        "gold_similarity": 0.9781944751739502,
+        "best_distractor_similarity": 0.6842880845069885,
+        "gold_margin": 0.29390639066696167,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Kloane gegrillte Würste aus Nürnberg",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "A Dampfnudel is normalerweise:\n\nOptions:\nA: A würzige Suppe\nB: A gedämpfter Hefekloß\nC: A gebratener Kartoffelpuffer\nD: A harte Semmel\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3574059307575226,
+        "B": 0.891083836555481,
+        "C": 0.3835276961326599,
+        "D": 0.5906196236610413
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "A Dampfnudel is normalerweise:",
+        "semantic_anchor_text": "B: Ein gedämpfter Hefekloß",
+        "semantic_candidate_texts": {
+          "A": "A würzige Suppe",
+          "B": "A gedämpfter Hefekloß",
+          "C": "A gebratener Kartoffelpuffer",
+          "D": "A harte Semmel"
+        },
+        "similarities": {
+          "A": 0.3574059307575226,
+          "B": 0.891083836555481,
+          "C": 0.3835276961326599,
+          "D": 0.5906196236610413
+        },
+        "gold_similarity": 0.891083836555481,
+        "best_distractor_similarity": 0.5906196236610413,
+        "gold_margin": 0.3004642128944397,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Ein gedämpfter Hefekloß",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "As bayerische Bier-\"Reinheitsgebot\" vo 1516 wird normalerweise gnannt:\n\nOptions:\nA: Goldene Bulle\nB: Konkordat\nC: Reinheitsgebot\nD: Edikt von Worms\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.1887652426958084,
+        "B": 0.33884239196777344,
+        "C": 0.4084886908531189,
+        "D": 0.3293161988258362
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "As bayerische Bier-\"Reinheitsgebot\" vo 1516 wird normalerweise gnannt:",
+        "semantic_anchor_text": "As bayerische Bier-\"Reinheitsgebot\" vo 1516 wird normalerweise gnannt:",
+        "semantic_candidate_texts": {
+          "A": "Goldene Bulle",
+          "B": "Konkordat",
+          "C": "Reinheitsgebot",
+          "D": "Edikt von Worms"
+        },
+        "similarities": {
+          "A": 0.1887652426958084,
+          "B": 0.33884239196777344,
+          "C": 0.4084886908531189,
+          "D": 0.3293161988258362
+        },
+        "gold_similarity": 0.4084886908531189,
+        "best_distractor_similarity": 0.33884239196777344,
+        "gold_margin": 0.06964629888534546,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Ham Bayern aus der Region a Interesse an lokale kulinarische Produkte?\n\nOptions:\nA: Überhaupt ned\nB: A weng\nC: Mäßig\nD: Vui\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.366802841424942,
+        "B": 0.3413759469985962,
+        "C": 0.5242061614990234,
+        "D": 0.3591787815093994
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Ham Bayern aus der Region a Interesse an lokale kulinarische Produkte?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Überhaupt ned",
+          "B": "A weng",
+          "C": "Mäßig",
+          "D": "Vui"
+        },
+        "similarities": {
+          "A": 0.366802841424942,
+          "B": 0.3413759469985962,
+          "C": 0.5242061614990234,
+          "D": 0.3591787815093994
+        },
+        "gold_similarity": 0.5242061614990234,
+        "best_distractor_similarity": 0.366802841424942,
+        "gold_margin": 0.15740332007408142,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wofür steht as saure Lüngerl in der boarischen Kulturgschicht'n?\n\nOptions:\nA: A Festtagsgericht, des ausschließlich wohlhabenden bayrischen Familien vorbehalten war\nB: A bescheidenes, aber sozial wichtiges Gericht, das bei Hochzeiten und Leichenmählern in Zeiten der Knappheit serviert wurde\nC: A Gericht, das im 20. Jahrhundert von österreichischen Einwanderern nach Bayern g'bracht wurde\nD: A traditionelles Gericht, das ausschließlich mit katholischen religiösen Feiern verbunden ist\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.19759601354599,
+        "B": 0.23934949934482574,
+        "C": 0.35096222162246704,
+        "D": 0.12937532365322113
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wofür steht as saure Lüngerl in der boarischen Kulturgschicht'n?",
+        "semantic_anchor_text": "A: B",
+        "semantic_candidate_texts": {
+          "A": "A Festtagsgericht, des ausschließlich wohlhabenden bayrischen Familien vorbehalten war",
+          "B": "A bescheidenes, aber sozial wichtiges Gericht, das bei Hochzeiten und Leichenmählern in Zeiten der Knappheit serviert wurde",
+          "C": "A Gericht, das im 20. Jahrhundert von österreichischen Einwanderern nach Bayern g'bracht wurde",
+          "D": "A traditionelles Gericht, das ausschließlich mit katholischen religiösen Feiern verbunden ist"
+        },
+        "similarities": {
+          "A": 0.19759601354599,
+          "B": 0.23934949934482574,
+          "C": 0.35096222162246704,
+          "D": 0.12937532365322113
+        },
+        "gold_similarity": 0.23934949934482574,
+        "best_distractor_similarity": 0.35096222162246704,
+        "gold_margin": -0.1116127222776413,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wie hat sich die boarische Esskultur nachm Zwoaten Woidkriag verändert?\n\nOptions:\nA: Traditionelle Innereiengerichte san beliebter worn ois je zuvor\nB: De bayerische Küche wurde stark von italienischer und französischer Kochkunst beeinflusst\nC: Das Lüngerl als Hauptgericht ofacher Leute wurde allmählich durch Schweinebraten ersetzt\nD: Fleischgerichte san aufgrund vo Lebensmittelknappheit weitgehend vo bayrischen Tischen verschwunden\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8673936724662781,
+        "B": 0.5394461154937744,
+        "C": 0.2693387269973755,
+        "D": 0.422819048166275
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie hat sich die boarische Esskultur nachm Zwoaten Woidkriag verändert?",
+        "semantic_anchor_text": "A: Traditionelle Innereiengerichte sind beliebter geworden als zuvor",
+        "semantic_candidate_texts": {
+          "A": "Traditionelle Innereiengerichte san beliebter worn ois je zuvor",
+          "B": "De bayerische Küche wurde stark von italienischer und französischer Kochkunst beeinflusst",
+          "C": "Das Lüngerl als Hauptgericht ofacher Leute wurde allmählich durch Schweinebraten ersetzt",
+          "D": "Fleischgerichte san aufgrund vo Lebensmittelknappheit weitgehend vo bayrischen Tischen verschwunden"
+        },
+        "similarities": {
+          "A": 0.8673936724662781,
+          "B": 0.5394461154937744,
+          "C": 0.2693387269973755,
+          "D": 0.422819048166275
+        },
+        "gold_similarity": 0.2693387269973755,
+        "best_distractor_similarity": 0.8673936724662781,
+        "gold_margin": -0.5980549454689026,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Traditionelle Innereiengerichte sind beliebter geworden als zuvor",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wöche Beziehung bsteht zwischen einfachen traditionellen Gerichten und dem boarischen Landlebn?\n\nOptions:\nA: Ländliche Bayern ham Innereiengerichte immer ois minderwertiges Essen angsehen\nB: Ofache G'richte wia Lüngerl waren ein natürlicher Bestandteil des ländlichen Alltags und wurden ohne viel Aufhebens gegessen\nC: Traditionelles bayrisches Essen is ausschließlich vo de katholischen Fastenregeln beeinflusst worn\nD: Ländliche Gemeinden in Bayern ham de meisten ihrer Esstraditionen aus Österreich importiert\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.20448416471481323,
+        "B": 0.12689466774463654,
+        "C": 0.14280058443546295,
+        "D": 0.10536593943834305
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Beziehung bsteht zwischen einfachen traditionellen Gerichten und dem boarischen Landlebn?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Ländliche Bayern ham Innereiengerichte immer ois minderwertiges Essen angsehen",
+          "B": "Ofache G'richte wia Lüngerl waren ein natürlicher Bestandteil des ländlichen Alltags und wurden ohne viel Aufhebens gegessen",
+          "C": "Traditionelles bayrisches Essen is ausschließlich vo de katholischen Fastenregeln beeinflusst worn",
+          "D": "Ländliche Gemeinden in Bayern ham de meisten ihrer Esstraditionen aus Österreich importiert"
+        },
+        "similarities": {
+          "A": 0.20448416471481323,
+          "B": 0.12689466774463654,
+          "C": 0.14280058443546295,
+          "D": 0.10536593943834305
+        },
+        "gold_similarity": 0.12689466774463654,
+        "best_distractor_similarity": 0.20448416471481323,
+        "gold_margin": -0.0775894969701767,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wos is da traditionelle boarische Ansatz für Fastenessen während der Fastenzeit?\n\nOptions:\nA: Vollständiges Fasten ohne Nahrungsaufnahme an bestimmten Wochentagen\nB: Einfache, fleischlose Mahlzeiten, de hauptsächlich auf mehlbasierten Gerichten und Brot basieren\nC: A streng vegetarische Ernährung, inspiriert vo de Klostertraditionen\nD: Alle Mahlzeiten durch speziell gebraute Kräutertees und Suppen ersetzen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.08096405118703842,
+        "B": 0.0883115753531456,
+        "C": 0.11863775551319122,
+        "D": 0.057511113584041595
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is da traditionelle boarische Ansatz für Fastenessen während der Fastenzeit?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Vollständiges Fasten ohne Nahrungsaufnahme an bestimmten Wochentagen",
+          "B": "Einfache, fleischlose Mahlzeiten, de hauptsächlich auf mehlbasierten Gerichten und Brot basieren",
+          "C": "A streng vegetarische Ernährung, inspiriert vo de Klostertraditionen",
+          "D": "Alle Mahlzeiten durch speziell gebraute Kräutertees und Suppen ersetzen"
+        },
+        "similarities": {
+          "A": 0.08096405118703842,
+          "B": 0.0883115753531456,
+          "C": 0.11863775551319122,
+          "D": 0.057511113584041595
+        },
+        "gold_similarity": 0.0883115753531456,
+        "best_distractor_similarity": 0.11863775551319122,
+        "gold_margin": -0.030326180160045624,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Was für wuide Lösungen ham boarische Mönche se ausgedacht, um die strenga Fastenzeitn zu überstenga?\n\nOptions:\nA: De ham bestimmte Fleischsorten zu Gemüse für religiöse Zwecke erklärt\nB: De brauten starkes Bier als flüssige Mahlzeit, basierend auf dem Prinzip, dass Flüssigkeiten das Fasten nicht brechen\nC: De ham spezielle Fastenspeisen aus Italien und Österreich einführt\nD: De ham spezielle päpstliche Erlaubnis kriagt, an bestimmten Tagen Fleisch z'essen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4111489951610565,
+        "B": 0.4396628737449646,
+        "C": 0.3713701665401459,
+        "D": 0.5626996755599976
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was für wuide Lösungen ham boarische Mönche se ausgedacht, um die strenga Fastenzeitn zu überstenga?",
+        "semantic_anchor_text": "Was für wuide Lösungen ham boarische Mönche se ausgedacht, um die strenga Fastenzeitn zu überstenga?",
+        "semantic_candidate_texts": {
+          "A": "De ham bestimmte Fleischsorten zu Gemüse für religiöse Zwecke erklärt",
+          "B": "De brauten starkes Bier als flüssige Mahlzeit, basierend auf dem Prinzip, dass Flüssigkeiten das Fasten nicht brechen",
+          "C": "De ham spezielle Fastenspeisen aus Italien und Österreich einführt",
+          "D": "De ham spezielle päpstliche Erlaubnis kriagt, an bestimmten Tagen Fleisch z'essen"
+        },
+        "similarities": {
+          "A": 0.4111489951610565,
+          "B": 0.4396628737449646,
+          "C": 0.3713701665401459,
+          "D": 0.5626996755599976
+        },
+        "gold_similarity": 0.4396628737449646,
+        "best_distractor_similarity": 0.5626996755599976,
+        "gold_margin": -0.12303680181503296,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wia ham einige Bayern kreativ de Fastenregel gegn Floaschkonsum zrechtbogn?\n\nOptions:\nA: De ham Fleisch fein zerkleinert, damit es ned ois Fleisch erkannt werdn konnt\nB: De erklärten Biber und Otter zu Fischen, weil sie im Wasser lebten\nC: De ham argumentiert, dass grauchertes und getrocknetes Fleisch technisch gsehen koa richtiges Fleisch mehr is\nD: De ham Fleisch nur vor Sonnenaufgang und nach Sonnenuntergang gessen, um des Fasten ned z'brechen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.27132460474967957,
+        "B": 0.1844036877155304,
+        "C": 0.3365282416343689,
+        "D": 0.3365735411643982
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia ham einige Bayern kreativ de Fastenregel gegn Floaschkonsum zrechtbogn?",
+        "semantic_anchor_text": "Wia ham einige Bayern kreativ de Fastenregel gegn Floaschkonsum zrechtbogn?",
+        "semantic_candidate_texts": {
+          "A": "De ham Fleisch fein zerkleinert, damit es ned ois Fleisch erkannt werdn konnt",
+          "B": "De erklärten Biber und Otter zu Fischen, weil sie im Wasser lebten",
+          "C": "De ham argumentiert, dass grauchertes und getrocknetes Fleisch technisch gsehen koa richtiges Fleisch mehr is",
+          "D": "De ham Fleisch nur vor Sonnenaufgang und nach Sonnenuntergang gessen, um des Fasten ned z'brechen"
+        },
+        "similarities": {
+          "A": 0.27132460474967957,
+          "B": 0.1844036877155304,
+          "C": 0.3365282416343689,
+          "D": 0.3365735411643982
+        },
+        "gold_similarity": 0.1844036877155304,
+        "best_distractor_similarity": 0.3365735411643982,
+        "gold_margin": -0.1521698534488678,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Woraus besteht das boarische Essen Wasserschnalzn?\n\nOptions:\nA: A süßa Mehlknödel serviert mit Beerenkompott\nB: Oide Semmeln in Milch eingeweicht und in Butter gebraten\nC: Zwiebeln und Brotstücke gebraten und in Brühe mit Muskat und Salz gekocht\nD: Übrig gebliebener Brotteig flach backen und mit Buttermilch servieren\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.14010608196258545,
+        "B": 0.09191077202558517,
+        "C": 0.021283097565174103,
+        "D": 0.10109522938728333
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Woraus besteht das boarische Essen Wasserschnalzn?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "A süßa Mehlknödel serviert mit Beerenkompott",
+          "B": "Oide Semmeln in Milch eingeweicht und in Butter gebraten",
+          "C": "Zwiebeln und Brotstücke gebraten und in Brühe mit Muskat und Salz gekocht",
+          "D": "Übrig gebliebener Brotteig flach backen und mit Buttermilch servieren"
+        },
+        "similarities": {
+          "A": 0.14010608196258545,
+          "B": 0.09191077202558517,
+          "C": 0.021283097565174103,
+          "D": 0.10109522938728333
+        },
+        "gold_similarity": 0.021283097565174103,
+        "best_distractor_similarity": 0.14010608196258545,
+        "gold_margin": -0.11882298439741135,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wos san Rupfhauben und welchene kulturellen Bdeutungn haben de in Bayern?\n\nOptions:\nA: A festlicher Kucha, der traditionell zu Ostern in Oberbayern g'backen werd\nB: A einfaches mehlbasiertes Gericht aus Niederbayern, das einst Arme-Leute-Essen war, aber heid a beliebtes traditionelles Gericht ist\nC: A Art Semmel, de typisch fia Franken is und bei religiösen Zeremonien aufgstellt wird\nD: A süßes Gebäck, des im 19. Jahrhundert vo österreichischen Bäckern nach Bayern bracht worn is\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9846943616867065,
+        "B": 0.7517592906951904,
+        "C": 0.6445126533508301,
+        "D": 0.7206464409828186
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos san Rupfhauben und welchene kulturellen Bdeutungn haben de in Bayern?",
+        "semantic_anchor_text": "A: A festlicher Kucha, der traditionell zu Ostern in Oberbayern g'backen werd",
+        "semantic_candidate_texts": {
+          "A": "A festlicher Kucha, der traditionell zu Ostern in Oberbayern g'backen werd",
+          "B": "A einfaches mehlbasiertes Gericht aus Niederbayern, das einst Arme-Leute-Essen war, aber heid a beliebtes traditionelles Gericht ist",
+          "C": "A Art Semmel, de typisch fia Franken is und bei religiösen Zeremonien aufgstellt wird",
+          "D": "A süßes Gebäck, des im 19. Jahrhundert vo österreichischen Bäckern nach Bayern bracht worn is"
+        },
+        "similarities": {
+          "A": 0.9846943616867065,
+          "B": 0.7517592906951904,
+          "C": 0.6445126533508301,
+          "D": 0.7206464409828186
+        },
+        "gold_similarity": 0.7517592906951904,
+        "best_distractor_similarity": 0.9846943616867065,
+        "gold_margin": -0.2329350709915161,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: A festlicher Kucha, der traditionell zu Ostern in Oberbayern g'backen werd",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wos ist die Idee hinter dem boarischen Gericht Semmelschmarrn?\n\nOptions:\nA: Übrig gebliebene Ostereier verwenden, um a festliches süßes Dessert z'kreieren\nB: A Festtagsgericht, das für Feiern am Ende der Fastenzeit reserviert ist\nC: Alte Semmeln ned wegschmeißen, sondern in Milch und Ei einweichen und in Butter ausbacken\nD: A herzhaftes Pfannkuchengericht, des traditionell bei bayrischen Klosterfesten serviert wird\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.1746792495250702,
+        "B": 0.203496053814888,
+        "C": 0.08241531252861023,
+        "D": 0.11768625676631927
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos ist die Idee hinter dem boarischen Gericht Semmelschmarrn?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Übrig gebliebene Ostereier verwenden, um a festliches süßes Dessert z'kreieren",
+          "B": "A Festtagsgericht, das für Feiern am Ende der Fastenzeit reserviert ist",
+          "C": "Alte Semmeln ned wegschmeißen, sondern in Milch und Ei einweichen und in Butter ausbacken",
+          "D": "A herzhaftes Pfannkuchengericht, des traditionell bei bayrischen Klosterfesten serviert wird"
+        },
+        "similarities": {
+          "A": 0.1746792495250702,
+          "B": 0.203496053814888,
+          "C": 0.08241531252861023,
+          "D": 0.11768625676631927
+        },
+        "gold_similarity": 0.08241531252861023,
+        "best_distractor_similarity": 0.203496053814888,
+        "gold_margin": -0.12108074128627777,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Sammeln de Leit n Bayern Pilze, um sie\n\nOptions:\nA: An Restaurants z'verkaufen\nB: an Märkte zu verkaufen\nC: selbst zu verzehren\nD: wegzuwerfen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.29503417015075684,
+        "B": 0.20839494466781616,
+        "C": 0.8042930364608765,
+        "D": 0.2650437355041504
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Sammeln de Leit n Bayern Pilze, um sie",
+        "semantic_anchor_text": "C: selbst zu verzehren",
+        "semantic_candidate_texts": {
+          "A": "An Restaurants z'verkaufen",
+          "B": "an Märkte zu verkaufen",
+          "C": "selbst zu verzehren",
+          "D": "wegzuwerfen"
+        },
+        "similarities": {
+          "A": 0.29503417015075684,
+          "B": 0.20839494466781616,
+          "C": 0.8042930364608765,
+          "D": 0.2650437355041504
+        },
+        "gold_similarity": 0.8042930364608765,
+        "best_distractor_similarity": 0.29503417015075684,
+        "gold_margin": 0.5092588663101196,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: selbst zu verzehren",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Welchene drei Fleischsorten werdn für an Leberkäse verwendt?\n\nOptions:\nA: Corned Beef, Schweinefleisch, Speck\nB: Lamm, Kalb und geräucherter Schinken\nC: Hähnchen, Pute und Schweinebauch\nD: Wild, Wildschwein und Rindfleisch\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9767154455184937,
+        "B": 0.4585854709148407,
+        "C": 0.694951593875885,
+        "D": 0.6966407299041748
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchene drei Fleischsorten werdn für an Leberkäse verwendt?",
+        "semantic_anchor_text": "A: Corned Beef, Schweinefleisch, Speck",
+        "semantic_candidate_texts": {
+          "A": "Corned Beef, Schweinefleisch, Speck",
+          "B": "Lamm, Kalb und geräucherter Schinken",
+          "C": "Hähnchen, Pute und Schweinebauch",
+          "D": "Wild, Wildschwein und Rindfleisch"
+        },
+        "similarities": {
+          "A": 0.9767154455184937,
+          "B": 0.4585854709148407,
+          "C": 0.694951593875885,
+          "D": 0.6966407299041748
+        },
+        "gold_similarity": 0.9767154455184937,
+        "best_distractor_similarity": 0.6966407299041748,
+        "gold_margin": 0.28007471561431885,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Corned Beef, Schweinefleisch, Speck",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wie werd Leberkas am besten in Bezug auf die Zubereitungsmethode beschriebn?\n\nOptions:\nA: Roh gepökelt und über mehrere Wochen luftgetrocknet\nB: Üba Holzspänen g'reichert und dann g'kocht\nC: Überm offenen Feuer grillt und im Ganzen aufgtragt\nD: Gemahlen, gmischt und dann wia a Fleischkäse backt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.16649150848388672,
+        "B": 0.3410317897796631,
+        "C": 0.24325205385684967,
+        "D": 0.23327292501926422
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie werd Leberkas am besten in Bezug auf die Zubereitungsmethode beschriebn?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Roh gepökelt und über mehrere Wochen luftgetrocknet",
+          "B": "Üba Holzspänen g'reichert und dann g'kocht",
+          "C": "Überm offenen Feuer grillt und im Ganzen aufgtragt",
+          "D": "Gemahlen, gmischt und dann wia a Fleischkäse backt"
+        },
+        "similarities": {
+          "A": 0.16649150848388672,
+          "B": 0.3410317897796631,
+          "C": 0.24325205385684967,
+          "D": 0.23327292501926422
+        },
+        "gold_similarity": 0.23327292501926422,
+        "best_distractor_similarity": 0.3410317897796631,
+        "gold_margin": -0.10775886476039886,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Wos is a Semmel?\n\nOptions:\nA: A Art weiches süßes Gebäck gfüllt mit Marmelad oder Sahne\nB: A Art hartes Brötchen, beliebt in Süddeutschland\nC: A dichtes Roggenbrot, des ma meistns aufschneidet und mit Aufschnitt belegt\nD: A mit Käse gfülltes Fladenbrot\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9826858639717102,
+        "B": 0.5251109600067139,
+        "C": 0.6354813575744629,
+        "D": 0.6463805437088013
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is a Semmel?",
+        "semantic_anchor_text": "A: A Art weiches süßes Gebäck gefüllt mit Marmelade oder Sahne",
+        "semantic_candidate_texts": {
+          "A": "A Art weiches süßes Gebäck gfüllt mit Marmelad oder Sahne",
+          "B": "A Art hartes Brötchen, beliebt in Süddeutschland",
+          "C": "A dichtes Roggenbrot, des ma meistns aufschneidet und mit Aufschnitt belegt",
+          "D": "A mit Käse gfülltes Fladenbrot"
+        },
+        "similarities": {
+          "A": 0.9826858639717102,
+          "B": 0.5251109600067139,
+          "C": 0.6354813575744629,
+          "D": 0.6463805437088013
+        },
+        "gold_similarity": 0.5251109600067139,
+        "best_distractor_similarity": 0.9826858639717102,
+        "gold_margin": -0.45757490396499634,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: A Art weiches süßes Gebäck gefüllt mit Marmelade oder Sahne",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "culinary_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "culinary",
+      "bias": "cultural",
+      "prompt": "Bei welchene Mahlzeitn oder Gelegenheitn werd de Semmel typischerweise gessen?\n\nOptions:\nA: Mittag- und Abendessen ois Beilage\nB: Nur bei formellen Abendessen\nC: Frühstück, Brunch und Snacks\nD: Ausschließlich z'Weihnachten und Ostern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9792998433113098,
+        "B": 0.676283061504364,
+        "C": 0.7799585461616516,
+        "D": 0.4317469596862793
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bei welchene Mahlzeitn oder Gelegenheitn werd de Semmel typischerweise gessen?",
+        "semantic_anchor_text": "A: Mittag- und Abendessen ois Beilage",
+        "semantic_candidate_texts": {
+          "A": "Mittag- und Abendessen ois Beilage",
+          "B": "Nur bei formellen Abendessen",
+          "C": "Frühstück, Brunch und Snacks",
+          "D": "Ausschließlich z'Weihnachten und Ostern"
+        },
+        "similarities": {
+          "A": 0.9792998433113098,
+          "B": 0.676283061504364,
+          "C": 0.7799585461616516,
+          "D": 0.4317469596862793
+        },
+        "gold_similarity": 0.7799585461616516,
+        "best_distractor_similarity": 0.9792998433113098,
+        "gold_margin": -0.1993412971496582,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mittag- und Abendessen ois Beilage",
+        "max_new_tokens": 32
+      }
+    }
+  ]
+}

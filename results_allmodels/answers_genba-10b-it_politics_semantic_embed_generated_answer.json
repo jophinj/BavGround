@@ -1,0 +1,3661 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "genba-10b-it",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/genba-10b-it",
+  "source": "../other_models/genba-10b-it",
+  "dataset": "dataset/politics.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 128009,
+    "pad_token_id": 128009
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_generated_answer",
+    "mcq_strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 76.45,
+  "results": [
+    {
+      "id": "politics_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Which party has governed Bavaria continuously since 1957?\n\nOptions:\nA: SPD\nB: CSU\nC: FDP\nD: Grüne\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.35746943950653076,
+        "B": 0.5891458988189697,
+        "C": 0.03216923400759697,
+        "D": -0.011992521584033966
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which party has governed Bavaria continuously since 1957?",
+        "semantic_anchor_text": "CSU. The Christian Social Union (CSU) has governed Bavaria continuously since 1957.",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "CSU",
+          "C": "FDP",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.35746943950653076,
+          "B": 0.5891458988189697,
+          "C": 0.03216923400759697,
+          "D": -0.011992521584033966
+        },
+        "gold_similarity": 0.5891458988189697,
+        "best_distractor_similarity": 0.35746943950653076,
+        "gold_margin": 0.23167645931243896,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "CSU. The Christian Social Union (CSU) has governed Bavaria continuously since 1957.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is the name of Bavaria's state parliament?\n\nOptions:\nA: Bundesrat\nB: Bundestag\nC: Landtag\nD: Senat\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.493577241897583,
+        "B": 0.548160970211029,
+        "C": 0.5998902320861816,
+        "D": 0.253315806388855
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the name of Bavaria's state parliament?",
+        "semantic_anchor_text": "C: Landtag. \n\nThe Landtag is the state parliament of Bavaria, Germany. It is a unicameral legislative body with 180 members. The Landtag",
+        "semantic_candidate_texts": {
+          "A": "Bundesrat",
+          "B": "Bundestag",
+          "C": "Landtag",
+          "D": "Senat"
+        },
+        "similarities": {
+          "A": 0.493577241897583,
+          "B": 0.548160970211029,
+          "C": 0.5998902320861816,
+          "D": 0.253315806388855
+        },
+        "gold_similarity": 0.5998902320861816,
+        "best_distractor_similarity": 0.548160970211029,
+        "gold_margin": 0.05172926187515259,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Landtag. \n\nThe Landtag is the state parliament of Bavaria, Germany. It is a unicameral legislative body with 180 members. The Landtag",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Who became Minister-President of Bavaria in 2018?\n\nOptions:\nA: Edmund Stoiber\nB: Horst Seehofer\nC: Markus Söder\nD: Günther Beckstein\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5293309688568115,
+        "B": 0.5285964012145996,
+        "C": 0.955034613609314,
+        "D": 0.5127187371253967
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Who became Minister-President of Bavaria in 2018?",
+        "semantic_anchor_text": "C: Markus Söder.",
+        "semantic_candidate_texts": {
+          "A": "Edmund Stoiber",
+          "B": "Horst Seehofer",
+          "C": "Markus Söder",
+          "D": "Günther Beckstein"
+        },
+        "similarities": {
+          "A": 0.5293309688568115,
+          "B": 0.5285964012145996,
+          "C": 0.955034613609314,
+          "D": 0.5127187371253967
+        },
+        "gold_similarity": 0.955034613609314,
+        "best_distractor_similarity": 0.5293309688568115,
+        "gold_margin": 0.42570364475250244,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Markus Söder.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "In which city is the Bavarian state government headquartered?\n\nOptions:\nA: Nuremberg\nB: Augsburg\nC: Munich\nD: Regensburg\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5269266366958618,
+        "B": 0.5688561797142029,
+        "C": 0.7268064022064209,
+        "D": 0.4954659342765808
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In which city is the Bavarian state government headquartered?",
+        "semantic_anchor_text": "C: Munich\n\nThe Bavarian state government is headquartered in Munich.\nEnd of answer.\nNo follow-up questions. Thank you for using the assistant",
+        "semantic_candidate_texts": {
+          "A": "Nuremberg",
+          "B": "Augsburg",
+          "C": "Munich",
+          "D": "Regensburg"
+        },
+        "similarities": {
+          "A": 0.5269266366958618,
+          "B": 0.5688561797142029,
+          "C": 0.7268064022064209,
+          "D": 0.4954659342765808
+        },
+        "gold_similarity": 0.7268064022064209,
+        "best_distractor_similarity": 0.5688561797142029,
+        "gold_margin": 0.15795022249221802,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Munich\n\nThe Bavarian state government is headquartered in Munich.\nEnd of answer.\nNo follow-up questions. Thank you for using the assistant",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is the minimum percentage of votes needed to enter the Bavarian Landtag?\n\nOptions:\nA: 3%\nB: 5%\nC: 7%\nD: 10%\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6523473262786865,
+        "B": 0.4047677218914032,
+        "C": 0.45144736766815186,
+        "D": 0.3833710551261902
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the minimum percentage of votes needed to enter the Bavarian Landtag?",
+        "semantic_anchor_text": "A. 3% (The minimum percentage of votes needed to enter the Bavarian Landtag is 3%.)",
+        "semantic_candidate_texts": {
+          "A": "3%",
+          "B": "5%",
+          "C": "7%",
+          "D": "10%"
+        },
+        "similarities": {
+          "A": 0.6523473262786865,
+          "B": 0.4047677218914032,
+          "C": 0.45144736766815186,
+          "D": 0.3833710551261902
+        },
+        "gold_similarity": 0.4047677218914032,
+        "best_distractor_similarity": 0.6523473262786865,
+        "gold_margin": -0.24757960438728333,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A. 3% (The minimum percentage of votes needed to enter the Bavarian Landtag is 3%.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Which Bavarian politician also served as German Federal Finance Minister?\n\nOptions:\nA: Franz Josef Strauß\nB: Edmund Stoiber\nC: Horst Seehofer\nD: Markus Söder\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7094733119010925,
+        "B": 0.5163317322731018,
+        "C": 0.44864997267723083,
+        "D": 0.3796718120574951
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which Bavarian politician also served as German Federal Finance Minister?",
+        "semantic_anchor_text": "A: Franz Josef Strauß. He was a Bavarian politician and served as German Federal Finance Minister from 1955 to 1966. He was also the",
+        "semantic_candidate_texts": {
+          "A": "Franz Josef Strauß",
+          "B": "Edmund Stoiber",
+          "C": "Horst Seehofer",
+          "D": "Markus Söder"
+        },
+        "similarities": {
+          "A": 0.7094733119010925,
+          "B": 0.5163317322731018,
+          "C": 0.44864997267723083,
+          "D": 0.3796718120574951
+        },
+        "gold_similarity": 0.7094733119010925,
+        "best_distractor_similarity": 0.5163317322731018,
+        "gold_margin": 0.19314157962799072,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Franz Josef Strauß. He was a Bavarian politician and served as German Federal Finance Minister from 1955 to 1966. He was also the",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "How many constituencies does Bavaria have for Landtag elections?\n\nOptions:\nA: 71\nB: 91\nC: 101\nD: 121\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5006191730499268,
+        "B": 0.36946403980255127,
+        "C": 0.33794263005256653,
+        "D": 0.3244982361793518
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How many constituencies does Bavaria have for Landtag elections?",
+        "semantic_anchor_text": "A. 71. (Source: [Bayerischer Landtag](https://www.bayern.de/der-landtag/struktur/))",
+        "semantic_candidate_texts": {
+          "A": "71",
+          "B": "91",
+          "C": "101",
+          "D": "121"
+        },
+        "similarities": {
+          "A": 0.5006191730499268,
+          "B": 0.36946403980255127,
+          "C": 0.33794263005256653,
+          "D": 0.3244982361793518
+        },
+        "gold_similarity": 0.36946403980255127,
+        "best_distractor_similarity": 0.5006191730499268,
+        "gold_margin": -0.1311551332473755,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A. 71. (Source: [Bayerischer Landtag](https://www.bayern.de/der-landtag/struktur/))",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Which party came second in the 2023 Bavarian state election?\n\nOptions:\nA: SPD\nB: AfD\nC: Freie Wähler\nD: Grüne\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3271219730377197,
+        "B": 0.3002319931983948,
+        "C": 0.29435938596725464,
+        "D": 0.15378659963607788
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which party came second in the 2023 Bavarian state election?",
+        "semantic_anchor_text": "C: Freie Wähler\n\nThe Freie Wähler came second in the 2023 Bavarian state election.",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "AfD",
+          "C": "Freie Wähler",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.3271219730377197,
+          "B": 0.3002319931983948,
+          "C": 0.29435938596725464,
+          "D": 0.15378659963607788
+        },
+        "gold_similarity": 0.29435938596725464,
+        "best_distractor_similarity": 0.3271219730377197,
+        "gold_margin": -0.03276258707046509,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Freie Wähler\n\nThe Freie Wähler came second in the 2023 Bavarian state election.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is the official title of Bavaria's head of government?\n\nOptions:\nA: Gouverneur\nB: Bürgermeister\nC: Minister-President\nD: Landeshauptmann\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3166174590587616,
+        "B": 0.3175632059574127,
+        "C": 0.6970714926719666,
+        "D": 0.4545977711677551
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the official title of Bavaria's head of government?",
+        "semantic_anchor_text": "C: Minister-President. The Minister-President of Bavaria is the head of government of the German state of Bavaria. The position is equivalent to a",
+        "semantic_candidate_texts": {
+          "A": "Gouverneur",
+          "B": "Bürgermeister",
+          "C": "Minister-President",
+          "D": "Landeshauptmann"
+        },
+        "similarities": {
+          "A": 0.3166174590587616,
+          "B": 0.3175632059574127,
+          "C": 0.6970714926719666,
+          "D": 0.4545977711677551
+        },
+        "gold_similarity": 0.6970714926719666,
+        "best_distractor_similarity": 0.4545977711677551,
+        "gold_margin": 0.24247372150421143,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Minister-President. The Minister-President of Bavaria is the head of government of the German state of Bavaria. The position is equivalent to a",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Bavaria has a unique status in Germany described as a \"Free State.\" What is the German term?\n\nOptions:\nA: Bundesland\nB: Freistaat\nC: Stadtstaat\nD: Reichsland\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7449998259544373,
+        "B": 0.504372775554657,
+        "C": 0.3228132724761963,
+        "D": 0.6122561097145081
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bavaria has a unique status in Germany described as a \"Free State.\" What is the German term?",
+        "semantic_anchor_text": "The German term for Bavaria's unique status as a \"Free State\" is Bundesland.",
+        "semantic_candidate_texts": {
+          "A": "Bundesland",
+          "B": "Freistaat",
+          "C": "Stadtstaat",
+          "D": "Reichsland"
+        },
+        "similarities": {
+          "A": 0.7449998259544373,
+          "B": 0.504372775554657,
+          "C": 0.3228132724761963,
+          "D": 0.6122561097145081
+        },
+        "gold_similarity": 0.504372775554657,
+        "best_distractor_similarity": 0.7449998259544373,
+        "gold_margin": -0.24062705039978027,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "The German term for Bavaria's unique status as a \"Free State\" is Bundesland.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is Bavaria often accused of by media in northern Germany?\n\nOptions:\nA: Being too progressive and cosmopolitan\nB: Being economically weak but culturally rich\nC: Being economically strong but reactionary and separatist\nD: Being too focused on international politics\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5652780532836914,
+        "B": 0.6700925230979919,
+        "C": 0.9098927974700928,
+        "D": 0.46599751710891724
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is Bavaria often accused of by media in northern Germany?",
+        "semantic_anchor_text": "C: Being economically strong but reactionary and separatist.",
+        "semantic_candidate_texts": {
+          "A": "Being too progressive and cosmopolitan",
+          "B": "Being economically weak but culturally rich",
+          "C": "Being economically strong but reactionary and separatist",
+          "D": "Being too focused on international politics"
+        },
+        "similarities": {
+          "A": 0.5652780532836914,
+          "B": 0.6700925230979919,
+          "C": 0.9098927974700928,
+          "D": 0.46599751710891724
+        },
+        "gold_similarity": 0.9098927974700928,
+        "best_distractor_similarity": 0.6700925230979919,
+        "gold_margin": 0.23980027437210083,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Being economically strong but reactionary and separatist.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "How many crimes against public officials and elected representatives were registered in Bavaria in 2024?\n\nOptions:\nA: 163 offences, including 14 violent crimes\nB: 170 offences, including 11 violent crimes\nC: 170 offences, including 14 violent crimes\nD: 105 offences, including 11 violent crimes\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.896503746509552,
+        "B": 0.7507433891296387,
+        "C": 0.7520827054977417,
+        "D": 0.7290025353431702
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How many crimes against public officials and elected representatives were registered in Bavaria in 2024?",
+        "semantic_anchor_text": "A: 163 offences, including 14 violent crimes. (Option A is the correct answer).",
+        "semantic_candidate_texts": {
+          "A": "163 offences, including 14 violent crimes",
+          "B": "170 offences, including 11 violent crimes",
+          "C": "170 offences, including 14 violent crimes",
+          "D": "105 offences, including 11 violent crimes"
+        },
+        "similarities": {
+          "A": 0.896503746509552,
+          "B": 0.7507433891296387,
+          "C": 0.7520827054977417,
+          "D": 0.7290025353431702
+        },
+        "gold_similarity": 0.7520827054977417,
+        "best_distractor_similarity": 0.896503746509552,
+        "gold_margin": -0.1444210410118103,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 offences, including 14 violent crimes. (Option A is the correct answer).",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "According to political scientists, why are local politicians particularly vulnerable to attacks compared to state or federal politicians?\n\nOptions:\nA: Local politicians receive less media attention, making incidents easier to conceal\nB: Local politicians have fewer legal protections under German law\nC: Local politicians are more likely to make controversial decisions affecting daily life\nD: Local politicians are rooted in their communities and therefore easier to locate and confront\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.921660304069519,
+        "B": 0.5971470475196838,
+        "C": 0.6685467958450317,
+        "D": 0.6825478672981262
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "According to political scientists, why are local politicians particularly vulnerable to attacks compared to state or federal politicians?",
+        "semantic_anchor_text": "A: Local politicians receive less media attention, making incidents easier to conceal. (This is the correct answer.)",
+        "semantic_candidate_texts": {
+          "A": "Local politicians receive less media attention, making incidents easier to conceal",
+          "B": "Local politicians have fewer legal protections under German law",
+          "C": "Local politicians are more likely to make controversial decisions affecting daily life",
+          "D": "Local politicians are rooted in their communities and therefore easier to locate and confront"
+        },
+        "similarities": {
+          "A": 0.921660304069519,
+          "B": 0.5971470475196838,
+          "C": 0.6685467958450317,
+          "D": 0.6825478672981262
+        },
+        "gold_similarity": 0.6825478672981262,
+        "best_distractor_similarity": 0.921660304069519,
+        "gold_margin": -0.23911243677139282,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Local politicians receive less media attention, making incidents easier to conceal. (This is the correct answer.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "How many crimes against public officials and elected representatives were registered in Bavaria in 2023?\n\nOptions:\nA: 163 offences, including 11 violent crimes\nB: 100 offences, including 4 violent crimes\nC: 150 offences, including 8 violent crimes\nD: 200 offences, including 20 violent crimes\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9213571548461914,
+        "B": 0.6432673931121826,
+        "C": 0.7707962989807129,
+        "D": 0.7130742073059082
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How many crimes against public officials and elected representatives were registered in Bavaria in 2023?",
+        "semantic_anchor_text": "A: 163 offences, including 11 violent crimes. (Option A is correct)",
+        "semantic_candidate_texts": {
+          "A": "163 offences, including 11 violent crimes",
+          "B": "100 offences, including 4 violent crimes",
+          "C": "150 offences, including 8 violent crimes",
+          "D": "200 offences, including 20 violent crimes"
+        },
+        "similarities": {
+          "A": 0.9213571548461914,
+          "B": 0.6432673931121826,
+          "C": 0.7707962989807129,
+          "D": 0.7130742073059082
+        },
+        "gold_similarity": 0.9213571548461914,
+        "best_distractor_similarity": 0.7707962989807129,
+        "gold_margin": 0.15056085586547852,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 offences, including 11 violent crimes. (Option A is correct)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Why did the mayor of Dingolfing resign from office in 2025?\n\nOptions:\nA: He lost the municipal election\nB: He resigned due to threats and intimidation\nC: He had a corruption scandal\nD: He retired for health reasons\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.07613253593444824,
+        "B": -0.07400395721197128,
+        "C": 0.1807052493095398,
+        "D": 0.08731214702129364
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why did the mayor of Dingolfing resign from office in 2025?",
+        "semantic_anchor_text": "I'm sorry, but I do not have the information to answer that question. Can you provide me with more context or a source for me to look up",
+        "semantic_candidate_texts": {
+          "A": "He lost the municipal election",
+          "B": "He resigned due to threats and intimidation",
+          "C": "He had a corruption scandal",
+          "D": "He retired for health reasons"
+        },
+        "similarities": {
+          "A": 0.07613253593444824,
+          "B": -0.07400395721197128,
+          "C": 0.1807052493095398,
+          "D": 0.08731214702129364
+        },
+        "gold_similarity": -0.07400395721197128,
+        "best_distractor_similarity": 0.1807052493095398,
+        "gold_margin": -0.2547092065215111,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "I'm sorry, but I do not have the information to answer that question. Can you provide me with more context or a source for me to look up",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What does the Traunstein protest in 2022 reveal about Bavarian Catholics?\n\nOptions:\nA: Bavarian citizens easily separate regional identity from religion\nB: Even devout, community-rooted Bavarian Catholics publicly question Church leadership\nC: Bavarian society has largely turned away from the Catholic Church\nD: Church criticism in Bavaria comes mainly from secular and left-wing groups\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5716416239738464,
+        "B": 0.6615993976593018,
+        "C": 0.6440937519073486,
+        "D": 0.964668869972229
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the Traunstein protest in 2022 reveal about Bavarian Catholics?",
+        "semantic_anchor_text": "D: Church criticism in Bavaria comes mainly from secular and left-wing groups. (Option text only)",
+        "semantic_candidate_texts": {
+          "A": "Bavarian citizens easily separate regional identity from religion",
+          "B": "Even devout, community-rooted Bavarian Catholics publicly question Church leadership",
+          "C": "Bavarian society has largely turned away from the Catholic Church",
+          "D": "Church criticism in Bavaria comes mainly from secular and left-wing groups"
+        },
+        "similarities": {
+          "A": 0.5716416239738464,
+          "B": 0.6615993976593018,
+          "C": 0.6440937519073486,
+          "D": 0.964668869972229
+        },
+        "gold_similarity": 0.6615993976593018,
+        "best_distractor_similarity": 0.964668869972229,
+        "gold_margin": -0.30306947231292725,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Church criticism in Bavaria comes mainly from secular and left-wing groups. (Option text only)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is the general public perception of local politics, according to the article?\n\nOptions:\nA: Exciting and closely followed by most citizens\nB: Boring, complicated, and largely irrelevant to daily life\nC: Dominated by national party conflicts and ideological debates\nD: Transparent and easy to understand for ordinary people\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3408869206905365,
+        "B": 0.9289607405662537,
+        "C": 0.22435998916625977,
+        "D": 0.4021652340888977
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the general public perception of local politics, according to the article?",
+        "semantic_anchor_text": "B. Boring, complicated, and largely irrelevant to daily life",
+        "semantic_candidate_texts": {
+          "A": "Exciting and closely followed by most citizens",
+          "B": "Boring, complicated, and largely irrelevant to daily life",
+          "C": "Dominated by national party conflicts and ideological debates",
+          "D": "Transparent and easy to understand for ordinary people"
+        },
+        "similarities": {
+          "A": 0.3408869206905365,
+          "B": 0.9289607405662537,
+          "C": 0.22435998916625977,
+          "D": 0.4021652340888977
+        },
+        "gold_similarity": 0.9289607405662537,
+        "best_distractor_similarity": 0.4021652340888977,
+        "gold_margin": 0.526795506477356,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Boring, complicated, and largely irrelevant to daily life",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What types of issues are discussed in Bavarian municipal councils?\n\nOptions:\nA: Foreign policy and international trade\nB: National defense and federal budget planning\nC: Topics like flood protection, heating infrastructure, sports facilities and land use planning\nD: Immigration law and border control\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.21884016692638397,
+        "B": 0.3552057147026062,
+        "C": 0.970034658908844,
+        "D": 0.21410851180553436
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What types of issues are discussed in Bavarian municipal councils?",
+        "semantic_anchor_text": "C: Topics like flood protection, heating infrastructure, sports facilities and land use planning",
+        "semantic_candidate_texts": {
+          "A": "Foreign policy and international trade",
+          "B": "National defense and federal budget planning",
+          "C": "Topics like flood protection, heating infrastructure, sports facilities and land use planning",
+          "D": "Immigration law and border control"
+        },
+        "similarities": {
+          "A": 0.21884016692638397,
+          "B": 0.3552057147026062,
+          "C": 0.970034658908844,
+          "D": 0.21410851180553436
+        },
+        "gold_similarity": 0.970034658908844,
+        "best_distractor_similarity": 0.3552057147026062,
+        "gold_margin": 0.6148289442062378,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Topics like flood protection, heating infrastructure, sports facilities and land use planning",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "How does Bavaria compare to other German states in terms of wind energy expansion?\n\nOptions:\nA: Bavaria leads Germany in the number of newly built wind turbines\nB: Bavaria is roughly average compared to other German states\nC: Bavaria significantly lags behind other German states\nD: Bavaria has banned all new wind energy projects indefinitely\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6339515447616577,
+        "B": 0.8727461695671082,
+        "C": 0.6311985850334167,
+        "D": 0.4145162105560303
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How does Bavaria compare to other German states in terms of wind energy expansion?",
+        "semantic_anchor_text": "B. Bavaria is roughly average compared to other German states. (Source: Windbranche Journal, 2021)",
+        "semantic_candidate_texts": {
+          "A": "Bavaria leads Germany in the number of newly built wind turbines",
+          "B": "Bavaria is roughly average compared to other German states",
+          "C": "Bavaria significantly lags behind other German states",
+          "D": "Bavaria has banned all new wind energy projects indefinitely"
+        },
+        "similarities": {
+          "A": 0.6339515447616577,
+          "B": 0.8727461695671082,
+          "C": 0.6311985850334167,
+          "D": 0.4145162105560303
+        },
+        "gold_similarity": 0.6311985850334167,
+        "best_distractor_similarity": 0.8727461695671082,
+        "gold_margin": -0.2415475845336914,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Bavaria is roughly average compared to other German states. (Source: Windbranche Journal, 2021)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What is the role of nature conservation organizations like the LBV in Bavaria's energy transition?\n\nOptions:\nA: They are firmly opposed to all forms of renewable energy expansion\nB: They generally support the energy transition but push back when protected species are at risk\nC: They have no legal standing to challenge wind energy projects in court\nD: They are funded by the Bavarian state government to approve wind energy projects\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.38504448533058167,
+        "B": 0.9816619157791138,
+        "C": 0.20374555885791779,
+        "D": 0.2790074348449707
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the role of nature conservation organizations like the LBV in Bavaria's energy transition?",
+        "semantic_anchor_text": "B: They generally support the energy transition but push back when protected species are at risk",
+        "semantic_candidate_texts": {
+          "A": "They are firmly opposed to all forms of renewable energy expansion",
+          "B": "They generally support the energy transition but push back when protected species are at risk",
+          "C": "They have no legal standing to challenge wind energy projects in court",
+          "D": "They are funded by the Bavarian state government to approve wind energy projects"
+        },
+        "similarities": {
+          "A": 0.38504448533058167,
+          "B": 0.9816619157791138,
+          "C": 0.20374555885791779,
+          "D": 0.2790074348449707
+        },
+        "gold_similarity": 0.9816619157791138,
+        "best_distractor_similarity": 0.38504448533058167,
+        "gold_margin": 0.5966174304485321,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: They generally support the energy transition but push back when protected species are at risk",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "How are the legal instruments called that the local governments use to regulate farming in Upper Bavaria?\n\nOptions:\nA: Einheimischenmodelle\nB: Gesetze\nC: Bauergesetze\nD: Landwirtschaftsgesetze\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.35413071513175964,
+        "B": 0.5827756524085999,
+        "C": 0.4161841571331024,
+        "D": 0.9552880525588989
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How are the legal instruments called that the local governments use to regulate farming in Upper Bavaria?",
+        "semantic_anchor_text": "D: Landwirtschaftsgesetze",
+        "semantic_candidate_texts": {
+          "A": "Einheimischenmodelle",
+          "B": "Gesetze",
+          "C": "Bauergesetze",
+          "D": "Landwirtschaftsgesetze"
+        },
+        "similarities": {
+          "A": 0.35413071513175964,
+          "B": 0.5827756524085999,
+          "C": 0.4161841571331024,
+          "D": 0.9552880525588989
+        },
+        "gold_similarity": 0.35413071513175964,
+        "best_distractor_similarity": 0.9552880525588989,
+        "gold_margin": -0.6011573374271393,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Landwirtschaftsgesetze",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Why are in-migrants in rural Bavaria often considered outsiders by the natives?\n\nOptions:\nA: Lack of participation in village activities\nB: They are different\nC: Lack of interest in local life\nD: Because in-migrants might not stay a long time\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.23534363508224487,
+        "B": 0.24947577714920044,
+        "C": 0.35212740302085876,
+        "D": 0.9590561389923096
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why are in-migrants in rural Bavaria often considered outsiders by the natives?",
+        "semantic_anchor_text": "D: Because in-migrants might not stay a long time",
+        "semantic_candidate_texts": {
+          "A": "Lack of participation in village activities",
+          "B": "They are different",
+          "C": "Lack of interest in local life",
+          "D": "Because in-migrants might not stay a long time"
+        },
+        "similarities": {
+          "A": 0.23534363508224487,
+          "B": 0.24947577714920044,
+          "C": 0.35212740302085876,
+          "D": 0.9590561389923096
+        },
+        "gold_similarity": 0.23534363508224487,
+        "best_distractor_similarity": 0.9590561389923096,
+        "gold_margin": -0.7237125039100647,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Because in-migrants might not stay a long time",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Who qualifies as 'Einheimische' in Bavaria?\n\nOptions:\nA: Natives\nB: Outsiders\nC: Homeloving people\nD: Heimat loving people\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3534497022628784,
+        "B": 0.3140307068824768,
+        "C": 0.5943393707275391,
+        "D": 0.9459022879600525
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Who qualifies as 'Einheimische' in Bavaria?",
+        "semantic_anchor_text": "D: Heimat loving people",
+        "semantic_candidate_texts": {
+          "A": "Natives",
+          "B": "Outsiders",
+          "C": "Homeloving people",
+          "D": "Heimat loving people"
+        },
+        "similarities": {
+          "A": 0.3534497022628784,
+          "B": 0.3140307068824768,
+          "C": 0.5943393707275391,
+          "D": 0.9459022879600525
+        },
+        "gold_similarity": 0.3534497022628784,
+        "best_distractor_similarity": 0.9459022879600525,
+        "gold_margin": -0.5924525856971741,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Heimat loving people",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "What major political change occurred in Bavaria around 1978 that fundamentally altered village power structures?\n\nOptions:\nA: The Eingemeindung (administrative rationalization) abolished village heads and concentrated power at the town level\nB: Bavaria gained independence from the German federal system\nC: Universal suffrage was extended to women in local elections\nD: The Catholic Church was banned from participating in village governance\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9897675514221191,
+        "B": 0.39298737049102783,
+        "C": 0.24645668268203735,
+        "D": 0.41077399253845215
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What major political change occurred in Bavaria around 1978 that fundamentally altered village power structures?",
+        "semantic_anchor_text": "A: The Eingemeindung (administrative rationalization) abolished village heads and concentrated power at the town level.",
+        "semantic_candidate_texts": {
+          "A": "The Eingemeindung (administrative rationalization) abolished village heads and concentrated power at the town level",
+          "B": "Bavaria gained independence from the German federal system",
+          "C": "Universal suffrage was extended to women in local elections",
+          "D": "The Catholic Church was banned from participating in village governance"
+        },
+        "similarities": {
+          "A": 0.9897675514221191,
+          "B": 0.39298737049102783,
+          "C": 0.24645668268203735,
+          "D": 0.41077399253845215
+        },
+        "gold_similarity": 0.9897675514221191,
+        "best_distractor_similarity": 0.41077399253845215,
+        "gold_margin": 0.578993558883667,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: The Eingemeindung (administrative rationalization) abolished village heads and concentrated power at the town level.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "At the annual Bürgerversammlung (citizens' meeting) in Bavarian villages, what unspoken agreement exists between the mayor and villagers?\n\nOptions:\nA: Free beer is provided to all attendees to ensure good attendance\nB: Both sides tacitly \"perform order\" and harmony, avoiding raising sharp issues despite underlying conflicts\nC: The mayor must resign if more than 10 villagers object to any policy\nD: Villagers are legally required to attend or face fines\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.1800227165222168,
+        "B": 0.9498869180679321,
+        "C": 0.0928952544927597,
+        "D": 0.15094545483589172
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "At the annual Bürgerversammlung (citizens' meeting) in Bavarian villages, what unspoken agreement exists between the mayor and villagers?",
+        "semantic_anchor_text": "B. Both sides tacitly \"perform order\" and harmony, avoiding raising sharp issues despite underlying conflicts. (Option text only)",
+        "semantic_candidate_texts": {
+          "A": "Free beer is provided to all attendees to ensure good attendance",
+          "B": "Both sides tacitly \"perform order\" and harmony, avoiding raising sharp issues despite underlying conflicts",
+          "C": "The mayor must resign if more than 10 villagers object to any policy",
+          "D": "Villagers are legally required to attend or face fines"
+        },
+        "similarities": {
+          "A": 0.1800227165222168,
+          "B": 0.9498869180679321,
+          "C": 0.0928952544927597,
+          "D": 0.15094545483589172
+        },
+        "gold_similarity": 0.9498869180679321,
+        "best_distractor_similarity": 0.1800227165222168,
+        "gold_margin": 0.7698642015457153,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Both sides tacitly \"perform order\" and harmony, avoiding raising sharp issues despite underlying conflicts. (Option text only)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welche Partei regiert Bayern ununterbrochen seit 1957?\n\nOptions:\nA: SPD\nB: CSU\nC: FDP\nD: Grüne\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.31401145458221436,
+        "B": 0.47281134128570557,
+        "C": 0.03289872035384178,
+        "D": -0.042426787316799164
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Partei regiert Bayern ununterbrochen seit 1957?",
+        "semantic_anchor_text": "Die CSU (CSU) regiert Bayern ununterbrochen seit 1957. Antwort A.",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "CSU",
+          "C": "FDP",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.31401145458221436,
+          "B": 0.47281134128570557,
+          "C": 0.03289872035384178,
+          "D": -0.042426787316799164
+        },
+        "gold_similarity": 0.47281134128570557,
+        "best_distractor_similarity": 0.31401145458221436,
+        "gold_margin": 0.1587998867034912,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die CSU (CSU) regiert Bayern ununterbrochen seit 1957. Antwort A.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie heißt das bayerische Landesparlament?\n\nOptions:\nA: Bundesrat\nB: Bundestag\nC: Landtag\nD: Senat\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7064857482910156,
+        "B": 0.7099350690841675,
+        "C": 0.3575049936771393,
+        "D": 0.31763380765914917
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie heißt das bayerische Landesparlament?",
+        "semantic_anchor_text": "Das bayerische Landesparlament heißt Landtag. Option C.",
+        "semantic_candidate_texts": {
+          "A": "Bundesrat",
+          "B": "Bundestag",
+          "C": "Landtag",
+          "D": "Senat"
+        },
+        "similarities": {
+          "A": 0.7064857482910156,
+          "B": 0.7099350690841675,
+          "C": 0.3575049936771393,
+          "D": 0.31763380765914917
+        },
+        "gold_similarity": 0.3575049936771393,
+        "best_distractor_similarity": 0.7099350690841675,
+        "gold_margin": -0.3524300754070282,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das bayerische Landesparlament heißt Landtag. Option C.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wer wurde 2018 Ministerpräsident von Bayern?\n\nOptions:\nA: Edmund Stoiber\nB: Horst Seehofer\nC: Markus Söder\nD: Günther Beckstein\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.27446499466896057,
+        "B": 0.42213132977485657,
+        "C": 0.7034668922424316,
+        "D": 0.3867366909980774
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer wurde 2018 Ministerpräsident von Bayern?",
+        "semantic_anchor_text": "Markus Söder wurde 2018 Ministerpr�sident von Bayern.",
+        "semantic_candidate_texts": {
+          "A": "Edmund Stoiber",
+          "B": "Horst Seehofer",
+          "C": "Markus Söder",
+          "D": "Günther Beckstein"
+        },
+        "similarities": {
+          "A": 0.27446499466896057,
+          "B": 0.42213132977485657,
+          "C": 0.7034668922424316,
+          "D": 0.3867366909980774
+        },
+        "gold_similarity": 0.7034668922424316,
+        "best_distractor_similarity": 0.42213132977485657,
+        "gold_margin": 0.2813355624675751,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Markus Söder wurde 2018 Ministerpr�sident von Bayern.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "In welcher Stadt hat die bayerische Staatsregierung ihren Sitz?\n\nOptions:\nA: Nürnberg\nB: Augsburg\nC: München\nD: Regensburg\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4824073612689972,
+        "B": 0.5403810739517212,
+        "C": 0.7476479411125183,
+        "D": 0.44950684905052185
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In welcher Stadt hat die bayerische Staatsregierung ihren Sitz?",
+        "semantic_anchor_text": "Der Sitz der bayerischen Staatsregierung ist in München.",
+        "semantic_candidate_texts": {
+          "A": "Nürnberg",
+          "B": "Augsburg",
+          "C": "München",
+          "D": "Regensburg"
+        },
+        "similarities": {
+          "A": 0.4824073612689972,
+          "B": 0.5403810739517212,
+          "C": 0.7476479411125183,
+          "D": 0.44950684905052185
+        },
+        "gold_similarity": 0.7476479411125183,
+        "best_distractor_similarity": 0.5403810739517212,
+        "gold_margin": 0.20726686716079712,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Der Sitz der bayerischen Staatsregierung ist in München.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welcher Mindestprozentsatz an Stimmen ist nötig, um in den Bayerischen Landtag einzuziehen?\n\nOptions:\nA: 3%\nB: 5%\nC: 7%\nD: 10%\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.43238621950149536,
+        "B": 0.61165452003479,
+        "C": 0.40634018182754517,
+        "D": 0.41752490401268005
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Mindestprozentsatz an Stimmen ist nötig, um in den Bayerischen Landtag einzuziehen?",
+        "semantic_anchor_text": "Der Mindestprozentsatz an Stimmen, der für die Wahl in den Bayerischen Landtag erforderlich ist, beträgt 5%. (Option B)",
+        "semantic_candidate_texts": {
+          "A": "3%",
+          "B": "5%",
+          "C": "7%",
+          "D": "10%"
+        },
+        "similarities": {
+          "A": 0.43238621950149536,
+          "B": 0.61165452003479,
+          "C": 0.40634018182754517,
+          "D": 0.41752490401268005
+        },
+        "gold_similarity": 0.61165452003479,
+        "best_distractor_similarity": 0.43238621950149536,
+        "gold_margin": 0.17926830053329468,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Der Mindestprozentsatz an Stimmen, der für die Wahl in den Bayerischen Landtag erforderlich ist, beträgt 5%. (Option B)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welcher bayerische Politiker diente auch als deutscher Bundesfinanzminister?\n\nOptions:\nA: Franz Josef Strauß\nB: Edmund Stoiber\nC: Horst Seehofer\nD: Markus Söder\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7176076173782349,
+        "B": 0.5063181519508362,
+        "C": 0.44916367530822754,
+        "D": 0.39510858058929443
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher bayerische Politiker diente auch als deutscher Bundesfinanzminister?",
+        "semantic_anchor_text": "A: Franz Josef Strauß diente sowohl als bayerischer Politiker als auch als deutscher Bundesfinanzminister.",
+        "semantic_candidate_texts": {
+          "A": "Franz Josef Strauß",
+          "B": "Edmund Stoiber",
+          "C": "Horst Seehofer",
+          "D": "Markus Söder"
+        },
+        "similarities": {
+          "A": 0.7176076173782349,
+          "B": 0.5063181519508362,
+          "C": 0.44916367530822754,
+          "D": 0.39510858058929443
+        },
+        "gold_similarity": 0.7176076173782349,
+        "best_distractor_similarity": 0.5063181519508362,
+        "gold_margin": 0.21128946542739868,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Franz Josef Strauß diente sowohl als bayerischer Politiker als auch als deutscher Bundesfinanzminister.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie viele Wahlkreise hat Bayern für Landtagswahlen?\n\nOptions:\nA: 71\nB: 91\nC: 101\nD: 121\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5855981111526489,
+        "B": 0.43477848172187805,
+        "C": 0.43614980578422546,
+        "D": 0.3661305904388428
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie viele Wahlkreise hat Bayern für Landtagswahlen?",
+        "semantic_anchor_text": "A: 71. (1) 71 Wahlkreise hat Bayern für Landtagswahlen.",
+        "semantic_candidate_texts": {
+          "A": "71",
+          "B": "91",
+          "C": "101",
+          "D": "121"
+        },
+        "similarities": {
+          "A": 0.5855981111526489,
+          "B": 0.43477848172187805,
+          "C": 0.43614980578422546,
+          "D": 0.3661305904388428
+        },
+        "gold_similarity": 0.43477848172187805,
+        "best_distractor_similarity": 0.5855981111526489,
+        "gold_margin": -0.15081962943077087,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 71. (1) 71 Wahlkreise hat Bayern für Landtagswahlen.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welche Partei wurde bei der bayerischen Landtagswahl 2023 Zweite?\n\nOptions:\nA: SPD\nB: AfD\nC: Freie Wähler\nD: Grüne\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2719052731990814,
+        "B": 0.2827736735343933,
+        "C": 0.6509299278259277,
+        "D": 0.18099723756313324
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Partei wurde bei der bayerischen Landtagswahl 2023 Zweite?",
+        "semantic_anchor_text": "C: Freie Wähler\n\nBei der bayerischen Landtagswahl 2023 wurden die Freien Wähler Zweiter.\nEnde der Antwort.\nStop. 🛑",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "AfD",
+          "C": "Freie Wähler",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.2719052731990814,
+          "B": 0.2827736735343933,
+          "C": 0.6509299278259277,
+          "D": 0.18099723756313324
+        },
+        "gold_similarity": 0.6509299278259277,
+        "best_distractor_similarity": 0.2827736735343933,
+        "gold_margin": 0.3681562542915344,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Freie Wähler\n\nBei der bayerischen Landtagswahl 2023 wurden die Freien Wähler Zweiter.\nEnde der Antwort.\nStop. 🛑",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie lautet der offizielle Titel des bayerischen Regierungschefs?\n\nOptions:\nA: Gouverneur\nB: Bürgermeister\nC: Ministerpräsident\nD: Landeshauptmann\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.46056607365608215,
+        "B": 0.4926535487174988,
+        "C": 0.5498301386833191,
+        "D": 0.5547051429748535
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie lautet der offizielle Titel des bayerischen Regierungschefs?",
+        "semantic_anchor_text": "Der offizielle Titel des bayerischen Regierungschefs ist Ministerpr�sident. (A) Gouverneur, (B) Bürgermeister, (D) Landeshauptmann sind",
+        "semantic_candidate_texts": {
+          "A": "Gouverneur",
+          "B": "Bürgermeister",
+          "C": "Ministerpräsident",
+          "D": "Landeshauptmann"
+        },
+        "similarities": {
+          "A": 0.46056607365608215,
+          "B": 0.4926535487174988,
+          "C": 0.5498301386833191,
+          "D": 0.5547051429748535
+        },
+        "gold_similarity": 0.5498301386833191,
+        "best_distractor_similarity": 0.5547051429748535,
+        "gold_margin": -0.004875004291534424,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Der offizielle Titel des bayerischen Regierungschefs ist Ministerpr�sident. (A) Gouverneur, (B) Bürgermeister, (D) Landeshauptmann sind",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Bayern hat einen besonderen Status in Deutschland, beschrieben als \"Freistaat\". Wie lautet der deutsche Begriff?\n\nOptions:\nA: Bundesland\nB: Freistaat\nC: Stadtstaat\nD: Reichsland\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7663673162460327,
+        "B": 0.467001736164093,
+        "C": 0.3706691265106201,
+        "D": 0.6747130155563354
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern hat einen besonderen Status in Deutschland, beschrieben als \"Freistaat\". Wie lautet der deutsche Begriff?",
+        "semantic_anchor_text": "Der deutsche Begriff für den besonderen Status Bayerns in Deutschland, beschrieben als \"Freistaat\", ist \"Freistaat\". Option A: Bundesland ist ebenfalls korrekt. Option",
+        "semantic_candidate_texts": {
+          "A": "Bundesland",
+          "B": "Freistaat",
+          "C": "Stadtstaat",
+          "D": "Reichsland"
+        },
+        "similarities": {
+          "A": 0.7663673162460327,
+          "B": 0.467001736164093,
+          "C": 0.3706691265106201,
+          "D": 0.6747130155563354
+        },
+        "gold_similarity": 0.467001736164093,
+        "best_distractor_similarity": 0.7663673162460327,
+        "gold_margin": -0.2993655800819397,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Der deutsche Begriff für den besonderen Status Bayerns in Deutschland, beschrieben als \"Freistaat\", ist \"Freistaat\". Option A: Bundesland ist ebenfalls korrekt. Option",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Was wird Bayern von Medien in Norddeutschland oft vorgeworfen?\n\nOptions:\nA: Zu progressiv und weltoffen zu sein\nB: Wirtschaftlich schwach, aber kulturell reich zu sein\nC: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein\nD: Zu sehr auf internationale Politik fokussiert zu sein\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5750072002410889,
+        "B": 0.6481605768203735,
+        "C": 0.8760727643966675,
+        "D": 0.46921753883361816
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was wird Bayern von Medien in Norddeutschland oft vorgeworfen?",
+        "semantic_anchor_text": "C: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein.\n\nHinweis: Diese Antwort basiert auf der Annahme, dass die Frage",
+        "semantic_candidate_texts": {
+          "A": "Zu progressiv und weltoffen zu sein",
+          "B": "Wirtschaftlich schwach, aber kulturell reich zu sein",
+          "C": "Wirtschaftlich stark, aber reaktionär und separatistisch zu sein",
+          "D": "Zu sehr auf internationale Politik fokussiert zu sein"
+        },
+        "similarities": {
+          "A": 0.5750072002410889,
+          "B": 0.6481605768203735,
+          "C": 0.8760727643966675,
+          "D": 0.46921753883361816
+        },
+        "gold_similarity": 0.8760727643966675,
+        "best_distractor_similarity": 0.6481605768203735,
+        "gold_margin": 0.22791218757629395,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein.\n\nHinweis: Diese Antwort basiert auf der Annahme, dass die Frage",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie viele Straftaten gegen Amtsträger und gewählte Vertreter wurden 2024 in Bayern registriert?\n\nOptions:\nA: 163 Straftaten, darunter 14 Gewaltdelikte\nB: 170 Straftaten, darunter 11 Gewaltdelikte\nC: 170 Straftaten, darunter 14 Gewaltdelikte\nD: 105 Straftaten, darunter 11 Gewaltdelikte\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9763169288635254,
+        "B": 0.8015820980072021,
+        "C": 0.8169552087783813,
+        "D": 0.7701385617256165
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie viele Straftaten gegen Amtsträger und gewählte Vertreter wurden 2024 in Bayern registriert?",
+        "semantic_anchor_text": "A: 163 Straftaten, darunter 14 Gewaltdelikte.",
+        "semantic_candidate_texts": {
+          "A": "163 Straftaten, darunter 14 Gewaltdelikte",
+          "B": "170 Straftaten, darunter 11 Gewaltdelikte",
+          "C": "170 Straftaten, darunter 14 Gewaltdelikte",
+          "D": "105 Straftaten, darunter 11 Gewaltdelikte"
+        },
+        "similarities": {
+          "A": 0.9763169288635254,
+          "B": 0.8015820980072021,
+          "C": 0.8169552087783813,
+          "D": 0.7701385617256165
+        },
+        "gold_similarity": 0.8169552087783813,
+        "best_distractor_similarity": 0.9763169288635254,
+        "gold_margin": -0.15936172008514404,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 Straftaten, darunter 14 Gewaltdelikte.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Laut Politikwissenschaftlern, warum sind Lokalpolitiker im Vergleich zu Landes- oder Bundespolitikern besonders anfällig für Angriffe?\n\nOptions:\nA: Lokalpolitiker erhalten weniger Medienaufmerksamkeit, wodurch Vorfälle leichter zu verbergen sind\nB: Lokalpolitiker haben weniger rechtlichen Schutz nach deutschem Recht\nC: Lokalpolitiker treffen eher kontroverse Entscheidungen, die den Alltag betreffen\nD: Lokalpolitiker sind in ihren Gemeinden verwurzelt und daher leichter zu lokalisieren und zu konfrontieren\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9652366042137146,
+        "B": 0.5982325673103333,
+        "C": 0.6591577529907227,
+        "D": 0.6850616931915283
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Laut Politikwissenschaftlern, warum sind Lokalpolitiker im Vergleich zu Landes- oder Bundespolitikern besonders anfällig für Angriffe?",
+        "semantic_anchor_text": "A: Lokalpolitiker erhalten weniger Medienaufmerksamkeit, wodurch Vorf�lle leichter zu verbergen sind.",
+        "semantic_candidate_texts": {
+          "A": "Lokalpolitiker erhalten weniger Medienaufmerksamkeit, wodurch Vorfälle leichter zu verbergen sind",
+          "B": "Lokalpolitiker haben weniger rechtlichen Schutz nach deutschem Recht",
+          "C": "Lokalpolitiker treffen eher kontroverse Entscheidungen, die den Alltag betreffen",
+          "D": "Lokalpolitiker sind in ihren Gemeinden verwurzelt und daher leichter zu lokalisieren und zu konfrontieren"
+        },
+        "similarities": {
+          "A": 0.9652366042137146,
+          "B": 0.5982325673103333,
+          "C": 0.6591577529907227,
+          "D": 0.6850616931915283
+        },
+        "gold_similarity": 0.6850616931915283,
+        "best_distractor_similarity": 0.9652366042137146,
+        "gold_margin": -0.2801749110221863,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Lokalpolitiker erhalten weniger Medienaufmerksamkeit, wodurch Vorf�lle leichter zu verbergen sind.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie viele Straftaten gegen Amtsträger und gewählte Vertreter wurden 2023 in Bayern registriert?\n\nOptions:\nA: 163 Straftaten, darunter 11 Gewaltdelikte\nB: 100 Straftaten, darunter 4 Gewaltdelikte\nC: 150 Straftaten, darunter 8 Gewaltdelikte\nD: 200 Straftaten, darunter 20 Gewaltdelikte\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9783124923706055,
+        "B": 0.6337825059890747,
+        "C": 0.7841799259185791,
+        "D": 0.7319120168685913
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie viele Straftaten gegen Amtsträger und gewählte Vertreter wurden 2023 in Bayern registriert?",
+        "semantic_anchor_text": "A: 163 Straftaten, darunter 11 Gewaltdelikte.",
+        "semantic_candidate_texts": {
+          "A": "163 Straftaten, darunter 11 Gewaltdelikte",
+          "B": "100 Straftaten, darunter 4 Gewaltdelikte",
+          "C": "150 Straftaten, darunter 8 Gewaltdelikte",
+          "D": "200 Straftaten, darunter 20 Gewaltdelikte"
+        },
+        "similarities": {
+          "A": 0.9783124923706055,
+          "B": 0.6337825059890747,
+          "C": 0.7841799259185791,
+          "D": 0.7319120168685913
+        },
+        "gold_similarity": 0.9783124923706055,
+        "best_distractor_similarity": 0.7841799259185791,
+        "gold_margin": 0.19413256645202637,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 Straftaten, darunter 11 Gewaltdelikte.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Warum trat der Bürgermeister von Dingolfing 2025 von seinem Amt zurück?\n\nOptions:\nA: Er verlor die Kommunalwahl\nB: Er trat aufgrund von Drohungen und Einschüchterung zurück\nC: Er hatte einen Korruptionsskandal\nD: Er ging aus gesundheitlichen Gründen in den Ruhestand\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.37529149651527405,
+        "B": 0.8897335529327393,
+        "C": 0.33194947242736816,
+        "D": 0.5088114738464355
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum trat der Bürgermeister von Dingolfing 2025 von seinem Amt zurück?",
+        "semantic_anchor_text": "Er trat aufgrund von Drohungen und Einsch�chterung zurück.",
+        "semantic_candidate_texts": {
+          "A": "Er verlor die Kommunalwahl",
+          "B": "Er trat aufgrund von Drohungen und Einschüchterung zurück",
+          "C": "Er hatte einen Korruptionsskandal",
+          "D": "Er ging aus gesundheitlichen Gründen in den Ruhestand"
+        },
+        "similarities": {
+          "A": 0.37529149651527405,
+          "B": 0.8897335529327393,
+          "C": 0.33194947242736816,
+          "D": 0.5088114738464355
+        },
+        "gold_similarity": 0.8897335529327393,
+        "best_distractor_similarity": 0.5088114738464355,
+        "gold_margin": 0.3809220790863037,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Er trat aufgrund von Drohungen und Einsch�chterung zurück.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Was zeigt der Traunsteiner Protest 2022 über bayerische Katholiken?\n\nOptions:\nA: Bayerische Bürger trennen leicht regionale Identität von Religion\nB: Selbst gläubige, gemeindeverankerte bayerische Katholiken hinterfragen öffentlich die Kirchenführung\nC: Die bayerische Gesellschaft hat sich weitgehend von der katholischen Kirche abgewandt\nD: Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6935048699378967,
+        "B": 0.7145902514457703,
+        "C": 0.6762977838516235,
+        "D": 0.9376659989356995
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was zeigt der Traunsteiner Protest 2022 über bayerische Katholiken?",
+        "semantic_anchor_text": "D. Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen. (1)  Quelle: [Artikel über den Traunsteiner Protest",
+        "semantic_candidate_texts": {
+          "A": "Bayerische Bürger trennen leicht regionale Identität von Religion",
+          "B": "Selbst gläubige, gemeindeverankerte bayerische Katholiken hinterfragen öffentlich die Kirchenführung",
+          "C": "Die bayerische Gesellschaft hat sich weitgehend von der katholischen Kirche abgewandt",
+          "D": "Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen"
+        },
+        "similarities": {
+          "A": 0.6935048699378967,
+          "B": 0.7145902514457703,
+          "C": 0.6762977838516235,
+          "D": 0.9376659989356995
+        },
+        "gold_similarity": 0.7145902514457703,
+        "best_distractor_similarity": 0.9376659989356995,
+        "gold_margin": -0.2230757474899292,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D. Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen. (1)  Quelle: [Artikel über den Traunsteiner Protest",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie wird Lokalpolitik laut Artikel von der Öffentlichkeit wahrgenommen?\n\nOptions:\nA: Spannend und von den meisten Bürgern eng verfolgt\nB: Langweilig, kompliziert und weitgehend irrelevant für den Alltag\nC: Dominiert von nationalen Parteikonflikten und ideologischen Debatten\nD: Transparent und für normale Bürger leicht verständlich\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.37299421429634094,
+        "B": 0.8601978421211243,
+        "C": 0.2568655014038086,
+        "D": 0.38029998540878296
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie wird Lokalpolitik laut Artikel von der Öffentlichkeit wahrgenommen?",
+        "semantic_anchor_text": "B. Langweilig, kompliziert und weitgehend irrelevant für den Alltag. (Option B)",
+        "semantic_candidate_texts": {
+          "A": "Spannend und von den meisten Bürgern eng verfolgt",
+          "B": "Langweilig, kompliziert und weitgehend irrelevant für den Alltag",
+          "C": "Dominiert von nationalen Parteikonflikten und ideologischen Debatten",
+          "D": "Transparent und für normale Bürger leicht verständlich"
+        },
+        "similarities": {
+          "A": 0.37299421429634094,
+          "B": 0.8601978421211243,
+          "C": 0.2568655014038086,
+          "D": 0.38029998540878296
+        },
+        "gold_similarity": 0.8601978421211243,
+        "best_distractor_similarity": 0.38029998540878296,
+        "gold_margin": 0.4798978567123413,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Langweilig, kompliziert und weitgehend irrelevant für den Alltag. (Option B)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welche Art von Themen werden in bayerischen Gemeinderäten diskutiert?\n\nOptions:\nA: Außenpolitik und internationaler Handel\nB: Landesverteidigung und Bundeshaushalt\nC: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung\nD: Einwanderungsrecht und Grenzkontrolle\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.19344274699687958,
+        "B": 0.38826441764831543,
+        "C": 0.8302466869354248,
+        "D": 0.26039689779281616
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Art von Themen werden in bayerischen Gemeinderäten diskutiert?",
+        "semantic_anchor_text": "C: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung werden in bayerischen Gemeinderäten diskutiert.",
+        "semantic_candidate_texts": {
+          "A": "Außenpolitik und internationaler Handel",
+          "B": "Landesverteidigung und Bundeshaushalt",
+          "C": "Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung",
+          "D": "Einwanderungsrecht und Grenzkontrolle"
+        },
+        "similarities": {
+          "A": 0.19344274699687958,
+          "B": 0.38826441764831543,
+          "C": 0.8302466869354248,
+          "D": 0.26039689779281616
+        },
+        "gold_similarity": 0.8302466869354248,
+        "best_distractor_similarity": 0.38826441764831543,
+        "gold_margin": 0.4419822692871094,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung werden in bayerischen Gemeinderäten diskutiert.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie schneidet Bayern im Vergleich zu anderen deutschen Bundesländern beim Windkraftausbau ab?\n\nOptions:\nA: Bayern führt Deutschland bei der Zahl neu gebauter Windkraftanlagen an\nB: Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern\nC: Bayern hinkt anderen deutschen Bundesländern deutlich hinterher\nD: Bayern hat alle neuen Windenergieprojekte auf unbestimmte Zeit verboten\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5104944705963135,
+        "B": 0.9613165855407715,
+        "C": 0.8104134202003479,
+        "D": 0.3313944339752197
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie schneidet Bayern im Vergleich zu anderen deutschen Bundesländern beim Windkraftausbau ab?",
+        "semantic_anchor_text": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern.",
+        "semantic_candidate_texts": {
+          "A": "Bayern führt Deutschland bei der Zahl neu gebauter Windkraftanlagen an",
+          "B": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern",
+          "C": "Bayern hinkt anderen deutschen Bundesländern deutlich hinterher",
+          "D": "Bayern hat alle neuen Windenergieprojekte auf unbestimmte Zeit verboten"
+        },
+        "similarities": {
+          "A": 0.5104944705963135,
+          "B": 0.9613165855407715,
+          "C": 0.8104134202003479,
+          "D": 0.3313944339752197
+        },
+        "gold_similarity": 0.8104134202003479,
+        "best_distractor_similarity": 0.9613165855407715,
+        "gold_margin": -0.15090316534042358,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welche Rolle spielen Naturschutzorganisationen wie der LBV bei Bayerns Energiewende?\n\nOptions:\nA: Sie sind entschieden gegen jede Form des Ausbaus erneuerbarer Energien\nB: Sie unterstützen grundsätzlich die Energiewende, wehren sich aber, wenn geschützte Arten gefährdet sind\nC: Sie haben keine rechtliche Handhabe, um Windenergieprojekte vor Gericht anzufechten\nD: Sie werden von der bayerischen Staatsregierung finanziert, um Windenergieprojekte zu genehmigen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4070352017879486,
+        "B": 0.699415922164917,
+        "C": 0.30211883783340454,
+        "D": 0.583634614944458
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Rolle spielen Naturschutzorganisationen wie der LBV bei Bayerns Energiewende?",
+        "semantic_anchor_text": "Die Rolle von Naturschutzorganisationen wie dem LBV bei Bayerns Energiewende ist es, \"grunds�tzlich die Energiewende zu unterstützen, sich aber",
+        "semantic_candidate_texts": {
+          "A": "Sie sind entschieden gegen jede Form des Ausbaus erneuerbarer Energien",
+          "B": "Sie unterstützen grundsätzlich die Energiewende, wehren sich aber, wenn geschützte Arten gefährdet sind",
+          "C": "Sie haben keine rechtliche Handhabe, um Windenergieprojekte vor Gericht anzufechten",
+          "D": "Sie werden von der bayerischen Staatsregierung finanziert, um Windenergieprojekte zu genehmigen"
+        },
+        "similarities": {
+          "A": 0.4070352017879486,
+          "B": 0.699415922164917,
+          "C": 0.30211883783340454,
+          "D": 0.583634614944458
+        },
+        "gold_similarity": 0.699415922164917,
+        "best_distractor_similarity": 0.583634614944458,
+        "gold_margin": 0.11578130722045898,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die Rolle von Naturschutzorganisationen wie dem LBV bei Bayerns Energiewende ist es, \"grunds�tzlich die Energiewende zu unterstützen, sich aber",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wie heißen die rechtlichen Instrumente, die Kommunalverwaltungen zur Regulierung der Landwirtschaft in Oberbayern nutzen?\n\nOptions:\nA: Einheimischenmodelle\nB: Gesetze\nC: Bauergesetze\nD: Landwirtschaftsgesetze\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.35413071513175964,
+        "B": 0.5827756524085999,
+        "C": 0.4161841571331024,
+        "D": 0.9552880525588989
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie heißen die rechtlichen Instrumente, die Kommunalverwaltungen zur Regulierung der Landwirtschaft in Oberbayern nutzen?",
+        "semantic_anchor_text": "D: Landwirtschaftsgesetze",
+        "semantic_candidate_texts": {
+          "A": "Einheimischenmodelle",
+          "B": "Gesetze",
+          "C": "Bauergesetze",
+          "D": "Landwirtschaftsgesetze"
+        },
+        "similarities": {
+          "A": 0.35413071513175964,
+          "B": 0.5827756524085999,
+          "C": 0.4161841571331024,
+          "D": 0.9552880525588989
+        },
+        "gold_similarity": 0.35413071513175964,
+        "best_distractor_similarity": 0.9552880525588989,
+        "gold_margin": -0.6011573374271393,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Landwirtschaftsgesetze",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Warum werden Zuzügler im ländlichen Bayern von Einheimischen oft als Außenstehende betrachtet?\n\nOptions:\nA: Mangelnde Teilnahme an Dorfaktivitäten\nB: Sie sind anders\nC: Mangelndes Interesse am örtlichen Leben\nD: Weil Zuzügler möglicherweise nicht lange bleiben\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8928250670433044,
+        "B": 0.22940272092819214,
+        "C": 0.7162074446678162,
+        "D": 0.42391496896743774
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum werden Zuzügler im ländlichen Bayern von Einheimischen oft als Außenstehende betrachtet?",
+        "semantic_anchor_text": "A: Mangelnde Teilnahme an Dorfaktivit�ten",
+        "semantic_candidate_texts": {
+          "A": "Mangelnde Teilnahme an Dorfaktivitäten",
+          "B": "Sie sind anders",
+          "C": "Mangelndes Interesse am örtlichen Leben",
+          "D": "Weil Zuzügler möglicherweise nicht lange bleiben"
+        },
+        "similarities": {
+          "A": 0.8928250670433044,
+          "B": 0.22940272092819214,
+          "C": 0.7162074446678162,
+          "D": 0.42391496896743774
+        },
+        "gold_similarity": 0.8928250670433044,
+        "best_distractor_similarity": 0.7162074446678162,
+        "gold_margin": 0.17661762237548828,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mangelnde Teilnahme an Dorfaktivit�ten",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wer gilt in Bayern als 'Einheimische'?\n\nOptions:\nA: Eingeborene\nB: Außenstehende\nC: Heimatliebende Menschen\nD: Heimat liebende Menschen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6214112043380737,
+        "B": 0.5000746250152588,
+        "C": 0.9149236679077148,
+        "D": 0.8949706554412842
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer gilt in Bayern als 'Einheimische'?",
+        "semantic_anchor_text": "C: Heimatliebende Menschen",
+        "semantic_candidate_texts": {
+          "A": "Eingeborene",
+          "B": "Außenstehende",
+          "C": "Heimatliebende Menschen",
+          "D": "Heimat liebende Menschen"
+        },
+        "similarities": {
+          "A": 0.6214112043380737,
+          "B": 0.5000746250152588,
+          "C": 0.9149236679077148,
+          "D": 0.8949706554412842
+        },
+        "gold_similarity": 0.6214112043380737,
+        "best_distractor_similarity": 0.9149236679077148,
+        "gold_margin": -0.2935124635696411,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Heimatliebende Menschen",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Welche große politische Veränderung ereignete sich um 1978 in Bayern, die die dörflichen Machtstrukturen grundlegend veränderte?\n\nOptions:\nA: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene\nB: Bayern erlangte Unabhängigkeit vom deutschen Bundesstaat\nC: Das allgemeine Wahlrecht wurde auf Frauen bei Kommunalwahlen ausgeweitet\nD: Der katholischen Kirche wurde die Teilnahme an der Dorfverwaltung verboten\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9769651889801025,
+        "B": 0.2380748689174652,
+        "C": 0.3958666920661926,
+        "D": 0.4070410132408142
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche große politische Veränderung ereignete sich um 1978 in Bayern, die die dörflichen Machtstrukturen grundlegend veränderte?",
+        "semantic_anchor_text": "A: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene. Dies war",
+        "semantic_candidate_texts": {
+          "A": "Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene",
+          "B": "Bayern erlangte Unabhängigkeit vom deutschen Bundesstaat",
+          "C": "Das allgemeine Wahlrecht wurde auf Frauen bei Kommunalwahlen ausgeweitet",
+          "D": "Der katholischen Kirche wurde die Teilnahme an der Dorfverwaltung verboten"
+        },
+        "similarities": {
+          "A": 0.9769651889801025,
+          "B": 0.2380748689174652,
+          "C": 0.3958666920661926,
+          "D": 0.4070410132408142
+        },
+        "gold_similarity": 0.9769651889801025,
+        "best_distractor_similarity": 0.4070410132408142,
+        "gold_margin": 0.5699241757392883,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene. Dies war",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Bei der jährlichen Bürgerversammlung in bayerischen Dörfern, welche unausgesprochene Vereinbarung besteht zwischen Bürgermeister und Dorfbewohnern?\n\nOptions:\nA: Freibier wird allen Teilnehmern zur Verfügung gestellt, um gute Beteiligung zu gewährleisten\nB: Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusprechen\nC: Der Bürgermeister muss zurücktreten, wenn mehr als 10 Dorfbewohner gegen eine Politik Einspruch erheben\nD: Dorfbewohner sind gesetzlich verpflichtet teilzunehmen oder müssen Bußgelder zahlen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23425275087356567,
+        "B": 0.9723455905914307,
+        "C": 0.17483317852020264,
+        "D": 0.2705341577529907
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bei der jährlichen Bürgerversammlung in bayerischen Dörfern, welche unausgesprochene Vereinbarung besteht zwischen Bürgermeister und Dorfbewohnern?",
+        "semantic_anchor_text": "B. Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusp",
+        "semantic_candidate_texts": {
+          "A": "Freibier wird allen Teilnehmern zur Verfügung gestellt, um gute Beteiligung zu gewährleisten",
+          "B": "Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusprechen",
+          "C": "Der Bürgermeister muss zurücktreten, wenn mehr als 10 Dorfbewohner gegen eine Politik Einspruch erheben",
+          "D": "Dorfbewohner sind gesetzlich verpflichtet teilzunehmen oder müssen Bußgelder zahlen"
+        },
+        "similarities": {
+          "A": 0.23425275087356567,
+          "B": 0.9723455905914307,
+          "C": 0.17483317852020264,
+          "D": 0.2705341577529907
+        },
+        "gold_similarity": 0.9723455905914307,
+        "best_distractor_similarity": 0.2705341577529907,
+        "gold_margin": 0.7018114328384399,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusp",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöche Partei regiert Bayern ununterbrochen seit 1957?\n\nOptions:\nA: SPD\nB: CSU\nC: FDP\nD: Grüne\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.38626158237457275,
+        "B": 0.6546492576599121,
+        "C": 0.16239526867866516,
+        "D": 0.08258062601089478
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Partei regiert Bayern ununterbrochen seit 1957?",
+        "semantic_anchor_text": "B - CSU. De CSU is de regierende Partei in Bayern und regiert des Bundesland ununterbrochen seit 1957. De CSU is a christlich-kons",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "CSU",
+          "C": "FDP",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.38626158237457275,
+          "B": 0.6546492576599121,
+          "C": 0.16239526867866516,
+          "D": 0.08258062601089478
+        },
+        "gold_similarity": 0.6546492576599121,
+        "best_distractor_similarity": 0.38626158237457275,
+        "gold_margin": 0.26838767528533936,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B - CSU. De CSU is de regierende Partei in Bayern und regiert des Bundesland ununterbrochen seit 1957. De CSU is a christlich-kons",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wia hoaßt des bayerische Landesparlament?\n\nOptions:\nA: Bundesrat\nB: Bundestag\nC: Landtag\nD: Senat\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6263695955276489,
+        "B": 0.6628175973892212,
+        "C": 0.4375123083591461,
+        "D": 0.3110617399215698
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia hoaßt des bayerische Landesparlament?",
+        "semantic_anchor_text": "C: Landtag. Des is da Nama vom bayerischen Landesparlament. Des is a Einkammerparlament mit 180 Mitgliedern.",
+        "semantic_candidate_texts": {
+          "A": "Bundesrat",
+          "B": "Bundestag",
+          "C": "Landtag",
+          "D": "Senat"
+        },
+        "similarities": {
+          "A": 0.6263695955276489,
+          "B": 0.6628175973892212,
+          "C": 0.4375123083591461,
+          "D": 0.3110617399215698
+        },
+        "gold_similarity": 0.4375123083591461,
+        "best_distractor_similarity": 0.6628175973892212,
+        "gold_margin": -0.22530528903007507,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Landtag. Des is da Nama vom bayerischen Landesparlament. Des is a Einkammerparlament mit 180 Mitgliedern.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wer is 2018 Ministerpräsident von Bayern worn?\n\nOptions:\nA: Edmund Stoiber\nB: Horst Seehofer\nC: Markus Söder\nD: Günther Beckstein\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3536072075366974,
+        "B": 0.8308468461036682,
+        "C": 0.48079073429107666,
+        "D": 0.5914645195007324
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer is 2018 Ministerpräsident von Bayern worn?",
+        "semantic_anchor_text": "B is de richtige Antwort. Horst Seehofer is 2018 Ministerpr�sident von Bayern worn.",
+        "semantic_candidate_texts": {
+          "A": "Edmund Stoiber",
+          "B": "Horst Seehofer",
+          "C": "Markus Söder",
+          "D": "Günther Beckstein"
+        },
+        "similarities": {
+          "A": 0.3536072075366974,
+          "B": 0.8308468461036682,
+          "C": 0.48079073429107666,
+          "D": 0.5914645195007324
+        },
+        "gold_similarity": 0.48079073429107666,
+        "best_distractor_similarity": 0.8308468461036682,
+        "gold_margin": -0.35005611181259155,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B is de richtige Antwort. Horst Seehofer is 2018 Ministerpr�sident von Bayern worn.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "In wöcher Stadt hat d'bayerische Staatsregierung ihrn Sitz?\n\nOptions:\nA: Nürnberg\nB: Augsburg\nC: München\nD: Regensburg\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5936065912246704,
+        "B": 0.5483729243278503,
+        "C": 0.6185432076454163,
+        "D": 0.9391741752624512
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In wöcher Stadt hat d'bayerische Staatsregierung ihrn Sitz?",
+        "semantic_anchor_text": "D: Regensburg.",
+        "semantic_candidate_texts": {
+          "A": "Nürnberg",
+          "B": "Augsburg",
+          "C": "München",
+          "D": "Regensburg"
+        },
+        "similarities": {
+          "A": 0.5936065912246704,
+          "B": 0.5483729243278503,
+          "C": 0.6185432076454163,
+          "D": 0.9391741752624512
+        },
+        "gold_similarity": 0.6185432076454163,
+        "best_distractor_similarity": 0.9391741752624512,
+        "gold_margin": -0.3206309676170349,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Regensburg.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöcher Mindestprozentsatz an Stimmen is nötig, um in'n Bayerischen Landtag einzuziagn?\n\nOptions:\nA: 3%\nB: 5%\nC: 7%\nD: 10%\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5936646461486816,
+        "B": 0.4116160273551941,
+        "C": 0.42067015171051025,
+        "D": 0.41273534297943115
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher Mindestprozentsatz an Stimmen is nötig, um in'n Bayerischen Landtag einzuziagn?",
+        "semantic_anchor_text": "A, 3%. Des is da Mindestprozentsatz an Stimmen, den a Partei braucht, um in'n Bayerischen Landtag einzuziagn.",
+        "semantic_candidate_texts": {
+          "A": "3%",
+          "B": "5%",
+          "C": "7%",
+          "D": "10%"
+        },
+        "similarities": {
+          "A": 0.5936646461486816,
+          "B": 0.4116160273551941,
+          "C": 0.42067015171051025,
+          "D": 0.41273534297943115
+        },
+        "gold_similarity": 0.4116160273551941,
+        "best_distractor_similarity": 0.5936646461486816,
+        "gold_margin": -0.18204861879348755,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A, 3%. Des is da Mindestprozentsatz an Stimmen, den a Partei braucht, um in'n Bayerischen Landtag einzuziagn.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöcher bayerische Politiker hat aa als deutscher Bundesfinanzminister gedient?\n\nOptions:\nA: Franz Josef Strauß\nB: Edmund Stoiber\nC: Horst Seehofer\nD: Markus Söder\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9813942909240723,
+        "B": 0.7480220794677734,
+        "C": 0.5594573616981506,
+        "D": 0.5417198538780212
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher bayerische Politiker hat aa als deutscher Bundesfinanzminister gedient?",
+        "semantic_anchor_text": "A: Franz Josef Strauß.",
+        "semantic_candidate_texts": {
+          "A": "Franz Josef Strauß",
+          "B": "Edmund Stoiber",
+          "C": "Horst Seehofer",
+          "D": "Markus Söder"
+        },
+        "similarities": {
+          "A": 0.9813942909240723,
+          "B": 0.7480220794677734,
+          "C": 0.5594573616981506,
+          "D": 0.5417198538780212
+        },
+        "gold_similarity": 0.9813942909240723,
+        "best_distractor_similarity": 0.7480220794677734,
+        "gold_margin": 0.23337221145629883,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Franz Josef Strauß.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wievui Wahlkreise hat Bayern für d'Landtagswahlen?\n\nOptions:\nA: 71\nB: 91\nC: 101\nD: 121\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6861435174942017,
+        "B": 0.5255672335624695,
+        "C": 0.4943297803401947,
+        "D": 0.4770449697971344
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wievui Wahlkreise hat Bayern für d'Landtagswahlen?",
+        "semantic_anchor_text": "A: 71. (Do is de exakte Antwort auf dei Frog. Koane Erklärung notwendig.)",
+        "semantic_candidate_texts": {
+          "A": "71",
+          "B": "91",
+          "C": "101",
+          "D": "121"
+        },
+        "similarities": {
+          "A": 0.6861435174942017,
+          "B": 0.5255672335624695,
+          "C": 0.4943297803401947,
+          "D": 0.4770449697971344
+        },
+        "gold_similarity": 0.5255672335624695,
+        "best_distractor_similarity": 0.6861435174942017,
+        "gold_margin": -0.16057628393173218,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 71. (Do is de exakte Antwort auf dei Frog. Koane Erklärung notwendig.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöche Partei is bei da bayerischen Landtagswahl 2023 Zweite worn?\n\nOptions:\nA: SPD\nB: AfD\nC: Freie Wähler\nD: Grüne\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.39611318707466125,
+        "B": 0.4343235194683075,
+        "C": 0.330661803483963,
+        "D": 0.25070920586586
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Partei is bei da bayerischen Landtagswahl 2023 Zweite worn?",
+        "semantic_anchor_text": "C: Freie Wähler\n\nBei da bayerischen Landtagswahl 2023 san de Freien Wähler de zwoatplatzierte Partei worn.\nEnde der Antwort.",
+        "semantic_candidate_texts": {
+          "A": "SPD",
+          "B": "AfD",
+          "C": "Freie Wähler",
+          "D": "Grüne"
+        },
+        "similarities": {
+          "A": 0.39611318707466125,
+          "B": 0.4343235194683075,
+          "C": 0.330661803483963,
+          "D": 0.25070920586586
+        },
+        "gold_similarity": 0.330661803483963,
+        "best_distractor_similarity": 0.4343235194683075,
+        "gold_margin": -0.10366171598434448,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Freie Wähler\n\nBei da bayerischen Landtagswahl 2023 san de Freien Wähler de zwoatplatzierte Partei worn.\nEnde der Antwort.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wia lautet da offizielle Titel vom bayerischen Regierungschef?\n\nOptions:\nA: Gouverneur\nB: Bürgermeister\nC: Ministerpräsident\nD: Landeshauptmann\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.36218714714050293,
+        "B": 0.38990479707717896,
+        "C": 0.5656911134719849,
+        "D": 0.6297886967658997
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia lautet da offizielle Titel vom bayerischen Regierungschef?",
+        "semantic_anchor_text": "Da offizielle Titel vom bayerischen Regierungschef is da Ministerpr�sident. Antwort A.",
+        "semantic_candidate_texts": {
+          "A": "Gouverneur",
+          "B": "Bürgermeister",
+          "C": "Ministerpräsident",
+          "D": "Landeshauptmann"
+        },
+        "similarities": {
+          "A": 0.36218714714050293,
+          "B": 0.38990479707717896,
+          "C": 0.5656911134719849,
+          "D": 0.6297886967658997
+        },
+        "gold_similarity": 0.5656911134719849,
+        "best_distractor_similarity": 0.6297886967658997,
+        "gold_margin": -0.0640975832939148,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Da offizielle Titel vom bayerischen Regierungschef is da Ministerpr�sident. Antwort A.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Bayern hat an besonderen Status in Deutschland, beschrieben als \"Freistaat\". Wia lautet da deutsche Begriff?\n\nOptions:\nA: Bundesland\nB: Freistaat\nC: Stadtstaat\nD: Reichsland\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6977512240409851,
+        "B": 0.5008577108383179,
+        "C": 0.38380882143974304,
+        "D": 0.6278231143951416
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern hat an besonderen Status in Deutschland, beschrieben als \"Freistaat\". Wia lautet da deutsche Begriff?",
+        "semantic_anchor_text": "Da korrekte Begriff is \"Freistaat\". Option A, Bundesland, is a andere Art vo politischer Einheit in Deitschland. Option C, Stadtstaat, beschreibt",
+        "semantic_candidate_texts": {
+          "A": "Bundesland",
+          "B": "Freistaat",
+          "C": "Stadtstaat",
+          "D": "Reichsland"
+        },
+        "similarities": {
+          "A": 0.6977512240409851,
+          "B": 0.5008577108383179,
+          "C": 0.38380882143974304,
+          "D": 0.6278231143951416
+        },
+        "gold_similarity": 0.5008577108383179,
+        "best_distractor_similarity": 0.6977512240409851,
+        "gold_margin": -0.19689351320266724,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Da korrekte Begriff is \"Freistaat\". Option A, Bundesland, is a andere Art vo politischer Einheit in Deitschland. Option C, Stadtstaat, beschreibt",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Was wird Bayern von de Medien in Norddeutschland oft vorworfen?\n\nOptions:\nA: Zu progressiv und weltoffn zu sein\nB: Wirtschaftlich schwach, aber kulturell reich zu sein\nC: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein\nD: Zu sehr auf internationale Politik fokussiert zu sein\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5931873917579651,
+        "B": 0.6593035459518433,
+        "C": 0.9040496349334717,
+        "D": 0.455032616853714
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was wird Bayern von de Medien in Norddeutschland oft vorworfen?",
+        "semantic_anchor_text": "C: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein.",
+        "semantic_candidate_texts": {
+          "A": "Zu progressiv und weltoffn zu sein",
+          "B": "Wirtschaftlich schwach, aber kulturell reich zu sein",
+          "C": "Wirtschaftlich stark, aber reaktionär und separatistisch zu sein",
+          "D": "Zu sehr auf internationale Politik fokussiert zu sein"
+        },
+        "similarities": {
+          "A": 0.5931873917579651,
+          "B": 0.6593035459518433,
+          "C": 0.9040496349334717,
+          "D": 0.455032616853714
+        },
+        "gold_similarity": 0.9040496349334717,
+        "best_distractor_similarity": 0.6593035459518433,
+        "gold_margin": 0.24474608898162842,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Wirtschaftlich stark, aber reaktionär und separatistisch zu sein.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wievui Straftaten gegen Amtsträger und gwählte Vertreter san 2024 in Bayern registriert worn?\n\nOptions:\nA: 163 Straftaten, darunter 14 Gewaltdelikte\nB: 170 Straftaten, darunter 11 Gewaltdelikte\nC: 170 Straftaten, darunter 14 Gewaltdelikte\nD: 105 Straftaten, darunter 11 Gewaltdelikte\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6302099823951721,
+        "B": 0.5592328310012817,
+        "C": 0.5614280104637146,
+        "D": 0.525635838508606
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wievui Straftaten gegen Amtsträger und gwählte Vertreter san 2024 in Bayern registriert worn?",
+        "semantic_anchor_text": "A: 163 Straftaten gegen Amtstr�ger und gwählte Vertreter san 2024 in Bayern registriert worn, darunter 14 Gewalt",
+        "semantic_candidate_texts": {
+          "A": "163 Straftaten, darunter 14 Gewaltdelikte",
+          "B": "170 Straftaten, darunter 11 Gewaltdelikte",
+          "C": "170 Straftaten, darunter 14 Gewaltdelikte",
+          "D": "105 Straftaten, darunter 11 Gewaltdelikte"
+        },
+        "similarities": {
+          "A": 0.6302099823951721,
+          "B": 0.5592328310012817,
+          "C": 0.5614280104637146,
+          "D": 0.525635838508606
+        },
+        "gold_similarity": 0.5614280104637146,
+        "best_distractor_similarity": 0.6302099823951721,
+        "gold_margin": -0.06878197193145752,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 Straftaten gegen Amtstr�ger und gwählte Vertreter san 2024 in Bayern registriert worn, darunter 14 Gewalt",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Laut Politikwissenschaftler, warum san d'Lokalpolitiker im Vergleich zu de Landes- oder Bundespolitiker besonders anfällig für Angriffe?\n\nOptions:\nA: Lokalpolitiker kriegn weniger Medienaufmerksamkeit, wodurch Vorfäll leichter z'verstecken san\nB: Lokalpolitiker ham weniger rechtlichen Schutz nach deutschem Recht\nC: Lokalpolitiker treffen eher kontroverse Entscheidungen, de den Alltag betreffen\nD: Lokalpolitiker san in ihren Gemeinden dahoam und daher leichter z'finden und z'konfrontieren\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.951187014579773,
+        "B": 0.5453358292579651,
+        "C": 0.6775757074356079,
+        "D": 0.7210025191307068
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Laut Politikwissenschaftler, warum san d'Lokalpolitiker im Vergleich zu de Landes- oder Bundespolitiker besonders anfällig für Angriffe?",
+        "semantic_anchor_text": "A: Lokalpolitiker kriegn weniger Medienaufmerksamkeit, wodurch Vorfäll leichter z'verstecken san.",
+        "semantic_candidate_texts": {
+          "A": "Lokalpolitiker kriegn weniger Medienaufmerksamkeit, wodurch Vorfäll leichter z'verstecken san",
+          "B": "Lokalpolitiker ham weniger rechtlichen Schutz nach deutschem Recht",
+          "C": "Lokalpolitiker treffen eher kontroverse Entscheidungen, de den Alltag betreffen",
+          "D": "Lokalpolitiker san in ihren Gemeinden dahoam und daher leichter z'finden und z'konfrontieren"
+        },
+        "similarities": {
+          "A": 0.951187014579773,
+          "B": 0.5453358292579651,
+          "C": 0.6775757074356079,
+          "D": 0.7210025191307068
+        },
+        "gold_similarity": 0.7210025191307068,
+        "best_distractor_similarity": 0.951187014579773,
+        "gold_margin": -0.23018449544906616,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Lokalpolitiker kriegn weniger Medienaufmerksamkeit, wodurch Vorfäll leichter z'verstecken san.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wievui Straftaten gegen Amtsträger und gwählte Vertreter san 2023 in Bayern registriert worn?\n\nOptions:\nA: 163 Straftaten, darunter 11 Gewaltdelikte\nB: 100 Straftaten, darunter 4 Gewaltdelikte\nC: 150 Straftaten, darunter 8 Gewaltdelikte\nD: 200 Straftaten, darunter 20 Gewaltdelikte\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9783124923706055,
+        "B": 0.6337825059890747,
+        "C": 0.7841799259185791,
+        "D": 0.7319120168685913
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wievui Straftaten gegen Amtsträger und gwählte Vertreter san 2023 in Bayern registriert worn?",
+        "semantic_anchor_text": "A: 163 Straftaten, darunter 11 Gewaltdelikte.",
+        "semantic_candidate_texts": {
+          "A": "163 Straftaten, darunter 11 Gewaltdelikte",
+          "B": "100 Straftaten, darunter 4 Gewaltdelikte",
+          "C": "150 Straftaten, darunter 8 Gewaltdelikte",
+          "D": "200 Straftaten, darunter 20 Gewaltdelikte"
+        },
+        "similarities": {
+          "A": 0.9783124923706055,
+          "B": 0.6337825059890747,
+          "C": 0.7841799259185791,
+          "D": 0.7319120168685913
+        },
+        "gold_similarity": 0.9783124923706055,
+        "best_distractor_similarity": 0.7841799259185791,
+        "gold_margin": 0.19413256645202637,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 163 Straftaten, darunter 11 Gewaltdelikte.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Warum is da Bürgermeister von Dingolfing 2025 von seim Amt zurücktreten?\n\nOptions:\nA: Er hot de Kommunalwahl verlorn\nB: Er trat aufgrund von Drohungen und Einschüchterung zurückgetreten\nC: Er hat an Korruptionsskandal ghabt\nD: Er ging aus g'sundheitlichen Gründen in den Ruhestand\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.29019156098365784,
+        "B": 0.4540098011493683,
+        "C": 0.32612675428390503,
+        "D": 0.9296875
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum is da Bürgermeister von Dingolfing 2025 von seim Amt zurücktreten?",
+        "semantic_anchor_text": "Er is aus g'sundheitlichen Gründen in den Ruhestand ganga.",
+        "semantic_candidate_texts": {
+          "A": "Er hot de Kommunalwahl verlorn",
+          "B": "Er trat aufgrund von Drohungen und Einschüchterung zurückgetreten",
+          "C": "Er hat an Korruptionsskandal ghabt",
+          "D": "Er ging aus g'sundheitlichen Gründen in den Ruhestand"
+        },
+        "similarities": {
+          "A": 0.29019156098365784,
+          "B": 0.4540098011493683,
+          "C": 0.32612675428390503,
+          "D": 0.9296875
+        },
+        "gold_similarity": 0.4540098011493683,
+        "best_distractor_similarity": 0.9296875,
+        "gold_margin": -0.4756776988506317,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Er is aus g'sundheitlichen Gründen in den Ruhestand ganga.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Was zoagt da Traunsteiner Protest 2022 über d'bayerischen Katholiken?\n\nOptions:\nA: Bayrische Bürger trennand leicht regionale Identität vo da Religion\nB: Selbst gläubige, gemeindeverankerte bayerische Katholiken hinterfrag'n öffentlich die Kirchenführung\nC: De bayrische Gesellschaft hat si weitgehend vo da katholischen Kirche abgwandt\nD: Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7023640275001526,
+        "B": 0.7247301936149597,
+        "C": 0.7307751178741455,
+        "D": 0.9312813878059387
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was zoagt da Traunsteiner Protest 2022 über d'bayerischen Katholiken?",
+        "semantic_anchor_text": "D. Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen. (1)  Quelle: [Artikeltitel] (2)",
+        "semantic_candidate_texts": {
+          "A": "Bayrische Bürger trennand leicht regionale Identität vo da Religion",
+          "B": "Selbst gläubige, gemeindeverankerte bayerische Katholiken hinterfrag'n öffentlich die Kirchenführung",
+          "C": "De bayrische Gesellschaft hat si weitgehend vo da katholischen Kirche abgwandt",
+          "D": "Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen"
+        },
+        "similarities": {
+          "A": 0.7023640275001526,
+          "B": 0.7247301936149597,
+          "C": 0.7307751178741455,
+          "D": 0.9312813878059387
+        },
+        "gold_similarity": 0.7247301936149597,
+        "best_distractor_similarity": 0.9312813878059387,
+        "gold_margin": -0.206551194190979,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D. Kirchenkritik in Bayern kommt hauptsächlich von säkularen und linken Gruppen. (1)  Quelle: [Artikeltitel] (2)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wia wird d'Lokalpolitik laut Artikel von da Öffentlichkeit wahrgnommen?\n\nOptions:\nA: Spannend und vo de meisten Bürger genau verfolgt\nB: Langweilig, kompliziert und weitgehend irrelevant fia den Alltag\nC: Dominiert von nationalen Parteikonflikten und ideologischen Debatten\nD: Transparent und fia normale Bürger leicht verständlich\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5337405204772949,
+        "B": 0.8994307518005371,
+        "C": 0.39379072189331055,
+        "D": 0.5381516218185425
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia wird d'Lokalpolitik laut Artikel von da Öffentlichkeit wahrgnommen?",
+        "semantic_anchor_text": "B. Langweilig, kompliziert und weitgehend irrelevant fia den Alltag. (Quelle: Artikel von da Öffentlichkeit)",
+        "semantic_candidate_texts": {
+          "A": "Spannend und vo de meisten Bürger genau verfolgt",
+          "B": "Langweilig, kompliziert und weitgehend irrelevant fia den Alltag",
+          "C": "Dominiert von nationalen Parteikonflikten und ideologischen Debatten",
+          "D": "Transparent und fia normale Bürger leicht verständlich"
+        },
+        "similarities": {
+          "A": 0.5337405204772949,
+          "B": 0.8994307518005371,
+          "C": 0.39379072189331055,
+          "D": 0.5381516218185425
+        },
+        "gold_similarity": 0.8994307518005371,
+        "best_distractor_similarity": 0.5381516218185425,
+        "gold_margin": 0.36127912998199463,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Langweilig, kompliziert und weitgehend irrelevant fia den Alltag. (Quelle: Artikel von da Öffentlichkeit)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöche Art von Themen wern in bayerischen Gemeinderäten diskutiert?\n\nOptions:\nA: Außenpolitik und internationaler Handel\nB: Landesverteidigung und Bundeshaushalt\nC: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung\nD: Einwanderungsrecht und Grenzkontrolle\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.18455442786216736,
+        "B": 0.40983784198760986,
+        "C": 0.8494770526885986,
+        "D": 0.27805161476135254
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Art von Themen wern in bayerischen Gemeinderäten diskutiert?",
+        "semantic_anchor_text": "C: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung wern in bayerischen Gemeinderäten diskutiert.",
+        "semantic_candidate_texts": {
+          "A": "Außenpolitik und internationaler Handel",
+          "B": "Landesverteidigung und Bundeshaushalt",
+          "C": "Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung",
+          "D": "Einwanderungsrecht und Grenzkontrolle"
+        },
+        "similarities": {
+          "A": 0.18455442786216736,
+          "B": 0.40983784198760986,
+          "C": 0.8494770526885986,
+          "D": 0.27805161476135254
+        },
+        "gold_similarity": 0.8494770526885986,
+        "best_distractor_similarity": 0.40983784198760986,
+        "gold_margin": 0.43963921070098877,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Themen wie Hochwasserschutz, Heizinfrastruktur, Sportanlagen und Flächennutzungsplanung wern in bayerischen Gemeinderäten diskutiert.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wia schneidet Bayern im Vergleich zu de anderen deutschen Bundesländer beim Windkraftausbau ab?\n\nOptions:\nA: Bayern führt Deutschland bei da Zahl neu bauter Windkraftanlagen an\nB: Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern\nC: Bayern hinkt anderen deutschen Bundesländern deutlich hinterher\nD: Bayern hat alle neuen Windenergieprojekte auf unbestimmte Zeit verboten\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5127469301223755,
+        "B": 0.9613165855407715,
+        "C": 0.8104134202003479,
+        "D": 0.3313944339752197
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia schneidet Bayern im Vergleich zu de anderen deutschen Bundesländer beim Windkraftausbau ab?",
+        "semantic_anchor_text": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern.",
+        "semantic_candidate_texts": {
+          "A": "Bayern führt Deutschland bei da Zahl neu bauter Windkraftanlagen an",
+          "B": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern",
+          "C": "Bayern hinkt anderen deutschen Bundesländern deutlich hinterher",
+          "D": "Bayern hat alle neuen Windenergieprojekte auf unbestimmte Zeit verboten"
+        },
+        "similarities": {
+          "A": 0.5127469301223755,
+          "B": 0.9613165855407715,
+          "C": 0.8104134202003479,
+          "D": 0.3313944339752197
+        },
+        "gold_similarity": 0.8104134202003479,
+        "best_distractor_similarity": 0.9613165855407715,
+        "gold_margin": -0.15090316534042358,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Bayern liegt etwa im Durchschnitt im Vergleich zu anderen deutschen Bundesländern.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöche Rolln spieln d'Naturschutzorganisationen wia da LBV bei Bayerns Energiewende?\n\nOptions:\nA: De san entschieden gegen jede Form vom Ausbau erneuerbarer Energien\nB: De unterstützn grundsätzlich de Energiewende, wehren sich aber, wenn geschützte Arten gefährdet san\nC: De ham koane rechtliche Handhabe, um Windenergieprojekte vor Gericht anzufechten\nD: De werdn vo da bayrischen Staatsregierung finanziert, um Windenergieprojekte z'genehmigen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5930955410003662,
+        "B": 0.9709060788154602,
+        "C": 0.35995107889175415,
+        "D": 0.37307244539260864
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Rolln spieln d'Naturschutzorganisationen wia da LBV bei Bayerns Energiewende?",
+        "semantic_anchor_text": "De unterstützn grundsätzlich de Energiewende, wehren sich aber, wenn gesch�tzte Arten gefährdet san.",
+        "semantic_candidate_texts": {
+          "A": "De san entschieden gegen jede Form vom Ausbau erneuerbarer Energien",
+          "B": "De unterstützn grundsätzlich de Energiewende, wehren sich aber, wenn geschützte Arten gefährdet san",
+          "C": "De ham koane rechtliche Handhabe, um Windenergieprojekte vor Gericht anzufechten",
+          "D": "De werdn vo da bayrischen Staatsregierung finanziert, um Windenergieprojekte z'genehmigen"
+        },
+        "similarities": {
+          "A": 0.5930955410003662,
+          "B": 0.9709060788154602,
+          "C": 0.35995107889175415,
+          "D": 0.37307244539260864
+        },
+        "gold_similarity": 0.9709060788154602,
+        "best_distractor_similarity": 0.5930955410003662,
+        "gold_margin": 0.377810537815094,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "De unterstützn grundsätzlich de Energiewende, wehren sich aber, wenn gesch�tzte Arten gefährdet san.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wia hoaßn d'rechtlichen Instrumente, de d'Kommunalverwaltungen zur Regulierung von da Landwirtschaft in Oberbayern nutzn?\n\nOptions:\nA: Einheimischenmodelle\nB: Gesetze\nC: Bauergesetze\nD: Landwirtschaftsgesetze\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4196765422821045,
+        "B": 0.5085510611534119,
+        "C": 0.4915120601654053,
+        "D": 0.8245630264282227
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia hoaßn d'rechtlichen Instrumente, de d'Kommunalverwaltungen zur Regulierung von da Landwirtschaft in Oberbayern nutzn?",
+        "semantic_anchor_text": "D: Landwirtschaftsgesetze.",
+        "semantic_candidate_texts": {
+          "A": "Einheimischenmodelle",
+          "B": "Gesetze",
+          "C": "Bauergesetze",
+          "D": "Landwirtschaftsgesetze"
+        },
+        "similarities": {
+          "A": 0.4196765422821045,
+          "B": 0.5085510611534119,
+          "C": 0.4915120601654053,
+          "D": 0.8245630264282227
+        },
+        "gold_similarity": 0.4196765422821045,
+        "best_distractor_similarity": 0.8245630264282227,
+        "gold_margin": -0.40488648414611816,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Landwirtschaftsgesetze.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Warum wern Zuzügler im ländlichen Bayern von de Einheimischen oft als Außenstehende betrachtet?\n\nOptions:\nA: Mangelnde Teilnahme an Dorfaktivitäten\nB: De san anders\nC: Mangelndes Interesse am örtlichen Leben\nD: Weil Zuzügler vielleicht ned lang bleibn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7985210418701172,
+        "B": 0.5359373092651367,
+        "C": 0.6861082315444946,
+        "D": 0.49547865986824036
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum wern Zuzügler im ländlichen Bayern von de Einheimischen oft als Außenstehende betrachtet?",
+        "semantic_anchor_text": "A: Mangelnde Teilnahme an Dorfaktivit�ten.",
+        "semantic_candidate_texts": {
+          "A": "Mangelnde Teilnahme an Dorfaktivitäten",
+          "B": "De san anders",
+          "C": "Mangelndes Interesse am örtlichen Leben",
+          "D": "Weil Zuzügler vielleicht ned lang bleibn"
+        },
+        "similarities": {
+          "A": 0.7985210418701172,
+          "B": 0.5359373092651367,
+          "C": 0.6861082315444946,
+          "D": 0.49547865986824036
+        },
+        "gold_similarity": 0.7985210418701172,
+        "best_distractor_similarity": 0.6861082315444946,
+        "gold_margin": 0.11241281032562256,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mangelnde Teilnahme an Dorfaktivit�ten.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wer gilt in Bayern als 'Einheimische'?\n\nOptions:\nA: Eingeborene\nB: Außenstehende\nC: Heimatliebende Menschen\nD: Heimatliebende Leit\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5862153768539429,
+        "B": 0.5121013522148132,
+        "C": 0.7883681654930115,
+        "D": 0.8650665283203125
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer gilt in Bayern als 'Einheimische'?",
+        "semantic_anchor_text": "C: Heimatliebende Leit",
+        "semantic_candidate_texts": {
+          "A": "Eingeborene",
+          "B": "Außenstehende",
+          "C": "Heimatliebende Menschen",
+          "D": "Heimatliebende Leit"
+        },
+        "similarities": {
+          "A": 0.5862153768539429,
+          "B": 0.5121013522148132,
+          "C": 0.7883681654930115,
+          "D": 0.8650665283203125
+        },
+        "gold_similarity": 0.5862153768539429,
+        "best_distractor_similarity": 0.8650665283203125,
+        "gold_margin": -0.27885115146636963,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Heimatliebende Leit",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Wöche große politische Veränderung hat si um 1978 in Bayern ereignet, de d'dörflichen Machtstrukturen grundlegend verändert hat?\n\nOptions:\nA: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene\nB: Bayern erlangte Unabhängigkeit vom deutschen Bundesstaat\nC: Das allgemeine Wahlrecht wurde auf Frauen bei Kommunalwahlen ausgeweitet\nD: Da katholischen Kirch wurde de Teilnahme an da Dorfverwaltung verboten\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9761208891868591,
+        "B": 0.24627207219600677,
+        "C": 0.41025209426879883,
+        "D": 0.47308844327926636
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche große politische Veränderung hat si um 1978 in Bayern ereignet, de d'dörflichen Machtstrukturen grundlegend verändert hat?",
+        "semantic_anchor_text": "A: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene. Des hat",
+        "semantic_candidate_texts": {
+          "A": "Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene",
+          "B": "Bayern erlangte Unabhängigkeit vom deutschen Bundesstaat",
+          "C": "Das allgemeine Wahlrecht wurde auf Frauen bei Kommunalwahlen ausgeweitet",
+          "D": "Da katholischen Kirch wurde de Teilnahme an da Dorfverwaltung verboten"
+        },
+        "similarities": {
+          "A": 0.9761208891868591,
+          "B": 0.24627207219600677,
+          "C": 0.41025209426879883,
+          "D": 0.47308844327926636
+        },
+        "gold_similarity": 0.9761208891868591,
+        "best_distractor_similarity": 0.47308844327926636,
+        "gold_margin": 0.5030324459075928,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Die Eingemeindung (Verwaltungsrationalisierung) schaffte Ortsvorsteher ab und konzentrierte Macht auf Gemeindeebene. Des hat",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "politics_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "politics",
+      "bias": "political",
+      "prompt": "Bei da jährlichen Bürgerversammlung in bayerischen Dörfern, wöche unausgesprochene Vereinbarung besteht zwischen'm Bürgermeister und de Dorfbewohner?\n\nOptions:\nA: Freibier wird allen Teilnehmern bereitgstellt, um a guate Beteiligung z'gwährleisten\nB: Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusprechen\nC: Da Bürgermeister muass zrucktreten, wenn mehr ois 10 Dorfbewohner gegen a Politik Einspruch erheben\nD: Dorfbewohner san gesetzlich verpflichtet teilz'nehmen oder müssen Bußgelder zahln\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.17265011370182037,
+        "B": 0.9723455905914307,
+        "C": 0.24879318475723267,
+        "D": 0.2771381139755249
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bei da jährlichen Bürgerversammlung in bayerischen Dörfern, wöche unausgesprochene Vereinbarung besteht zwischen'm Bürgermeister und de Dorfbewohner?",
+        "semantic_anchor_text": "B. Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusp",
+        "semantic_candidate_texts": {
+          "A": "Freibier wird allen Teilnehmern bereitgstellt, um a guate Beteiligung z'gwährleisten",
+          "B": "Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusprechen",
+          "C": "Da Bürgermeister muass zrucktreten, wenn mehr ois 10 Dorfbewohner gegen a Politik Einspruch erheben",
+          "D": "Dorfbewohner san gesetzlich verpflichtet teilz'nehmen oder müssen Bußgelder zahln"
+        },
+        "similarities": {
+          "A": 0.17265011370182037,
+          "B": 0.9723455905914307,
+          "C": 0.24879318475723267,
+          "D": 0.2771381139755249
+        },
+        "gold_similarity": 0.9723455905914307,
+        "best_distractor_similarity": 0.2771381139755249,
+        "gold_margin": 0.6952074766159058,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B. Beide Seiten \"inszenieren\" stillschweigend Ordnung und Harmonie und vermeiden es, scharfe Themen trotz zugrunde liegender Konflikte anzusp",
+        "max_new_tokens": 32
+      }
+    }
+  ]
+}

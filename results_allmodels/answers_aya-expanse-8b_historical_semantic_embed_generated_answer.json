@@ -1,0 +1,3656 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "aya-expanse-8b",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/aya-expanse-8b",
+  "source": "../other_models/aya-expanse-8b",
+  "dataset": "dataset/historical.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 255001,
+    "pad_token_id": 0
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_generated_answer",
+    "mcq_strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 38.22,
+  "results": [
+    {
+      "id": "historical_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Which dynasty ruled Bavaria for centuries and ended its rule with the fall of the monarchy in 1918?\n\nOptions:\nA: Habsburg\nB: Hohenzollern\nC: Wittelsbach\nD: Hanover\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4606057107448578,
+        "B": 0.36333057284355164,
+        "C": 0.7569159865379333,
+        "D": 0.22268931567668915
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which dynasty ruled Bavaria for centuries and ended its rule with the fall of the monarchy in 1918?",
+        "semantic_anchor_text": "C: Wittelsbach (The Wittelsbach dynasty ruled Bavaria from 1328 until 1918.)",
+        "semantic_candidate_texts": {
+          "A": "Habsburg",
+          "B": "Hohenzollern",
+          "C": "Wittelsbach",
+          "D": "Hanover"
+        },
+        "similarities": {
+          "A": 0.4606057107448578,
+          "B": 0.36333057284355164,
+          "C": 0.7569159865379333,
+          "D": 0.22268931567668915
+        },
+        "gold_similarity": 0.7569159865379333,
+        "best_distractor_similarity": 0.4606057107448578,
+        "gold_margin": 0.29631027579307556,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Wittelsbach (The Wittelsbach dynasty ruled Bavaria from 1328 until 1918.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In which year was Bavaria elevated to the status of a kingdom?\n\nOptions:\nA: 1648\nB: 1701\nC: 1806\nD: 1871\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.43342873454093933,
+        "B": 0.5202355980873108,
+        "C": 0.9016416072845459,
+        "D": 0.5587023496627808
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In which year was Bavaria elevated to the status of a kingdom?",
+        "semantic_anchor_text": "C: 1806",
+        "semantic_candidate_texts": {
+          "A": "1648",
+          "B": "1701",
+          "C": "1806",
+          "D": "1871"
+        },
+        "similarities": {
+          "A": 0.43342873454093933,
+          "B": 0.5202355980873108,
+          "C": 0.9016416072845459,
+          "D": 0.5587023496627808
+        },
+        "gold_similarity": 0.9016416072845459,
+        "best_distractor_similarity": 0.5587023496627808,
+        "gold_margin": 0.34293925762176514,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1806",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Who is commonly listed as the first King of Bavaria (after it became a kingdom in 1806)?\n\nOptions:\nA: Ludwig II\nB: Maximilian I Joseph\nC: Maximilian II\nD: Otto I\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6883258819580078,
+        "B": 0.9606204628944397,
+        "C": 0.851527214050293,
+        "D": 0.539417564868927
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Who is commonly listed as the first King of Bavaria (after it became a kingdom in 1806)?",
+        "semantic_anchor_text": "B: Maximilian I Joseph",
+        "semantic_candidate_texts": {
+          "A": "Ludwig II",
+          "B": "Maximilian I Joseph",
+          "C": "Maximilian II",
+          "D": "Otto I"
+        },
+        "similarities": {
+          "A": 0.6883258819580078,
+          "B": 0.9606204628944397,
+          "C": 0.851527214050293,
+          "D": 0.539417564868927
+        },
+        "gold_similarity": 0.9606204628944397,
+        "best_distractor_similarity": 0.851527214050293,
+        "gold_margin": 0.10909324884414673,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Maximilian I Joseph",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "After the monarchy ended in 1918, what name became the official designation of the Bavarian state?\n\nOptions:\nA: Kingdom of Bavaria\nB: Bavarian Republic\nC: Bavarian Federation\nD: Free State of Bavaria (Freistaat Bayern)\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8393948078155518,
+        "B": 0.839178204536438,
+        "C": 0.8218900561332703,
+        "D": 0.9845122694969177
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "After the monarchy ended in 1918, what name became the official designation of the Bavarian state?",
+        "semantic_anchor_text": "D: Free State of Bavaria (Freistaat Bayern)",
+        "semantic_candidate_texts": {
+          "A": "Kingdom of Bavaria",
+          "B": "Bavarian Republic",
+          "C": "Bavarian Federation",
+          "D": "Free State of Bavaria (Freistaat Bayern)"
+        },
+        "similarities": {
+          "A": 0.8393948078155518,
+          "B": 0.839178204536438,
+          "C": 0.8218900561332703,
+          "D": 0.9845122694969177
+        },
+        "gold_similarity": 0.9845122694969177,
+        "best_distractor_similarity": 0.8393948078155518,
+        "gold_margin": 0.14511746168136597,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Free State of Bavaria (Freistaat Bayern)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "The short-lived Bavarian Soviet Republic was proclaimed in which year?\n\nOptions:\nA: 1848\nB: 1919\nC: 1923\nD: 1933\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.45869767665863037,
+        "B": 0.8766882419586182,
+        "C": 0.6881320476531982,
+        "D": 0.6269500255584717
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The short-lived Bavarian Soviet Republic was proclaimed in which year?",
+        "semantic_anchor_text": "B: 1919",
+        "semantic_candidate_texts": {
+          "A": "1848",
+          "B": "1919",
+          "C": "1923",
+          "D": "1933"
+        },
+        "similarities": {
+          "A": 0.45869767665863037,
+          "B": 0.8766882419586182,
+          "C": 0.6881320476531982,
+          "D": 0.6269500255584717
+        },
+        "gold_similarity": 0.8766882419586182,
+        "best_distractor_similarity": 0.6881320476531982,
+        "gold_margin": 0.18855619430541992,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: 1919",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "The failed 1923 coup attempt launched in Munich is known as the:\n\nOptions:\nA: Kapp Putsch\nB: Night of the Long Knives\nC: Spartacist Uprising\nD: Beer Hall Putsch\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.43710413575172424,
+        "B": 0.3631398677825928,
+        "C": 0.13367147743701935,
+        "D": 0.9443660974502563
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The failed 1923 coup attempt launched in Munich is known as the:",
+        "semantic_anchor_text": "D: Beer Hall Putsch",
+        "semantic_candidate_texts": {
+          "A": "Kapp Putsch",
+          "B": "Night of the Long Knives",
+          "C": "Spartacist Uprising",
+          "D": "Beer Hall Putsch"
+        },
+        "similarities": {
+          "A": 0.43710413575172424,
+          "B": 0.3631398677825928,
+          "C": 0.13367147743701935,
+          "D": 0.9443660974502563
+        },
+        "gold_similarity": 0.9443660974502563,
+        "best_distractor_similarity": 0.43710413575172424,
+        "gold_margin": 0.5072619616985321,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Beer Hall Putsch",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bavaria became an electorate within the Holy Roman Empire in which year (when it received the electoral dignity)?\n\nOptions:\nA: 1180\nB: 1506\nC: 1623\nD: 1815\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.49184897541999817,
+        "B": 0.8818297386169434,
+        "C": 0.40407711267471313,
+        "D": 0.43563252687454224
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bavaria became an electorate within the Holy Roman Empire in which year (when it received the electoral dignity)?",
+        "semantic_anchor_text": "B: 1506",
+        "semantic_candidate_texts": {
+          "A": "1180",
+          "B": "1506",
+          "C": "1623",
+          "D": "1815"
+        },
+        "similarities": {
+          "A": 0.49184897541999817,
+          "B": 0.8818297386169434,
+          "C": 0.40407711267471313,
+          "D": 0.43563252687454224
+        },
+        "gold_similarity": 0.40407711267471313,
+        "best_distractor_similarity": 0.8818297386169434,
+        "gold_margin": -0.4777526259422302,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: 1506",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bavaria became a constituent state of the German Empire in:\n\nOptions:\nA: 1866\nB: 1867\nC: 1871\nD: 1918\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7086758017539978,
+        "B": 0.7485338449478149,
+        "C": 0.88820481300354,
+        "D": 0.49355456233024597
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bavaria became a constituent state of the German Empire in:",
+        "semantic_anchor_text": "C: 1871",
+        "semantic_candidate_texts": {
+          "A": "1866",
+          "B": "1867",
+          "C": "1871",
+          "D": "1918"
+        },
+        "similarities": {
+          "A": 0.7086758017539978,
+          "B": 0.7485338449478149,
+          "C": 0.88820481300354,
+          "D": 0.49355456233024597
+        },
+        "gold_similarity": 0.7485338449478149,
+        "best_distractor_similarity": 0.88820481300354,
+        "gold_margin": -0.1396709680557251,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1871",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Which party has been especially dominant in Bavarian state politics in the post–World War II era?\n\nOptions:\nA: CSU\nB: FDP\nC: CDU\nD: SPD\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4616880714893341,
+        "B": 0.13353979587554932,
+        "C": 0.4162660241127014,
+        "D": 0.3754342198371887
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which party has been especially dominant in Bavarian state politics in the post–World War II era?",
+        "semantic_anchor_text": "A: CSU\n\n(Note: The answer is based on historical data and the current political landscape of Bavaria, Germany.)",
+        "semantic_candidate_texts": {
+          "A": "CSU",
+          "B": "FDP",
+          "C": "CDU",
+          "D": "SPD"
+        },
+        "similarities": {
+          "A": 0.4616880714893341,
+          "B": 0.13353979587554932,
+          "C": 0.4162660241127014,
+          "D": 0.3754342198371887
+        },
+        "gold_similarity": 0.4616880714893341,
+        "best_distractor_similarity": 0.4162660241127014,
+        "gold_margin": 0.04542204737663269,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: CSU\n\n(Note: The answer is based on historical data and the current political landscape of Bavaria, Germany.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Which statement best describes Bavaria’s position on the 1949 Basic Law (Grundgesetz) vote in the Bavarian parliament?\n\nOptions:\nA: Bavaria approved it unanimously.\nB: Bavaria abstained and did not join the Federal Republic.\nC: Bavaria voted against it, but still became bound by it after enough other Länder approved it.\nD: Bavaria approved it only after a nationwide referendum.\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6406592130661011,
+        "B": 0.5529804825782776,
+        "C": 0.9839922189712524,
+        "D": 0.7590097784996033
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which statement best describes Bavaria’s position on the 1949 Basic Law (Grundgesetz) vote in the Bavarian parliament?",
+        "semantic_anchor_text": "C: Bavaria voted against it, but still became bound by it after enough other Länder approved it.",
+        "semantic_candidate_texts": {
+          "A": "Bavaria approved it unanimously.",
+          "B": "Bavaria abstained and did not join the Federal Republic.",
+          "C": "Bavaria voted against it, but still became bound by it after enough other Länder approved it.",
+          "D": "Bavaria approved it only after a nationwide referendum."
+        },
+        "similarities": {
+          "A": 0.6406592130661011,
+          "B": 0.5529804825782776,
+          "C": 0.9839922189712524,
+          "D": 0.7590097784996033
+        },
+        "gold_similarity": 0.9839922189712524,
+        "best_distractor_similarity": 0.7590097784996033,
+        "gold_margin": 0.22498244047164917,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bavaria voted against it, but still became bound by it after enough other Länder approved it.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Why was King Ludwig III forced to leave Munich in a rented car on the evening of 7 November 1918?\n\nOptions:\nA: Loyal troops had already surrounded the city.\nB: The royal train station had been destroyed.\nC: His chauffeur had joined the revolution and the official automobiles were unusable.\nD: The royal family had planned a hunting trip outside Munich.\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.1284804791212082,
+        "B": 0.26236623525619507,
+        "C": 0.9688494801521301,
+        "D": 0.15627208352088928
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why was King Ludwig III forced to leave Munich in a rented car on the evening of 7 November 1918?",
+        "semantic_anchor_text": "C: His chauffeur had joined the revolution and the official automobiles were unusable.",
+        "semantic_candidate_texts": {
+          "A": "Loyal troops had already surrounded the city.",
+          "B": "The royal train station had been destroyed.",
+          "C": "His chauffeur had joined the revolution and the official automobiles were unusable.",
+          "D": "The royal family had planned a hunting trip outside Munich."
+        },
+        "similarities": {
+          "A": 0.1284804791212082,
+          "B": 0.26236623525619507,
+          "C": 0.9688494801521301,
+          "D": 0.15627208352088928
+        },
+        "gold_similarity": 0.9688494801521301,
+        "best_distractor_similarity": 0.26236623525619507,
+        "gold_margin": 0.7064832448959351,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: His chauffeur had joined the revolution and the official automobiles were unusable.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Where was the first meeting of the Worker, Soldier, and Farmer Council held under Kurt Eisner’s leadership on the night of 7 November 1918?\n\nOptions:\nA: Mathäserbräu\nB: Residenz München\nC: Landtag building in Prannerstraße\nD: Theresienwiese\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9555968046188354,
+        "B": 0.5213972330093384,
+        "C": 0.45141127705574036,
+        "D": 0.6235958337783813
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Where was the first meeting of the Worker, Soldier, and Farmer Council held under Kurt Eisner’s leadership on the night of 7 November 1918?",
+        "semantic_anchor_text": "A: Mathäserbräu",
+        "semantic_candidate_texts": {
+          "A": "Mathäserbräu",
+          "B": "Residenz München",
+          "C": "Landtag building in Prannerstraße",
+          "D": "Theresienwiese"
+        },
+        "similarities": {
+          "A": 0.9555968046188354,
+          "B": 0.5213972330093384,
+          "C": 0.45141127705574036,
+          "D": 0.6235958337783813
+        },
+        "gold_similarity": 0.45141127705574036,
+        "best_distractor_similarity": 0.9555968046188354,
+        "gold_margin": -0.5041855275630951,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mathäserbräu",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "During the Bavarian Revolution on 7 November 1918, at which location did the stationed soldiers switch sides without resistance and join Kurt Eisner’s march?\n\nOptions:\nA: Marsfeldkaserne\nB: Guldeinschule\nC: Max-II-Kaserne\nD: Türkenkaserne\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.344440758228302,
+        "B": 0.47851085662841797,
+        "C": 0.3565501868724823,
+        "D": 0.9071910381317139
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "During the Bavarian Revolution on 7 November 1918, at which location did the stationed soldiers switch sides without resistance and join Kurt Eisner’s march?",
+        "semantic_anchor_text": "D: Türkenkaserne",
+        "semantic_candidate_texts": {
+          "A": "Marsfeldkaserne",
+          "B": "Guldeinschule",
+          "C": "Max-II-Kaserne",
+          "D": "Türkenkaserne"
+        },
+        "similarities": {
+          "A": 0.344440758228302,
+          "B": 0.47851085662841797,
+          "C": 0.3565501868724823,
+          "D": 0.9071910381317139
+        },
+        "gold_similarity": 0.47851085662841797,
+        "best_distractor_similarity": 0.9071910381317139,
+        "gold_margin": -0.4286801815032959,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Türkenkaserne",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What happened in Würzburg exactly one week after U.S. troops began fighting their way through the city on Karsamstag (Holy Saturday)?\n\nOptions:\nA: The city was officially declared a cultural memorial site.\nB: The war in Würzburg ended on 6 April 1945 after further heavy casualties.\nC: The remaining population was evacuated to Bavaria’s countryside.\nD: The British forces occupied the city center.\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.10660510510206223,
+        "B": 0.38041889667510986,
+        "C": 0.9736901521682739,
+        "D": 0.26067012548446655
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What happened in Würzburg exactly one week after U.S. troops began fighting their way through the city on Karsamstag (Holy Saturday)?",
+        "semantic_anchor_text": "C: The remaining population was evacuated to Bavaria’s countryside.",
+        "semantic_candidate_texts": {
+          "A": "The city was officially declared a cultural memorial site.",
+          "B": "The war in Würzburg ended on 6 April 1945 after further heavy casualties.",
+          "C": "The remaining population was evacuated to Bavaria’s countryside.",
+          "D": "The British forces occupied the city center."
+        },
+        "similarities": {
+          "A": 0.10660510510206223,
+          "B": 0.38041889667510986,
+          "C": 0.9736901521682739,
+          "D": 0.26067012548446655
+        },
+        "gold_similarity": 0.38041889667510986,
+        "best_distractor_similarity": 0.9736901521682739,
+        "gold_margin": -0.5932712554931641,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: The remaining population was evacuated to Bavaria’s countryside.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Which U.S. military unit advanced on Würzburg after the devastating bombing of 16 March 1945?\n\nOptions:\nA: 1st Infantry Division\nB: 101st Airborne Division\nC: 42nd Infantry Division\nD: 3rd Armored Division\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7624439001083374,
+        "B": 0.5514732003211975,
+        "C": 0.7463737726211548,
+        "D": 0.9645919799804688
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which U.S. military unit advanced on Würzburg after the devastating bombing of 16 March 1945?",
+        "semantic_anchor_text": "D: 3rd Armored Division",
+        "semantic_candidate_texts": {
+          "A": "1st Infantry Division",
+          "B": "101st Airborne Division",
+          "C": "42nd Infantry Division",
+          "D": "3rd Armored Division"
+        },
+        "similarities": {
+          "A": 0.7624439001083374,
+          "B": 0.5514732003211975,
+          "C": 0.7463737726211548,
+          "D": 0.9645919799804688
+        },
+        "gold_similarity": 0.7463737726211548,
+        "best_distractor_similarity": 0.9645919799804688,
+        "gold_margin": -0.21821820735931396,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: 3rd Armored Division",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What symbolic act takes place every year in Würzburg on 16 March to commemorate the destruction of the city?\n\nOptions:\nA: Church bells ring at the exact time the bombing began and for the duration it lasted.\nB: The ruins of the old town are illuminated with red lights.\nC: A minute of silence is observed at noon across Bavaria.\nD: A military parade marches through the rebuilt city center.\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.002465745434165001,
+        "B": 0.11969655752182007,
+        "C": 0.2192540168762207,
+        "D": 0.131803959608078
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What symbolic act takes place every year in Würzburg on 16 March to commemorate the destruction of the city?",
+        "semantic_anchor_text": "A",
+        "semantic_candidate_texts": {
+          "A": "Church bells ring at the exact time the bombing began and for the duration it lasted.",
+          "B": "The ruins of the old town are illuminated with red lights.",
+          "C": "A minute of silence is observed at noon across Bavaria.",
+          "D": "A military parade marches through the rebuilt city center."
+        },
+        "similarities": {
+          "A": 0.002465745434165001,
+          "B": 0.11969655752182007,
+          "C": 0.2192540168762207,
+          "D": 0.131803959608078
+        },
+        "gold_similarity": 0.002465745434165001,
+        "best_distractor_similarity": 0.2192540168762207,
+        "gold_margin": -0.2167882714420557,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Which resistance group, whose members had once belonged to a student company were housed in the Bergmannschule in Munich?\n\nOptions:\nA: Edelweißpiraten\nB: Rote Kapelle\nC: Weiße Rose\nD: Kreisauer Kreis\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.22129851579666138,
+        "B": 0.8123750686645508,
+        "C": 0.3636426329612732,
+        "D": 0.46445587277412415
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which resistance group, whose members had once belonged to a student company were housed in the Bergmannschule in Munich?",
+        "semantic_anchor_text": "B: Rote Kapelle (Red Chapel)",
+        "semantic_candidate_texts": {
+          "A": "Edelweißpiraten",
+          "B": "Rote Kapelle",
+          "C": "Weiße Rose",
+          "D": "Kreisauer Kreis"
+        },
+        "similarities": {
+          "A": 0.22129851579666138,
+          "B": 0.8123750686645508,
+          "C": 0.3636426329612732,
+          "D": 0.46445587277412415
+        },
+        "gold_similarity": 0.3636426329612732,
+        "best_distractor_similarity": 0.8123750686645508,
+        "gold_margin": -0.4487324357032776,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Rote Kapelle (Red Chapel)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Why were members of the Wittelsbach family, including Franz Herzog, imprisoned in 1944?\n\nOptions:\nA: They tried to flee to Switzerland during the war\nB: They were Sippenhäftlinge (family hostages) taken after the assassination attempt on Hitler\nC: They resisted the Nazi drafting of Bavarian youth\nD: They refused to donate family wealth to the Reich\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.45803695917129517,
+        "B": 0.9812439680099487,
+        "C": 0.5559871792793274,
+        "D": 0.38230031728744507
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why were members of the Wittelsbach family, including Franz Herzog, imprisoned in 1944?",
+        "semantic_anchor_text": "B They were Sippenhäftlinge (family hostages) taken after the assassination attempt on Hitler",
+        "semantic_candidate_texts": {
+          "A": "They tried to flee to Switzerland during the war",
+          "B": "They were Sippenhäftlinge (family hostages) taken after the assassination attempt on Hitler",
+          "C": "They resisted the Nazi drafting of Bavarian youth",
+          "D": "They refused to donate family wealth to the Reich"
+        },
+        "similarities": {
+          "A": 0.45803695917129517,
+          "B": 0.9812439680099487,
+          "C": 0.5559871792793274,
+          "D": 0.38230031728744507
+        },
+        "gold_similarity": 0.9812439680099487,
+        "best_distractor_similarity": 0.5559871792793274,
+        "gold_margin": 0.42525678873062134,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B They were Sippenhäftlinge (family hostages) taken after the assassination attempt on Hitler",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What is the Wittelsbacher Ausgleichsfonds, established in 1923?\n\nOptions:\nA: A museum dedicated to the history of Bavaria\nB: A foundation to compensate the family and preserve their art and properties\nC: A political organization aiming to restore the monarchy\nD: A charitable fund exclusively for Bavarian students\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4845395088195801,
+        "B": 0.6645423173904419,
+        "C": 0.2308862805366516,
+        "D": 0.6012239456176758
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the Wittelsbacher Ausgleichsfonds, established in 1923?",
+        "semantic_anchor_text": "B A foundation to compensate the family and preserve their art and properties.\n\nThe Wittelsbacher Ausgleichsfonds (Wittelsbach Compensation Fund) was",
+        "semantic_candidate_texts": {
+          "A": "A museum dedicated to the history of Bavaria",
+          "B": "A foundation to compensate the family and preserve their art and properties",
+          "C": "A political organization aiming to restore the monarchy",
+          "D": "A charitable fund exclusively for Bavarian students"
+        },
+        "similarities": {
+          "A": 0.4845395088195801,
+          "B": 0.6645423173904419,
+          "C": 0.2308862805366516,
+          "D": 0.6012239456176758
+        },
+        "gold_similarity": 0.6645423173904419,
+        "best_distractor_similarity": 0.6012239456176758,
+        "gold_margin": 0.06331837177276611,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B A foundation to compensate the family and preserve their art and properties.\n\nThe Wittelsbacher Ausgleichsfonds (Wittelsbach Compensation Fund) was",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Why was Franz Herzog von Bayern considered a potential threat by the Nazis before the Gestapo arrests?\n\nOptions:\nA: He had publicly criticized Hitler in newspapers\nB: As a popular former Generalfeldmarschall with military connections, he could have served as a rallying point for monarchist resistance\nC: He was secretly funding anti-Nazi groups abroad\nD: He controlled large arms factories in Bavaria\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.48792871832847595,
+        "B": 0.9674922227859497,
+        "C": 0.5592532157897949,
+        "D": 0.4898626208305359
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why was Franz Herzog von Bayern considered a potential threat by the Nazis before the Gestapo arrests?",
+        "semantic_anchor_text": "B As a popular former Generalfeldmarschall with military connections, he could have served as a rallying point for monarchist resistance.",
+        "semantic_candidate_texts": {
+          "A": "He had publicly criticized Hitler in newspapers",
+          "B": "As a popular former Generalfeldmarschall with military connections, he could have served as a rallying point for monarchist resistance",
+          "C": "He was secretly funding anti-Nazi groups abroad",
+          "D": "He controlled large arms factories in Bavaria"
+        },
+        "similarities": {
+          "A": 0.48792871832847595,
+          "B": 0.9674922227859497,
+          "C": 0.5592532157897949,
+          "D": 0.4898626208305359
+        },
+        "gold_similarity": 0.9674922227859497,
+        "best_distractor_similarity": 0.5592532157897949,
+        "gold_margin": 0.4082390069961548,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B As a popular former Generalfeldmarschall with military connections, he could have served as a rallying point for monarchist resistance.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "How did the state of Bavaria represent itself in the early 2000s?\n\nOptions:\nA: As a state of great buisness oppurtunity and as a hi-tech location\nB: \nC: \nD: \n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8383781313896179
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How did the state of Bavaria represent itself in the early 2000s?",
+        "semantic_anchor_text": "A: As a state of great business opportunity and as a hi-tech location.",
+        "semantic_candidate_texts": {
+          "A": "As a state of great buisness oppurtunity and as a hi-tech location"
+        },
+        "similarities": {
+          "A": 0.8383781313896179
+        },
+        "gold_similarity": 0.8383781313896179,
+        "best_distractor_similarity": null,
+        "gold_margin": null,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {
+          "B": "",
+          "C": "",
+          "D": ""
+        },
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: As a state of great business opportunity and as a hi-tech location.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What topics were traditionally discussed at a Stammtisch?\n\nOptions:\nA: Only sports and weather\nB: Politics local news and philosophical ideas\nC: Buisness contacts and trade deals\nD: Religious scriptures and prayers\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.12777386605739594,
+        "B": 0.5566102266311646,
+        "C": 0.2563765048980713,
+        "D": 0.18359239399433136
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What topics were traditionally discussed at a Stammtisch?",
+        "semantic_anchor_text": "B: Politics local news and philosophical ideas.\n\nStammtisch, or \"table of regulars,\" were traditional German social gatherings where people would meet regularly",
+        "semantic_candidate_texts": {
+          "A": "Only sports and weather",
+          "B": "Politics local news and philosophical ideas",
+          "C": "Buisness contacts and trade deals",
+          "D": "Religious scriptures and prayers"
+        },
+        "similarities": {
+          "A": 0.12777386605739594,
+          "B": 0.5566102266311646,
+          "C": 0.2563765048980713,
+          "D": 0.18359239399433136
+        },
+        "gold_similarity": 0.5566102266311646,
+        "best_distractor_similarity": 0.2563765048980713,
+        "gold_margin": 0.30023372173309326,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Politics local news and philosophical ideas.\n\nStammtisch, or \"table of regulars,\" were traditional German social gatherings where people would meet regularly",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What was the primary function of a large Bavarian household until the mid 20th century?\n\nOptions:\nA: A centre for trade and commerce\nB: A seasonal guest house for travellers\nC: A place of religious community life\nD: An agricultural unit with barns and farms\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2188299000263214,
+        "B": 0.2612419128417969,
+        "C": 0.28113141655921936,
+        "D": 0.6532383561134338
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What was the primary function of a large Bavarian household until the mid 20th century?",
+        "semantic_anchor_text": "D: An agricultural unit with barns and farms.\n\n(Note: This is a hypothetical response based on the user instruction and common historical context. In reality",
+        "semantic_candidate_texts": {
+          "A": "A centre for trade and commerce",
+          "B": "A seasonal guest house for travellers",
+          "C": "A place of religious community life",
+          "D": "An agricultural unit with barns and farms"
+        },
+        "similarities": {
+          "A": 0.2188299000263214,
+          "B": 0.2612419128417969,
+          "C": 0.28113141655921936,
+          "D": 0.6532383561134338
+        },
+        "gold_similarity": 0.6532383561134338,
+        "best_distractor_similarity": 0.28113141655921936,
+        "gold_margin": 0.3721069395542145,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: An agricultural unit with barns and farms.\n\n(Note: This is a hypothetical response based on the user instruction and common historical context. In reality",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "What historical event explains why Upper Bavarian farmers became landowners rather than tenants?\n\nOptions:\nA: A royal degree by the King redistributed noble estates to the peasants\nB: A series of agricultural reforms after World War 1\nC: The secularization of church property from 1803 replaced feudal relations with peasant farming\nD: The unification of Germany of 1871 granted farmers automatically the land ownership\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5540438890457153,
+        "B": 0.5546174049377441,
+        "C": 0.9865843057632446,
+        "D": 0.4872089624404907
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What historical event explains why Upper Bavarian farmers became landowners rather than tenants?",
+        "semantic_anchor_text": "C: The secularization of church property from 1803 replaced feudal relations with peasant farming.",
+        "semantic_candidate_texts": {
+          "A": "A royal degree by the King redistributed noble estates to the peasants",
+          "B": "A series of agricultural reforms after World War 1",
+          "C": "The secularization of church property from 1803 replaced feudal relations with peasant farming",
+          "D": "The unification of Germany of 1871 granted farmers automatically the land ownership"
+        },
+        "similarities": {
+          "A": 0.5540438890457153,
+          "B": 0.5546174049377441,
+          "C": 0.9865843057632446,
+          "D": 0.4872089624404907
+        },
+        "gold_similarity": 0.9865843057632446,
+        "best_distractor_similarity": 0.5546174049377441,
+        "gold_margin": 0.4319669008255005,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: The secularization of church property from 1803 replaced feudal relations with peasant farming.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In traditional Bavarian villages, what unique naming system was used that differed from family surnames?\n\nOptions:\nA: Village titles based on birth order (First Son, Second Daughter, etc.)\nB: House-names (Hausname) - everyone living in a house adopted that house's name, regardless of their family name\nC: Occupational names that changed with each generation's profession\nD: Catholic saint names assigned by the local priest at baptism\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.486393541097641,
+        "B": 0.9259673357009888,
+        "C": 0.3156135082244873,
+        "D": 0.26535868644714355
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In traditional Bavarian villages, what unique naming system was used that differed from family surnames?",
+        "semantic_anchor_text": "B: House-names (Hausname) - everyone living in a house adopted that house's name, regardless of their family name.",
+        "semantic_candidate_texts": {
+          "A": "Village titles based on birth order (First Son, Second Daughter, etc.)",
+          "B": "House-names (Hausname) - everyone living in a house adopted that house's name, regardless of their family name",
+          "C": "Occupational names that changed with each generation's profession",
+          "D": "Catholic saint names assigned by the local priest at baptism"
+        },
+        "similarities": {
+          "A": 0.486393541097641,
+          "B": 0.9259673357009888,
+          "C": 0.3156135082244873,
+          "D": 0.26535868644714355
+        },
+        "gold_similarity": 0.9259673357009888,
+        "best_distractor_similarity": 0.486393541097641,
+        "gold_margin": 0.4395737946033478,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: House-names (Hausname) - everyone living in a house adopted that house's name, regardless of their family name.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche Dynastie regierte Bayern jahrhundertelang und beendete ihre Herrschaft mit dem Fall der Monarchie 1918?\n\nOptions:\nA: Habsburg\nB: Hohenzollern\nC: Wittelsbach\nD: Hannover\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4844508171081543,
+        "B": 0.5822890996932983,
+        "C": 0.9479275345802307,
+        "D": 0.47018563747406006
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Dynastie regierte Bayern jahrhundertelang und beendete ihre Herrschaft mit dem Fall der Monarchie 1918?",
+        "semantic_anchor_text": "C: Wittelsbach",
+        "semantic_candidate_texts": {
+          "A": "Habsburg",
+          "B": "Hohenzollern",
+          "C": "Wittelsbach",
+          "D": "Hannover"
+        },
+        "similarities": {
+          "A": 0.4844508171081543,
+          "B": 0.5822890996932983,
+          "C": 0.9479275345802307,
+          "D": 0.47018563747406006
+        },
+        "gold_similarity": 0.9479275345802307,
+        "best_distractor_similarity": 0.5822890996932983,
+        "gold_margin": 0.3656384348869324,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Wittelsbach",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In welchem Jahr wurde Bayern zum Königreich erhoben?\n\nOptions:\nA: 1648\nB: 1701\nC: 1806\nD: 1871\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23108059167861938,
+        "B": 0.26106756925582886,
+        "C": 0.6469736099243164,
+        "D": 0.3968343734741211
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In welchem Jahr wurde Bayern zum Königreich erhoben?",
+        "semantic_anchor_text": "C: 1806 (Hinweis: Bayern wurde am 1. Januar 1806 zum Königreich erhoben.)",
+        "semantic_candidate_texts": {
+          "A": "1648",
+          "B": "1701",
+          "C": "1806",
+          "D": "1871"
+        },
+        "similarities": {
+          "A": 0.23108059167861938,
+          "B": 0.26106756925582886,
+          "C": 0.6469736099243164,
+          "D": 0.3968343734741211
+        },
+        "gold_similarity": 0.6469736099243164,
+        "best_distractor_similarity": 0.3968343734741211,
+        "gold_margin": 0.2501392364501953,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1806 (Hinweis: Bayern wurde am 1. Januar 1806 zum Königreich erhoben.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wer wird üblicherweise als erster König von Bayern aufgeführt (nachdem es 1806 Königreich wurde)?\n\nOptions:\nA: Ludwig II\nB: Maximilian I. Joseph\nC: Maximilian II\nD: Otto I\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5870569944381714,
+        "B": 0.8792155385017395,
+        "C": 0.7637046575546265,
+        "D": 0.4569922685623169
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer wird üblicherweise als erster König von Bayern aufgeführt (nachdem es 1806 Königreich wurde)?",
+        "semantic_anchor_text": "B: Maximilian I. Joseph (Anmerkung: Die Antwort basiert auf der historischen Einordnung, die Maximilian I. Joseph als den",
+        "semantic_candidate_texts": {
+          "A": "Ludwig II",
+          "B": "Maximilian I. Joseph",
+          "C": "Maximilian II",
+          "D": "Otto I"
+        },
+        "similarities": {
+          "A": 0.5870569944381714,
+          "B": 0.8792155385017395,
+          "C": 0.7637046575546265,
+          "D": 0.4569922685623169
+        },
+        "gold_similarity": 0.8792155385017395,
+        "best_distractor_similarity": 0.7637046575546265,
+        "gold_margin": 0.11551088094711304,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Maximilian I. Joseph (Anmerkung: Die Antwort basiert auf der historischen Einordnung, die Maximilian I. Joseph als den",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Nach dem Ende der Monarchie 1918, welcher Name wurde die offizielle Bezeichnung des bayerischen Staates?\n\nOptions:\nA: Königreich Bayern\nB: Bayerische Republik\nC: Bayerischer Bund\nD: Freistaat Bayern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8776547908782959,
+        "B": 0.8466867804527283,
+        "C": 0.8518204689025879,
+        "D": 0.9606613516807556
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Nach dem Ende der Monarchie 1918, welcher Name wurde die offizielle Bezeichnung des bayerischen Staates?",
+        "semantic_anchor_text": "D: Freistaat Bayern",
+        "semantic_candidate_texts": {
+          "A": "Königreich Bayern",
+          "B": "Bayerische Republik",
+          "C": "Bayerischer Bund",
+          "D": "Freistaat Bayern"
+        },
+        "similarities": {
+          "A": 0.8776547908782959,
+          "B": 0.8466867804527283,
+          "C": 0.8518204689025879,
+          "D": 0.9606613516807556
+        },
+        "gold_similarity": 0.9606613516807556,
+        "best_distractor_similarity": 0.8776547908782959,
+        "gold_margin": 0.08300656080245972,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Freistaat Bayern",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Die kurzlebige Bayerische Räterepublik wurde in welchem Jahr ausgerufen?\n\nOptions:\nA: 1848\nB: 1919\nC: 1923\nD: 1933\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9522314071655273,
+        "B": 0.513047993183136,
+        "C": 0.5481398105621338,
+        "D": 0.5614020228385925
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Die kurzlebige Bayerische Räterepublik wurde in welchem Jahr ausgerufen?",
+        "semantic_anchor_text": "A: 1848",
+        "semantic_candidate_texts": {
+          "A": "1848",
+          "B": "1919",
+          "C": "1923",
+          "D": "1933"
+        },
+        "similarities": {
+          "A": 0.9522314071655273,
+          "B": 0.513047993183136,
+          "C": 0.5481398105621338,
+          "D": 0.5614020228385925
+        },
+        "gold_similarity": 0.513047993183136,
+        "best_distractor_similarity": 0.9522314071655273,
+        "gold_margin": -0.43918341398239136,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 1848",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Der gescheiterte Putschversuch von 1923 in München ist bekannt als:\n\nOptions:\nA: Kapp-Putsch\nB: Nacht der langen Messer\nC: Spartakusaufstand\nD: Hitlerputsch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5064775943756104,
+        "B": 0.34023064374923706,
+        "C": 0.28046366572380066,
+        "D": 0.9469851851463318
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Der gescheiterte Putschversuch von 1923 in München ist bekannt als:",
+        "semantic_anchor_text": "D: Hitlerputsch",
+        "semantic_candidate_texts": {
+          "A": "Kapp-Putsch",
+          "B": "Nacht der langen Messer",
+          "C": "Spartakusaufstand",
+          "D": "Hitlerputsch"
+        },
+        "similarities": {
+          "A": 0.5064775943756104,
+          "B": 0.34023064374923706,
+          "C": 0.28046366572380066,
+          "D": 0.9469851851463318
+        },
+        "gold_similarity": 0.9469851851463318,
+        "best_distractor_similarity": 0.5064775943756104,
+        "gold_margin": 0.44050759077072144,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Hitlerputsch",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bayern wurde Kurfürstentum innerhalb des Heiligen Römischen Reiches in welchem Jahr (als es die Kurwürde erhielt)?\n\nOptions:\nA: 1180\nB: 1506\nC: 1623\nD: 1815\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5590806603431702,
+        "B": 0.3830779790878296,
+        "C": 0.3586093783378601,
+        "D": 0.42988085746765137
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern wurde Kurfürstentum innerhalb des Heiligen Römischen Reiches in welchem Jahr (als es die Kurwürde erhielt)?",
+        "semantic_anchor_text": "A: 1180\n\n(Note: The correct answer is A, as Bayern erhielt die Kurwürde im Jahr 11",
+        "semantic_candidate_texts": {
+          "A": "1180",
+          "B": "1506",
+          "C": "1623",
+          "D": "1815"
+        },
+        "similarities": {
+          "A": 0.5590806603431702,
+          "B": 0.3830779790878296,
+          "C": 0.3586093783378601,
+          "D": 0.42988085746765137
+        },
+        "gold_similarity": 0.3586093783378601,
+        "best_distractor_similarity": 0.5590806603431702,
+        "gold_margin": -0.20047128200531006,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: 1180\n\n(Note: The correct answer is A, as Bayern erhielt die Kurwürde im Jahr 11",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bayern wurde ein konstituierender Staat des Deutschen Kaiserreichs in:\n\nOptions:\nA: 1866\nB: 1867\nC: 1871\nD: 1918\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.36789631843566895,
+        "B": 0.4141160547733307,
+        "C": 0.610000491142273,
+        "D": 0.25686684250831604
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern wurde ein konstituierender Staat des Deutschen Kaiserreichs in:",
+        "semantic_anchor_text": "C: 1871 (Bayern wurde 1871 ein Teil des Deutschen Kaiserreichs.)",
+        "semantic_candidate_texts": {
+          "A": "1866",
+          "B": "1867",
+          "C": "1871",
+          "D": "1918"
+        },
+        "similarities": {
+          "A": 0.36789631843566895,
+          "B": 0.4141160547733307,
+          "C": 0.610000491142273,
+          "D": 0.25686684250831604
+        },
+        "gold_similarity": 0.4141160547733307,
+        "best_distractor_similarity": 0.610000491142273,
+        "gold_margin": -0.19588443636894226,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1871 (Bayern wurde 1871 ein Teil des Deutschen Kaiserreichs.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche Partei war besonders dominant in der bayerischen Landespolitik in der Nachkriegszeit nach dem Zweiten Weltkrieg?\n\nOptions:\nA: CSU\nB: FDP\nC: CDU\nD: SPD\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9469239115715027,
+        "B": 0.22191663086414337,
+        "C": 0.664409875869751,
+        "D": 0.31284934282302856
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Partei war besonders dominant in der bayerischen Landespolitik in der Nachkriegszeit nach dem Zweiten Weltkrieg?",
+        "semantic_anchor_text": "A: CSU",
+        "semantic_candidate_texts": {
+          "A": "CSU",
+          "B": "FDP",
+          "C": "CDU",
+          "D": "SPD"
+        },
+        "similarities": {
+          "A": 0.9469239115715027,
+          "B": 0.22191663086414337,
+          "C": 0.664409875869751,
+          "D": 0.31284934282302856
+        },
+        "gold_similarity": 0.9469239115715027,
+        "best_distractor_similarity": 0.664409875869751,
+        "gold_margin": 0.2825140357017517,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: CSU",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche Aussage beschreibt Bayerns Position zur Abstimmung über das Grundgesetz 1949 im Bayerischen Landtag am besten?\n\nOptions:\nA: Bayern stimmte einstimmig dafür.\nB: Bayern enthielt sich und trat der Bundesrepublik nicht bei.\nC: Bayern stimmte dagegen, wurde aber dennoch gebunden, nachdem genügend andere Länder zustimmten.\nD: Bayern stimmte nur nach einer bundesweiten Volksabstimmung zu.\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6315582990646362,
+        "B": 0.6134617328643799,
+        "C": 0.9795783758163452,
+        "D": 0.7598930597305298
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Aussage beschreibt Bayerns Position zur Abstimmung über das Grundgesetz 1949 im Bayerischen Landtag am besten?",
+        "semantic_anchor_text": "C: Bayern stimmte dagegen, wurde aber dennoch gebunden, nachdem genügend andere Länder zustimmten.",
+        "semantic_candidate_texts": {
+          "A": "Bayern stimmte einstimmig dafür.",
+          "B": "Bayern enthielt sich und trat der Bundesrepublik nicht bei.",
+          "C": "Bayern stimmte dagegen, wurde aber dennoch gebunden, nachdem genügend andere Länder zustimmten.",
+          "D": "Bayern stimmte nur nach einer bundesweiten Volksabstimmung zu."
+        },
+        "similarities": {
+          "A": 0.6315582990646362,
+          "B": 0.6134617328643799,
+          "C": 0.9795783758163452,
+          "D": 0.7598930597305298
+        },
+        "gold_similarity": 0.9795783758163452,
+        "best_distractor_similarity": 0.7598930597305298,
+        "gold_margin": 0.21968531608581543,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bayern stimmte dagegen, wurde aber dennoch gebunden, nachdem genügend andere Länder zustimmten.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum musste König Ludwig III. am Abend des 7. November 1918 München in einem gemieteten Auto verlassen?\n\nOptions:\nA: Loyale Truppen hatten die Stadt bereits umzingelt.\nB: Der königliche Bahnhof war zerstört worden.\nC: Sein Chauffeur hatte sich der Revolution angeschlossen und die offiziellen Automobile waren unbrauchbar.\nD: Die königliche Familie hatte eine Jagdreise außerhalb Münchens geplant.\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.20508944988250732,
+        "B": 0.27571195363998413,
+        "C": 0.9617424607276917,
+        "D": 0.1513674259185791
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum musste König Ludwig III. am Abend des 7. November 1918 München in einem gemieteten Auto verlassen?",
+        "semantic_anchor_text": "C: Sein Chauffeur hatte sich der Revolution angeschlossen und die offiziellen Automobile waren unbrauchbar.",
+        "semantic_candidate_texts": {
+          "A": "Loyale Truppen hatten die Stadt bereits umzingelt.",
+          "B": "Der königliche Bahnhof war zerstört worden.",
+          "C": "Sein Chauffeur hatte sich der Revolution angeschlossen und die offiziellen Automobile waren unbrauchbar.",
+          "D": "Die königliche Familie hatte eine Jagdreise außerhalb Münchens geplant."
+        },
+        "similarities": {
+          "A": 0.20508944988250732,
+          "B": 0.27571195363998413,
+          "C": 0.9617424607276917,
+          "D": 0.1513674259185791
+        },
+        "gold_similarity": 0.9617424607276917,
+        "best_distractor_similarity": 0.27571195363998413,
+        "gold_margin": 0.6860305070877075,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Sein Chauffeur hatte sich der Revolution angeschlossen und die offiziellen Automobile waren unbrauchbar.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wo fand das erste Treffen des Arbeiter-, Soldaten- und Bauernrats unter Kurt Eisners Führung in der Nacht vom 7. November 1918 statt?\n\nOptions:\nA: Mathäserbräu\nB: Residenz München\nC: Landtagsgebäude in der Prannerstraße\nD: Theresienwiese\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9555968046188354,
+        "B": 0.5213972330093384,
+        "C": 0.5771340131759644,
+        "D": 0.6235958337783813
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wo fand das erste Treffen des Arbeiter-, Soldaten- und Bauernrats unter Kurt Eisners Führung in der Nacht vom 7. November 1918 statt?",
+        "semantic_anchor_text": "A: Mathäserbräu",
+        "semantic_candidate_texts": {
+          "A": "Mathäserbräu",
+          "B": "Residenz München",
+          "C": "Landtagsgebäude in der Prannerstraße",
+          "D": "Theresienwiese"
+        },
+        "similarities": {
+          "A": 0.9555968046188354,
+          "B": 0.5213972330093384,
+          "C": 0.5771340131759644,
+          "D": 0.6235958337783813
+        },
+        "gold_similarity": 0.5771340131759644,
+        "best_distractor_similarity": 0.9555968046188354,
+        "gold_margin": -0.3784627914428711,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mathäserbräu",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Während der Bayerischen Revolution am 7. November 1918, an welchem Ort wechselten die stationierten Soldaten ohne Widerstand die Seiten und schlossen sich Kurt Eisners Marsch an?\n\nOptions:\nA: Marsfeldkaserne\nB: Guldeinschule\nC: Max-II-Kaserne\nD: Türkenkaserne\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.344440758228302,
+        "B": 0.47851085662841797,
+        "C": 0.3565501868724823,
+        "D": 0.9071910381317139
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Während der Bayerischen Revolution am 7. November 1918, an welchem Ort wechselten die stationierten Soldaten ohne Widerstand die Seiten und schlossen sich Kurt Eisners Marsch an?",
+        "semantic_anchor_text": "D: Türkenkaserne",
+        "semantic_candidate_texts": {
+          "A": "Marsfeldkaserne",
+          "B": "Guldeinschule",
+          "C": "Max-II-Kaserne",
+          "D": "Türkenkaserne"
+        },
+        "similarities": {
+          "A": 0.344440758228302,
+          "B": 0.47851085662841797,
+          "C": 0.3565501868724823,
+          "D": 0.9071910381317139
+        },
+        "gold_similarity": 0.47851085662841797,
+        "best_distractor_similarity": 0.9071910381317139,
+        "gold_margin": -0.4286801815032959,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Türkenkaserne",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was geschah in Würzburg genau eine Woche nachdem US-Truppen am Karsamstag begannen, sich durch die Stadt zu kämpfen?\n\nOptions:\nA: Die Stadt wurde offiziell zur Kulturgedenkstätte erklärt.\nB: Der Krieg in Würzburg endete am 6. April 1945 nach weiteren schweren Verlusten.\nC: Die verbliebene Bevölkerung wurde aufs bayerische Land evakuiert.\nD: Die britischen Streitkräfte besetzten das Stadtzentrum.\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3126852810382843,
+        "B": 0.19279053807258606,
+        "C": 0.26936209201812744,
+        "D": 0.9662395715713501
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was geschah in Würzburg genau eine Woche nachdem US-Truppen am Karsamstag begannen, sich durch die Stadt zu kämpfen?",
+        "semantic_anchor_text": "D: Die britischen Streitkräfte besetzten das Stadtzentrum.",
+        "semantic_candidate_texts": {
+          "A": "Die Stadt wurde offiziell zur Kulturgedenkstätte erklärt.",
+          "B": "Der Krieg in Würzburg endete am 6. April 1945 nach weiteren schweren Verlusten.",
+          "C": "Die verbliebene Bevölkerung wurde aufs bayerische Land evakuiert.",
+          "D": "Die britischen Streitkräfte besetzten das Stadtzentrum."
+        },
+        "similarities": {
+          "A": 0.3126852810382843,
+          "B": 0.19279053807258606,
+          "C": 0.26936209201812744,
+          "D": 0.9662395715713501
+        },
+        "gold_similarity": 0.19279053807258606,
+        "best_distractor_similarity": 0.9662395715713501,
+        "gold_margin": -0.773449033498764,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Die britischen Streitkräfte besetzten das Stadtzentrum.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche US-Militäreinheit rückte nach der verheerenden Bombardierung vom 16. März 1945 auf Würzburg vor?\n\nOptions:\nA: 1st Infantry Division\nB: 101st Airborne Division\nC: 42nd Infantry Division\nD: 3rd Armored Division\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7624439001083374,
+        "B": 0.5514732003211975,
+        "C": 0.7463737726211548,
+        "D": 0.9645919799804688
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche US-Militäreinheit rückte nach der verheerenden Bombardierung vom 16. März 1945 auf Würzburg vor?",
+        "semantic_anchor_text": "D: 3rd Armored Division",
+        "semantic_candidate_texts": {
+          "A": "1st Infantry Division",
+          "B": "101st Airborne Division",
+          "C": "42nd Infantry Division",
+          "D": "3rd Armored Division"
+        },
+        "similarities": {
+          "A": 0.7624439001083374,
+          "B": 0.5514732003211975,
+          "C": 0.7463737726211548,
+          "D": 0.9645919799804688
+        },
+        "gold_similarity": 0.7463737726211548,
+        "best_distractor_similarity": 0.9645919799804688,
+        "gold_margin": -0.21821820735931396,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: 3rd Armored Division",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welcher symbolische Akt findet jedes Jahr am 16. März in Würzburg statt, um an die Zerstörung der Stadt zu erinnern?\n\nOptions:\nA: Kirchenglocken läuten zur exakten Zeit des Bombenangriffs und für dessen Dauer.\nB: Die Ruinen der Altstadt werden mit roten Lichtern beleuchtet.\nC: Eine Schweigeminute wird mittags in ganz Bayern eingelegt.\nD: Eine Militärparade marschiert durch die wiederaufgebaute Innenstadt.\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9570934772491455,
+        "B": 0.42903199791908264,
+        "C": 0.3520824611186981,
+        "D": 0.36593273282051086
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher symbolische Akt findet jedes Jahr am 16. März in Würzburg statt, um an die Zerstörung der Stadt zu erinnern?",
+        "semantic_anchor_text": "A: Kirchenglocken läuten zur exakten Zeit des Bombenangriffs und für dessen Dauer.",
+        "semantic_candidate_texts": {
+          "A": "Kirchenglocken läuten zur exakten Zeit des Bombenangriffs und für dessen Dauer.",
+          "B": "Die Ruinen der Altstadt werden mit roten Lichtern beleuchtet.",
+          "C": "Eine Schweigeminute wird mittags in ganz Bayern eingelegt.",
+          "D": "Eine Militärparade marschiert durch die wiederaufgebaute Innenstadt."
+        },
+        "similarities": {
+          "A": 0.9570934772491455,
+          "B": 0.42903199791908264,
+          "C": 0.3520824611186981,
+          "D": 0.36593273282051086
+        },
+        "gold_similarity": 0.9570934772491455,
+        "best_distractor_similarity": 0.42903199791908264,
+        "gold_margin": 0.5280614793300629,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Kirchenglocken läuten zur exakten Zeit des Bombenangriffs und für dessen Dauer.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche Widerstandsgruppe, deren Mitglieder einst einer Studentenkompanie angehörten, war in der Bergmannschule in München untergebracht?\n\nOptions:\nA: Edelweißpiraten\nB: Rote Kapelle\nC: Weiße Rose\nD: Kreisauer Kreis\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.15025347471237183,
+        "B": 0.46819040179252625,
+        "C": 0.9329398274421692,
+        "D": 0.3789454698562622
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Widerstandsgruppe, deren Mitglieder einst einer Studentenkompanie angehörten, war in der Bergmannschule in München untergebracht?",
+        "semantic_anchor_text": "C: Weiße Rose",
+        "semantic_candidate_texts": {
+          "A": "Edelweißpiraten",
+          "B": "Rote Kapelle",
+          "C": "Weiße Rose",
+          "D": "Kreisauer Kreis"
+        },
+        "similarities": {
+          "A": 0.15025347471237183,
+          "B": 0.46819040179252625,
+          "C": 0.9329398274421692,
+          "D": 0.3789454698562622
+        },
+        "gold_similarity": 0.9329398274421692,
+        "best_distractor_similarity": 0.46819040179252625,
+        "gold_margin": 0.46474942564964294,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Weiße Rose",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum wurden Mitglieder der Familie Wittelsbach, darunter Franz Herzog, 1944 inhaftiert?\n\nOptions:\nA: Sie versuchten während des Krieges in die Schweiz zu fliehen\nB: Sie waren Sippenhäftlinge, die nach dem Attentat auf Hitler genommen wurden\nC: Sie widersetzten sich der Nazi-Einberufung bayerischer Jugendlicher\nD: Sie weigerten sich, Familienvermögen dem Reich zu spenden\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5322452187538147,
+        "B": 0.9483196139335632,
+        "C": 0.6774653792381287,
+        "D": 0.25022202730178833
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum wurden Mitglieder der Familie Wittelsbach, darunter Franz Herzog, 1944 inhaftiert?",
+        "semantic_anchor_text": "B: Sie waren Sippenhäftlinge, die nach dem Attentat auf Hitler genommen wurden",
+        "semantic_candidate_texts": {
+          "A": "Sie versuchten während des Krieges in die Schweiz zu fliehen",
+          "B": "Sie waren Sippenhäftlinge, die nach dem Attentat auf Hitler genommen wurden",
+          "C": "Sie widersetzten sich der Nazi-Einberufung bayerischer Jugendlicher",
+          "D": "Sie weigerten sich, Familienvermögen dem Reich zu spenden"
+        },
+        "similarities": {
+          "A": 0.5322452187538147,
+          "B": 0.9483196139335632,
+          "C": 0.6774653792381287,
+          "D": 0.25022202730178833
+        },
+        "gold_similarity": 0.9483196139335632,
+        "best_distractor_similarity": 0.6774653792381287,
+        "gold_margin": 0.27085423469543457,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Sie waren Sippenhäftlinge, die nach dem Attentat auf Hitler genommen wurden",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was ist der Wittelsbacher Ausgleichsfonds, der 1923 gegründet wurde?\n\nOptions:\nA: Ein Museum zur Geschichte Bayerns\nB: Eine Stiftung zur Entschädigung der Familie und Erhaltung ihrer Kunst und Immobilien\nC: Eine politische Organisation zur Wiederherstellung der Monarchie\nD: Ein Wohltätigkeitsfonds ausschließlich für bayerische Studenten\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6207967400550842,
+        "B": 0.34299516677856445,
+        "C": 0.20420847833156586,
+        "D": 0.4504621922969818
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist der Wittelsbacher Ausgleichsfonds, der 1923 gegründet wurde?",
+        "semantic_anchor_text": "B: Eine Stiftung zur Entschädigung der Familie und Erhaltung ihrer Kunst und Immobilien\n\n(Note: The correct answer is \"",
+        "semantic_candidate_texts": {
+          "A": "Ein Museum zur Geschichte Bayerns",
+          "B": "Eine Stiftung zur Entschädigung der Familie und Erhaltung ihrer Kunst und Immobilien",
+          "C": "Eine politische Organisation zur Wiederherstellung der Monarchie",
+          "D": "Ein Wohltätigkeitsfonds ausschließlich für bayerische Studenten"
+        },
+        "similarities": {
+          "A": 0.6207967400550842,
+          "B": 0.34299516677856445,
+          "C": 0.20420847833156586,
+          "D": 0.4504621922969818
+        },
+        "gold_similarity": 0.34299516677856445,
+        "best_distractor_similarity": 0.6207967400550842,
+        "gold_margin": -0.2778015732765198,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Eine Stiftung zur Entschädigung der Familie und Erhaltung ihrer Kunst und Immobilien\n\n(Note: The correct answer is \"",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum wurde Franz Herzog von Bayern vor den Gestapo-Verhaftungen von den Nazis als potenzielle Bedrohung angesehen?\n\nOptions:\nA: Er hatte Hitler öffentlich in Zeitungen kritisiert\nB: Als populärer ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätte er als Sammelpunkt für monarchistischen Widerstand dienen können\nC: Er finanzierte heimlich anti-nazistische Gruppen im Ausland\nD: Er kontrollierte große Waffenfabriken in Bayern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.47752392292022705,
+        "B": 0.9794811010360718,
+        "C": 0.5042566657066345,
+        "D": 0.49930986762046814
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum wurde Franz Herzog von Bayern vor den Gestapo-Verhaftungen von den Nazis als potenzielle Bedrohung angesehen?",
+        "semantic_anchor_text": "B: Als populärer ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätte er als Sammelpunkt für monarchistischen Widerstand dienen können.",
+        "semantic_candidate_texts": {
+          "A": "Er hatte Hitler öffentlich in Zeitungen kritisiert",
+          "B": "Als populärer ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätte er als Sammelpunkt für monarchistischen Widerstand dienen können",
+          "C": "Er finanzierte heimlich anti-nazistische Gruppen im Ausland",
+          "D": "Er kontrollierte große Waffenfabriken in Bayern"
+        },
+        "similarities": {
+          "A": 0.47752392292022705,
+          "B": 0.9794811010360718,
+          "C": 0.5042566657066345,
+          "D": 0.49930986762046814
+        },
+        "gold_similarity": 0.9794811010360718,
+        "best_distractor_similarity": 0.5042566657066345,
+        "gold_margin": 0.47522443532943726,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Als populärer ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätte er als Sammelpunkt für monarchistischen Widerstand dienen können.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wie präsentierte sich der Freistaat Bayern in den frühen 2000er Jahren?\n\nOptions:\nA: Als Staat mit großen Geschäftsmöglichkeiten und als Hochtechnologie-Standort\nB: Als traditioneller Agrarstaat\nC: Als Touristenziel mit Alpenkultur\nD: Als Industriestandort der Automobilbranche\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.26603007316589355,
+        "B": 0.2823502719402313,
+        "C": 0.28927335143089294,
+        "D": 0.2579003870487213
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie präsentierte sich der Freistaat Bayern in den frühen 2000er Jahren?",
+        "semantic_anchor_text": "A: Als Staat mit großen Geschäftsmöglichkeiten und als Hochtechnologie-Standort\n\n(Note: The answer provided is based on a",
+        "semantic_candidate_texts": {
+          "A": "Als Staat mit großen Geschäftsmöglichkeiten und als Hochtechnologie-Standort",
+          "B": "Als traditioneller Agrarstaat",
+          "C": "Als Touristenziel mit Alpenkultur",
+          "D": "Als Industriestandort der Automobilbranche"
+        },
+        "similarities": {
+          "A": 0.26603007316589355,
+          "B": 0.2823502719402313,
+          "C": 0.28927335143089294,
+          "D": 0.2579003870487213
+        },
+        "gold_similarity": 0.26603007316589355,
+        "best_distractor_similarity": 0.28927335143089294,
+        "gold_margin": -0.02324327826499939,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Als Staat mit großen Geschäftsmöglichkeiten und als Hochtechnologie-Standort\n\n(Note: The answer provided is based on a",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welche Themen wurden traditionell an einem Stammtisch diskutiert?\n\nOptions:\nA: Nur Sport und Wetter\nB: Politik, lokale Nachrichten und philosophische Ideen\nC: Geschäftskontakte und Handelsgeschäfte\nD: Religiöse Schriften und Gebete\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2457943558692932,
+        "B": 0.8242347240447998,
+        "C": 0.2782238721847534,
+        "D": 0.3333851099014282
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Themen wurden traditionell an einem Stammtisch diskutiert?",
+        "semantic_anchor_text": "B: Politik, lokale Nachrichten und philosophische Ideen.\n\n(Note: In der Vergangenheit, bevor moderne Kommunikationsmittel weit verbreitet waren, war der Stam",
+        "semantic_candidate_texts": {
+          "A": "Nur Sport und Wetter",
+          "B": "Politik, lokale Nachrichten und philosophische Ideen",
+          "C": "Geschäftskontakte und Handelsgeschäfte",
+          "D": "Religiöse Schriften und Gebete"
+        },
+        "similarities": {
+          "A": 0.2457943558692932,
+          "B": 0.8242347240447998,
+          "C": 0.2782238721847534,
+          "D": 0.3333851099014282
+        },
+        "gold_similarity": 0.8242347240447998,
+        "best_distractor_similarity": 0.3333851099014282,
+        "gold_margin": 0.4908496141433716,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Politik, lokale Nachrichten und philosophische Ideen.\n\n(Note: In der Vergangenheit, bevor moderne Kommunikationsmittel weit verbreitet waren, war der Stam",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was war die Hauptfunktion eines großen bayerischen Haushalts bis zur Mitte des 20. Jahrhunderts?\n\nOptions:\nA: Ein Zentrum für Handel und Gewerbe\nB: Ein saisonales Gästehaus für Reisende\nC: Ein Ort des religiösen Gemeinschaftslebens\nD: Eine landwirtschaftliche Einheit mit Scheunen und Höfen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.38251790404319763,
+        "B": 0.3319871723651886,
+        "C": 0.34221869707107544,
+        "D": 0.7264804840087891
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was war die Hauptfunktion eines großen bayerischen Haushalts bis zur Mitte des 20. Jahrhunderts?",
+        "semantic_anchor_text": "D: Eine landwirtschaftliche Einheit mit Scheunen und Höfen.",
+        "semantic_candidate_texts": {
+          "A": "Ein Zentrum für Handel und Gewerbe",
+          "B": "Ein saisonales Gästehaus für Reisende",
+          "C": "Ein Ort des religiösen Gemeinschaftslebens",
+          "D": "Eine landwirtschaftliche Einheit mit Scheunen und Höfen"
+        },
+        "similarities": {
+          "A": 0.38251790404319763,
+          "B": 0.3319871723651886,
+          "C": 0.34221869707107544,
+          "D": 0.7264804840087891
+        },
+        "gold_similarity": 0.7264804840087891,
+        "best_distractor_similarity": 0.38251790404319763,
+        "gold_margin": 0.34396257996559143,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Eine landwirtschaftliche Einheit mit Scheunen und Höfen.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Welches historische Ereignis erklärt, warum oberbayerische Bauern zu Grundbesitzern statt zu Pächtern wurden?\n\nOptions:\nA: Ein königliches Dekret verteilte Adelsgüter an die Bauern\nB: Eine Reihe von Agrarreformen nach dem Ersten Weltkrieg\nC: Die Säkularisation des Kirchenbesitzes ab 1803 ersetzte feudale Verhältnisse durch bäuerliche Landwirtschaft\nD: Die Einigung Deutschlands 1871 gewährte Bauern automatisch Landbesitz\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.553277850151062,
+        "B": 0.6049395799636841,
+        "C": 0.9690945148468018,
+        "D": 0.5048046112060547
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches historische Ereignis erklärt, warum oberbayerische Bauern zu Grundbesitzern statt zu Pächtern wurden?",
+        "semantic_anchor_text": "C: Die Säkularisation des Kirchenbesitzes ab 1803 ersetzte feudale Verhältnisse durch bäuerliche Landwirtschaft.",
+        "semantic_candidate_texts": {
+          "A": "Ein königliches Dekret verteilte Adelsgüter an die Bauern",
+          "B": "Eine Reihe von Agrarreformen nach dem Ersten Weltkrieg",
+          "C": "Die Säkularisation des Kirchenbesitzes ab 1803 ersetzte feudale Verhältnisse durch bäuerliche Landwirtschaft",
+          "D": "Die Einigung Deutschlands 1871 gewährte Bauern automatisch Landbesitz"
+        },
+        "similarities": {
+          "A": 0.553277850151062,
+          "B": 0.6049395799636841,
+          "C": 0.9690945148468018,
+          "D": 0.5048046112060547
+        },
+        "gold_similarity": 0.9690945148468018,
+        "best_distractor_similarity": 0.6049395799636841,
+        "gold_margin": 0.3641549348831177,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Die Säkularisation des Kirchenbesitzes ab 1803 ersetzte feudale Verhältnisse durch bäuerliche Landwirtschaft.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In traditionellen bayerischen Dörfern, welches einzigartige Namenssystem wurde verwendet, das sich von Familiennamen unterschied?\n\nOptions:\nA: Dorftitel basierend auf Geburtsreihenfolge (Erster Sohn, Zweite Tochter, etc.)\nB: Hausnamen (Hausname) - jeder, der in einem Haus lebte, übernahm den Namen dieses Hauses, unabhängig vom Familiennamen\nC: Berufsnamen, die sich mit jeder Generation änderten\nD: Katholische Heiligennamen, die vom örtlichen Pfarrer bei der Taufe vergeben wurden\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6071887612342834,
+        "B": 0.9353501796722412,
+        "C": 0.43086984753608704,
+        "D": 0.3538506031036377
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In traditionellen bayerischen Dörfern, welches einzigartige Namenssystem wurde verwendet, das sich von Familiennamen unterschied?",
+        "semantic_anchor_text": "B: Hausnamen (Hausname) - jeder, der in einem Haus lebte, übernahm den Namen dieses Hauses, unabhängig vom Familiennamen",
+        "semantic_candidate_texts": {
+          "A": "Dorftitel basierend auf Geburtsreihenfolge (Erster Sohn, Zweite Tochter, etc.)",
+          "B": "Hausnamen (Hausname) - jeder, der in einem Haus lebte, übernahm den Namen dieses Hauses, unabhängig vom Familiennamen",
+          "C": "Berufsnamen, die sich mit jeder Generation änderten",
+          "D": "Katholische Heiligennamen, die vom örtlichen Pfarrer bei der Taufe vergeben wurden"
+        },
+        "similarities": {
+          "A": 0.6071887612342834,
+          "B": 0.9353501796722412,
+          "C": 0.43086984753608704,
+          "D": 0.3538506031036377
+        },
+        "gold_similarity": 0.9353501796722412,
+        "best_distractor_similarity": 0.6071887612342834,
+        "gold_margin": 0.32816141843795776,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Hausnamen (Hausname) - jeder, der in einem Haus lebte, übernahm den Namen dieses Hauses, unabhängig vom Familiennamen",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöchane Dynastie hat Bayern jahrhundertelang regiert und ihre Herrschaft mit'n Fall da Monarchie 1918 beendt?\n\nOptions:\nA: Habsburg\nB: Hohenzollern\nC: Wittelsbach\nD: Hannover\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4844508171081543,
+        "B": 0.5822890996932983,
+        "C": 0.9479275345802307,
+        "D": 0.47018563747406006
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöchane Dynastie hat Bayern jahrhundertelang regiert und ihre Herrschaft mit'n Fall da Monarchie 1918 beendt?",
+        "semantic_anchor_text": "C: Wittelsbach",
+        "semantic_candidate_texts": {
+          "A": "Habsburg",
+          "B": "Hohenzollern",
+          "C": "Wittelsbach",
+          "D": "Hannover"
+        },
+        "similarities": {
+          "A": 0.4844508171081543,
+          "B": 0.5822890996932983,
+          "C": 0.9479275345802307,
+          "D": 0.47018563747406006
+        },
+        "gold_similarity": 0.9479275345802307,
+        "best_distractor_similarity": 0.5822890996932983,
+        "gold_margin": 0.3656384348869324,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Wittelsbach",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In wöchem Jahr is Bayern zum Königreich erhoben worn?\n\nOptions:\nA: 1648\nB: 1701\nC: 1806\nD: 1871\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3529616594314575,
+        "B": 0.3771546483039856,
+        "C": 0.6798791885375977,
+        "D": 0.4814104735851288
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In wöchem Jahr is Bayern zum Königreich erhoben worn?",
+        "semantic_anchor_text": "C: 1806\n(Note: The correct answer is 1806, as Bayern wurde im Jahr 18",
+        "semantic_candidate_texts": {
+          "A": "1648",
+          "B": "1701",
+          "C": "1806",
+          "D": "1871"
+        },
+        "similarities": {
+          "A": 0.3529616594314575,
+          "B": 0.3771546483039856,
+          "C": 0.6798791885375977,
+          "D": 0.4814104735851288
+        },
+        "gold_similarity": 0.6798791885375977,
+        "best_distractor_similarity": 0.4814104735851288,
+        "gold_margin": 0.19846871495246887,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1806\n(Note: The correct answer is 1806, as Bayern wurde im Jahr 18",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wer wird üblicherweise als erster König von Bayern aufgführt (nachdem's 1806 a Königreich worn is)\n\nOptions:\nA: Ludwig II\nB: Maximilian I. Joseph\nC: Maximilian II\nD: Otto I\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6707426905632019,
+        "B": 0.957867443561554,
+        "C": 0.8318410515785217,
+        "D": 0.5428153276443481
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer wird üblicherweise als erster König von Bayern aufgführt (nachdem's 1806 a Königreich worn is)",
+        "semantic_anchor_text": "B: Maximilian I. Joseph",
+        "semantic_candidate_texts": {
+          "A": "Ludwig II",
+          "B": "Maximilian I. Joseph",
+          "C": "Maximilian II",
+          "D": "Otto I"
+        },
+        "similarities": {
+          "A": 0.6707426905632019,
+          "B": 0.957867443561554,
+          "C": 0.8318410515785217,
+          "D": 0.5428153276443481
+        },
+        "gold_similarity": 0.957867443561554,
+        "best_distractor_similarity": 0.8318410515785217,
+        "gold_margin": 0.12602639198303223,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Maximilian I. Joseph",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Nach'n End da Monarchie 1918, wöcher Name is d'offizielle Bezeichnung vom bayerischen Staat worn?\n\nOptions:\nA: Königreich Bayern\nB: Bayerische Republik\nC: Bayerischer Bund\nD: Freistaat Bayern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.8776547908782959,
+        "B": 0.8466867804527283,
+        "C": 0.8518204689025879,
+        "D": 0.9606613516807556
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Nach'n End da Monarchie 1918, wöcher Name is d'offizielle Bezeichnung vom bayerischen Staat worn?",
+        "semantic_anchor_text": "D: Freistaat Bayern",
+        "semantic_candidate_texts": {
+          "A": "Königreich Bayern",
+          "B": "Bayerische Republik",
+          "C": "Bayerischer Bund",
+          "D": "Freistaat Bayern"
+        },
+        "similarities": {
+          "A": 0.8776547908782959,
+          "B": 0.8466867804527283,
+          "C": 0.8518204689025879,
+          "D": 0.9606613516807556
+        },
+        "gold_similarity": 0.9606613516807556,
+        "best_distractor_similarity": 0.8776547908782959,
+        "gold_margin": 0.08300656080245972,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Freistaat Bayern",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "D'kurzlebige Bayerische Räterepublik is in wöchem Jahr ausgrufen worn?\n\nOptions:\nA: 1848\nB: 1919\nC: 1923\nD: 1933\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7151639461517334,
+        "B": 0.48392462730407715,
+        "C": 0.49821704626083374,
+        "D": 0.4641043543815613
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "D'kurzlebige Bayerische Räterepublik is in wöchem Jahr ausgrufen worn?",
+        "semantic_anchor_text": "A1848",
+        "semantic_candidate_texts": {
+          "A": "1848",
+          "B": "1919",
+          "C": "1923",
+          "D": "1933"
+        },
+        "similarities": {
+          "A": 0.7151639461517334,
+          "B": 0.48392462730407715,
+          "C": 0.49821704626083374,
+          "D": 0.4641043543815613
+        },
+        "gold_similarity": 0.48392462730407715,
+        "best_distractor_similarity": 0.7151639461517334,
+        "gold_margin": -0.23123931884765625,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A1848",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Da gscheiterte Putschversuch vo 1923 in Minga is bekannt ois:\n\nOptions:\nA: Kapp-Putsch\nB: Nacht der langen Messer\nC: Spartakusaufstand\nD: Hitlerputsch\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5064775943756104,
+        "B": 0.34023064374923706,
+        "C": 0.28046366572380066,
+        "D": 0.9469851851463318
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Da gscheiterte Putschversuch vo 1923 in Minga is bekannt ois:",
+        "semantic_anchor_text": "D: Hitlerputsch",
+        "semantic_candidate_texts": {
+          "A": "Kapp-Putsch",
+          "B": "Nacht der langen Messer",
+          "C": "Spartakusaufstand",
+          "D": "Hitlerputsch"
+        },
+        "similarities": {
+          "A": 0.5064775943756104,
+          "B": 0.34023064374923706,
+          "C": 0.28046366572380066,
+          "D": 0.9469851851463318
+        },
+        "gold_similarity": 0.9469851851463318,
+        "best_distractor_similarity": 0.5064775943756104,
+        "gold_margin": 0.44050759077072144,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Hitlerputsch",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bayern is in wöchem Jahr Kurfürstentum innerhalb vom Heiligen Römischen Reich worn (wia's d'Kurwürde kriagt hat)?\n\nOptions:\nA: 1180\nB: 1506\nC: 1623\nD: 1815\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4373948574066162,
+        "B": 0.28476664423942566,
+        "C": 0.3988368511199951,
+        "D": 0.4347688555717468
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern is in wöchem Jahr Kurfürstentum innerhalb vom Heiligen Römischen Reich worn (wia's d'Kurwürde kriagt hat)?",
+        "semantic_anchor_text": "A\n\n(Note: The correct answer is 1180, as Bayern became a Kurfürstentum (electorship) within the Holy Roman Empire",
+        "semantic_candidate_texts": {
+          "A": "1180",
+          "B": "1506",
+          "C": "1623",
+          "D": "1815"
+        },
+        "similarities": {
+          "A": 0.4373948574066162,
+          "B": 0.28476664423942566,
+          "C": 0.3988368511199951,
+          "D": 0.4347688555717468
+        },
+        "gold_similarity": 0.3988368511199951,
+        "best_distractor_similarity": 0.4373948574066162,
+        "gold_margin": -0.038558006286621094,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A\n\n(Note: The correct answer is 1180, as Bayern became a Kurfürstentum (electorship) within the Holy Roman Empire",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Bayern is a konstituierender Staat vom Deutschen Kaiserreich worn in:\n\nOptions:\nA: 1866\nB: 1867\nC: 1871\nD: 1918\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.42536449432373047,
+        "B": 0.4435870051383972,
+        "C": 0.6282452940940857,
+        "D": 0.3031172454357147
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Bayern is a konstituierender Staat vom Deutschen Kaiserreich worn in:",
+        "semantic_anchor_text": "C: 1871 (Bayern wurde am 18. Januar 1871 als Teil des Deutschen Kaiserreichs gegründet.)",
+        "semantic_candidate_texts": {
+          "A": "1866",
+          "B": "1867",
+          "C": "1871",
+          "D": "1918"
+        },
+        "similarities": {
+          "A": 0.42536449432373047,
+          "B": 0.4435870051383972,
+          "C": 0.6282452940940857,
+          "D": 0.3031172454357147
+        },
+        "gold_similarity": 0.4435870051383972,
+        "best_distractor_similarity": 0.6282452940940857,
+        "gold_margin": -0.18465828895568848,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: 1871 (Bayern wurde am 18. Januar 1871 als Teil des Deutschen Kaiserreichs gegründet.)",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöche Partei war besonders dominant in da bayerischen Landespolitik in da Nachkriegszeit nach'n Zweiten Weltkrieg?\n\nOptions:\nA: CSU\nB: FDP\nC: CDU\nD: SPD\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9469239115715027,
+        "B": 0.22191663086414337,
+        "C": 0.664409875869751,
+        "D": 0.31284934282302856
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Partei war besonders dominant in da bayerischen Landespolitik in da Nachkriegszeit nach'n Zweiten Weltkrieg?",
+        "semantic_anchor_text": "A: CSU",
+        "semantic_candidate_texts": {
+          "A": "CSU",
+          "B": "FDP",
+          "C": "CDU",
+          "D": "SPD"
+        },
+        "similarities": {
+          "A": 0.9469239115715027,
+          "B": 0.22191663086414337,
+          "C": 0.664409875869751,
+          "D": 0.31284934282302856
+        },
+        "gold_similarity": 0.9469239115715027,
+        "best_distractor_similarity": 0.664409875869751,
+        "gold_margin": 0.2825140357017517,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: CSU",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöche Aussage beschreibt Bayerns Position zur Abstimmung über's Grundgesetz 1949 im Bayerischen Landtag am besten?\n\nOptions:\nA: Bayern hat einstimmig dafür g'stimmt.\nB: Bayern had si enthalten und is der Bundesrepublik ned beitreten\nC: Bayern hoad dagegen gstimmt, is aber trotzdem dran gebunden worn, nachdem gnuag andere Länder zuagstimmt ham\nD: Bayern hat nur nach aner bundesweiten Volksabstimmung zuagstimmt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5482456684112549,
+        "B": 0.6663017272949219,
+        "C": 0.9278857707977295,
+        "D": 0.7309579253196716
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Aussage beschreibt Bayerns Position zur Abstimmung über's Grundgesetz 1949 im Bayerischen Landtag am besten?",
+        "semantic_anchor_text": "C: Bayern hoad dagegen gstimmt, is aber trotzdem dran gebunden worn, nachdem gnuag andere Länder zuagstimmt ham.",
+        "semantic_candidate_texts": {
+          "A": "Bayern hat einstimmig dafür g'stimmt.",
+          "B": "Bayern had si enthalten und is der Bundesrepublik ned beitreten",
+          "C": "Bayern hoad dagegen gstimmt, is aber trotzdem dran gebunden worn, nachdem gnuag andere Länder zuagstimmt ham",
+          "D": "Bayern hat nur nach aner bundesweiten Volksabstimmung zuagstimmt"
+        },
+        "similarities": {
+          "A": 0.5482456684112549,
+          "B": 0.6663017272949219,
+          "C": 0.9278857707977295,
+          "D": 0.7309579253196716
+        },
+        "gold_similarity": 0.9278857707977295,
+        "best_distractor_similarity": 0.7309579253196716,
+        "gold_margin": 0.19692784547805786,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bayern hoad dagegen gstimmt, is aber trotzdem dran gebunden worn, nachdem gnuag andere Länder zuagstimmt ham.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum hat da König Ludwig III. am Abend vom 7. November 1918 Minga in aam gmieteten Auto verlassn müssn?\n\nOptions:\nA: Loyale Truppn ham d'Stadt scho umzingelt g'habt\nB: Da königliche Bahnhof war zerstört worn\nC: Sein Chauffeur håt si der Revolution angschlossn und d'offiziellen Automobile warn nimma z'brauchn\nD: D'königliche Familie hat a Jagdreise außerhalb von München eingplant g'habt.\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3263370394706726,
+        "B": 0.5077297687530518,
+        "C": 0.9384984970092773,
+        "D": 0.2691141963005066
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum hat da König Ludwig III. am Abend vom 7. November 1918 Minga in aam gmieteten Auto verlassn müssn?",
+        "semantic_anchor_text": "C: Sein Chauffeur håt si der Revolution angschlossn und d'offiziellen Automobile warn nimma z'brauchn.",
+        "semantic_candidate_texts": {
+          "A": "Loyale Truppn ham d'Stadt scho umzingelt g'habt",
+          "B": "Da königliche Bahnhof war zerstört worn",
+          "C": "Sein Chauffeur håt si der Revolution angschlossn und d'offiziellen Automobile warn nimma z'brauchn",
+          "D": "D'königliche Familie hat a Jagdreise außerhalb von München eingplant g'habt."
+        },
+        "similarities": {
+          "A": 0.3263370394706726,
+          "B": 0.5077297687530518,
+          "C": 0.9384984970092773,
+          "D": 0.2691141963005066
+        },
+        "gold_similarity": 0.9384984970092773,
+        "best_distractor_similarity": 0.5077297687530518,
+        "gold_margin": 0.4307687282562256,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Sein Chauffeur håt si der Revolution angschlossn und d'offiziellen Automobile warn nimma z'brauchn.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wo hat's erste Treffen vom Arbeiter-, Soldaten- und Bauernrat unter'm Kurt Eisner seiner Führung in da Nacht vom 7. November 1918 stattgfunden?\n\nOptions:\nA: Mathäserbräu\nB: Residenz München\nC: Landtagsgebäude in der Prannerstraße\nD: Theresienwiese\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7632334232330322,
+        "B": 0.29879623651504517,
+        "C": 0.3131585717201233,
+        "D": 0.4546159505844116
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wo hat's erste Treffen vom Arbeiter-, Soldaten- und Bauernrat unter'm Kurt Eisner seiner Führung in da Nacht vom 7. November 1918 stattgfunden?",
+        "semantic_anchor_text": "A: Mathäserbräu <|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Mathäserbräu",
+          "B": "Residenz München",
+          "C": "Landtagsgebäude in der Prannerstraße",
+          "D": "Theresienwiese"
+        },
+        "similarities": {
+          "A": 0.7632334232330322,
+          "B": 0.29879623651504517,
+          "C": 0.3131585717201233,
+          "D": 0.4546159505844116
+        },
+        "gold_similarity": 0.3131585717201233,
+        "best_distractor_similarity": 0.7632334232330322,
+        "gold_margin": -0.45007485151290894,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Mathäserbräu <|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Während da Bayerischen Revolution am 7. November 1918, an wöchem Ort ham d'stationierten Soldaten ohne Widerstand d'Seiten gwechselt und ham si dem Kurt Eisner seinem Marsch angsclossen?\n\nOptions:\nA: Marsfeldkaserne\nB: Guldeinschule\nC: Max-II-Kaserne\nD: Türkenkaserne\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.344440758228302,
+        "B": 0.47851085662841797,
+        "C": 0.3565501868724823,
+        "D": 0.9071910381317139
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Während da Bayerischen Revolution am 7. November 1918, an wöchem Ort ham d'stationierten Soldaten ohne Widerstand d'Seiten gwechselt und ham si dem Kurt Eisner seinem Marsch angsclossen?",
+        "semantic_anchor_text": "D: Türkenkaserne",
+        "semantic_candidate_texts": {
+          "A": "Marsfeldkaserne",
+          "B": "Guldeinschule",
+          "C": "Max-II-Kaserne",
+          "D": "Türkenkaserne"
+        },
+        "similarities": {
+          "A": 0.344440758228302,
+          "B": 0.47851085662841797,
+          "C": 0.3565501868724823,
+          "D": 0.9071910381317139
+        },
+        "gold_similarity": 0.47851085662841797,
+        "best_distractor_similarity": 0.9071910381317139,
+        "gold_margin": -0.4286801815032959,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Türkenkaserne",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was is in Würzburg genau a Woch'n nachdem d'US-Truppen am Karsamstag angfangen ham, si durch d'Stadt z'kämpfen, gschehgn?\n\nOptions:\nA: De Stodt wurde offiziell zur Kulturgedenkstätte erklärt.\nB: Der Krieg in Würzburg håt am 6. April 1945 nach weiterne schwerne Verlusten aufghört\nC: Die verbliebene Bevölkerung is aufs bayerische Land außievakuiert worn.\nD: Die britischen Streitkräfte ham's Stadtzentrum besetzt.\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.22652295231819153,
+        "B": 0.2845369577407837,
+        "C": 0.22504261136054993,
+        "D": 0.9653406143188477
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was is in Würzburg genau a Woch'n nachdem d'US-Truppen am Karsamstag angfangen ham, si durch d'Stadt z'kämpfen, gschehgn?",
+        "semantic_anchor_text": "D: Die britischen Streitkräfte ham's Stadtzentrum besetzt.",
+        "semantic_candidate_texts": {
+          "A": "De Stodt wurde offiziell zur Kulturgedenkstätte erklärt.",
+          "B": "Der Krieg in Würzburg håt am 6. April 1945 nach weiterne schwerne Verlusten aufghört",
+          "C": "Die verbliebene Bevölkerung is aufs bayerische Land außievakuiert worn.",
+          "D": "Die britischen Streitkräfte ham's Stadtzentrum besetzt."
+        },
+        "similarities": {
+          "A": 0.22652295231819153,
+          "B": 0.2845369577407837,
+          "C": 0.22504261136054993,
+          "D": 0.9653406143188477
+        },
+        "gold_similarity": 0.2845369577407837,
+        "best_distractor_similarity": 0.9653406143188477,
+        "gold_margin": -0.680803656578064,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Die britischen Streitkräfte ham's Stadtzentrum besetzt.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöche US-Militäreinheit is nach da verheerenden Bombardierung vom 16. März 1945 auf Würzburg vorgruckt?\n\nOptions:\nA: 1st Infantry Division\nB: 101st Airborne Division\nC: 42nd Infantry Division\nD: 3rd Armored Division\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7624439001083374,
+        "B": 0.5514732003211975,
+        "C": 0.7463737726211548,
+        "D": 0.9645919799804688
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche US-Militäreinheit is nach da verheerenden Bombardierung vom 16. März 1945 auf Würzburg vorgruckt?",
+        "semantic_anchor_text": "D: 3rd Armored Division",
+        "semantic_candidate_texts": {
+          "A": "1st Infantry Division",
+          "B": "101st Airborne Division",
+          "C": "42nd Infantry Division",
+          "D": "3rd Armored Division"
+        },
+        "similarities": {
+          "A": 0.7624439001083374,
+          "B": 0.5514732003211975,
+          "C": 0.7463737726211548,
+          "D": 0.9645919799804688
+        },
+        "gold_similarity": 0.7463737726211548,
+        "best_distractor_similarity": 0.9645919799804688,
+        "gold_margin": -0.21821820735931396,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: 3rd Armored Division",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöcher symbolische Akt findt jeds Jahr am 16. März in Würzburg statt, um an d'Zerstörung von da Stadt z'erinnern?\n\nOptions:\nA: Kirchenglocken leitn zur genauen Zeit vom Bombenangriff und so lang wia er dauert.\nB: D'Ruinen von der Altstadt wern mit roten Lichtern beleuchtet\nC: A Schweigeminut wird mittags in ganz Bayern eingelegt.\nD: A Militärparade marschiert durch d'wiederaufgebaute Innenstadt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.33541518449783325,
+        "B": 0.5139322280883789,
+        "C": 0.8896298408508301,
+        "D": 0.21181577444076538
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher symbolische Akt findt jeds Jahr am 16. März in Würzburg statt, um an d'Zerstörung von da Stadt z'erinnern?",
+        "semantic_anchor_text": "C: A Schweigeminut wird mittags in ganz Bayern eingelegt.",
+        "semantic_candidate_texts": {
+          "A": "Kirchenglocken leitn zur genauen Zeit vom Bombenangriff und so lang wia er dauert.",
+          "B": "D'Ruinen von der Altstadt wern mit roten Lichtern beleuchtet",
+          "C": "A Schweigeminut wird mittags in ganz Bayern eingelegt.",
+          "D": "A Militärparade marschiert durch d'wiederaufgebaute Innenstadt"
+        },
+        "similarities": {
+          "A": 0.33541518449783325,
+          "B": 0.5139322280883789,
+          "C": 0.8896298408508301,
+          "D": 0.21181577444076538
+        },
+        "gold_similarity": 0.33541518449783325,
+        "best_distractor_similarity": 0.8896298408508301,
+        "gold_margin": -0.5542146563529968,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: A Schweigeminut wird mittags in ganz Bayern eingelegt.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöche Widerstandsgruppe, deren Mitglieder amal a Studentenkompanie anghört ham, war in da Bergmannschule in Minga unterbracht?\n\nOptions:\nA: Edelweißpiraten\nB: Rote Kapelle\nC: Weiße Rose\nD: Kreisauer Kreis\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.24859502911567688,
+        "B": 0.4729529619216919,
+        "C": 0.17491716146469116,
+        "D": 0.8362879753112793
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Widerstandsgruppe, deren Mitglieder amal a Studentenkompanie anghört ham, war in da Bergmannschule in Minga unterbracht?",
+        "semantic_anchor_text": "D: Kreisauer Kreis",
+        "semantic_candidate_texts": {
+          "A": "Edelweißpiraten",
+          "B": "Rote Kapelle",
+          "C": "Weiße Rose",
+          "D": "Kreisauer Kreis"
+        },
+        "similarities": {
+          "A": 0.24859502911567688,
+          "B": 0.4729529619216919,
+          "C": 0.17491716146469116,
+          "D": 0.8362879753112793
+        },
+        "gold_similarity": 0.17491716146469116,
+        "best_distractor_similarity": 0.8362879753112793,
+        "gold_margin": -0.6613708138465881,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Kreisauer Kreis",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum san Mitglieder von da Familie Wittelsbach, darunter da Franz Herzog, 1944 inhaftiert worn?\n\nOptions:\nA: De ham an Krieg über, versuacht über de Schweiz aussezukemma\nB: Se warn Sippenhäftlinge, de nach em Attentat auf'n Hitler gnommen worn sind\nC: Se ham si der Nazi-Einberufung von de bayerischen Jugendlichen widersetzt\nD: Se ham si geweigert, Familienvermögen an's Reich z'spendn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5962351560592651,
+        "B": 0.9396236538887024,
+        "C": 0.8012579679489136,
+        "D": 0.4700155556201935
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum san Mitglieder von da Familie Wittelsbach, darunter da Franz Herzog, 1944 inhaftiert worn?",
+        "semantic_anchor_text": "B Se warn Sippenhäftlinge, de nach em Attentat auf'n Hitler gnommen worn sind.",
+        "semantic_candidate_texts": {
+          "A": "De ham an Krieg über, versuacht über de Schweiz aussezukemma",
+          "B": "Se warn Sippenhäftlinge, de nach em Attentat auf'n Hitler gnommen worn sind",
+          "C": "Se ham si der Nazi-Einberufung von de bayerischen Jugendlichen widersetzt",
+          "D": "Se ham si geweigert, Familienvermögen an's Reich z'spendn"
+        },
+        "similarities": {
+          "A": 0.5962351560592651,
+          "B": 0.9396236538887024,
+          "C": 0.8012579679489136,
+          "D": 0.4700155556201935
+        },
+        "gold_similarity": 0.9396236538887024,
+        "best_distractor_similarity": 0.8012579679489136,
+        "gold_margin": 0.13836568593978882,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B Se warn Sippenhäftlinge, de nach em Attentat auf'n Hitler gnommen worn sind.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was is da Wittelsbacher Ausgleichsfonds, der 1923 gründt worn is?\n\nOptions:\nA: A Museum zur Geschichte Bayerns\nB: A Stiftung zur Entschädigung von der Familie und zur Erhaltung von ihrer Kunst und ihre Immobilien\nC: A politische Organisation zur Wiederherstellung der Monarchie\nD: A Wohltätigkeitsfonds ausschließlich für bayerische Studenten\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.45270609855651855,
+        "B": 0.9717230796813965,
+        "C": 0.3634105622768402,
+        "D": 0.43983227014541626
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was is da Wittelsbacher Ausgleichsfonds, der 1923 gründt worn is?",
+        "semantic_anchor_text": "B: A Stiftung zur Entschädigung von der Familie und zur Erhaltung von ihrer Kunst und ihre Immobilien",
+        "semantic_candidate_texts": {
+          "A": "A Museum zur Geschichte Bayerns",
+          "B": "A Stiftung zur Entschädigung von der Familie und zur Erhaltung von ihrer Kunst und ihre Immobilien",
+          "C": "A politische Organisation zur Wiederherstellung der Monarchie",
+          "D": "A Wohltätigkeitsfonds ausschließlich für bayerische Studenten"
+        },
+        "similarities": {
+          "A": 0.45270609855651855,
+          "B": 0.9717230796813965,
+          "C": 0.3634105622768402,
+          "D": 0.43983227014541626
+        },
+        "gold_similarity": 0.9717230796813965,
+        "best_distractor_similarity": 0.45270609855651855,
+        "gold_margin": 0.5190169811248779,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: A Stiftung zur Entschädigung von der Familie und zur Erhaltung von ihrer Kunst und ihre Immobilien",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Warum is da Franz Herzog von Bayern von de Nazis als potenzielle Bedrohung angsehen worn, bevor d'Gestapo ihn verhaftet hat?\n\nOptions:\nA: Er hat an Hitler öffentlich in Zeitungen runterg'macht\nB: Als beliabter ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätt er als Sammelpunkt für monarchistischen Widerstand dienen kinna habn\nC: Er hat heimlich anti-nazistische Gruppen im Ausland finanziert.\nD: Er hat große Waffenfabriken in Bayern kontrolliert\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4840378761291504,
+        "B": 0.9734195470809937,
+        "C": 0.4712649881839752,
+        "D": 0.5238195657730103
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum is da Franz Herzog von Bayern von de Nazis als potenzielle Bedrohung angsehen worn, bevor d'Gestapo ihn verhaftet hat?",
+        "semantic_anchor_text": "B: Als beliabter ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätt er als Sammelpunkt für monarchistischen Widerstand dienen kinna habn.",
+        "semantic_candidate_texts": {
+          "A": "Er hat an Hitler öffentlich in Zeitungen runterg'macht",
+          "B": "Als beliabter ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätt er als Sammelpunkt für monarchistischen Widerstand dienen kinna habn",
+          "C": "Er hat heimlich anti-nazistische Gruppen im Ausland finanziert.",
+          "D": "Er hat große Waffenfabriken in Bayern kontrolliert"
+        },
+        "similarities": {
+          "A": 0.4840378761291504,
+          "B": 0.9734195470809937,
+          "C": 0.4712649881839752,
+          "D": 0.5238195657730103
+        },
+        "gold_similarity": 0.9734195470809937,
+        "best_distractor_similarity": 0.5238195657730103,
+        "gold_margin": 0.4495999813079834,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Als beliabter ehemaliger Generalfeldmarschall mit militärischen Verbindungen hätt er als Sammelpunkt für monarchistischen Widerstand dienen kinna habn.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wia hat si da Freistaat Bayern in de frühen 2000er Jahr'n präsentiert?\n\nOptions:\nA: Als Staat mit großn Geschäftsmöglichkeiten und als Hochtechnologie-Standort\nB: Als traditioneller Agrarstaat\nC: Ois Touristenziel mit Alpenkultur\nD: Als Industriestandort der Automobilbranche\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.9887791275978088,
+        "B": 0.5562847852706909,
+        "C": 0.22982320189476013,
+        "D": 0.6529945135116577
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia hat si da Freistaat Bayern in de frühen 2000er Jahr'n präsentiert?",
+        "semantic_anchor_text": "A: Als Staat mit großn Geschäftsmöglichkeiten und als Hochtechnologie-Standort",
+        "semantic_candidate_texts": {
+          "A": "Als Staat mit großn Geschäftsmöglichkeiten und als Hochtechnologie-Standort",
+          "B": "Als traditioneller Agrarstaat",
+          "C": "Ois Touristenziel mit Alpenkultur",
+          "D": "Als Industriestandort der Automobilbranche"
+        },
+        "similarities": {
+          "A": 0.9887791275978088,
+          "B": 0.5562847852706909,
+          "C": 0.22982320189476013,
+          "D": 0.6529945135116577
+        },
+        "gold_similarity": 0.9887791275978088,
+        "best_distractor_similarity": 0.6529945135116577,
+        "gold_margin": 0.3357846140861511,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Als Staat mit großn Geschäftsmöglichkeiten und als Hochtechnologie-Standort",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöche Themen san traditionell an an Stammtisch diskutiert worn?\n\nOptions:\nA: Nur Sport und Wetter\nB: Politik, lokale Nachrichten und philosophische Ideen\nC: Geschäftskontakte und Handelsgeschäfte\nD: Religiöse Schriften und Gebete\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.21226967871189117,
+        "B": 0.4735424220561981,
+        "C": 0.3128819763660431,
+        "D": 0.1923556923866272
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Themen san traditionell an an Stammtisch diskutiert worn?",
+        "semantic_anchor_text": "B: Politik, lokale Nachrichten und philosophische Ideen.\n\n(Note: The correct answer is \"B\" as traditional pub discussions often include a mix of",
+        "semantic_candidate_texts": {
+          "A": "Nur Sport und Wetter",
+          "B": "Politik, lokale Nachrichten und philosophische Ideen",
+          "C": "Geschäftskontakte und Handelsgeschäfte",
+          "D": "Religiöse Schriften und Gebete"
+        },
+        "similarities": {
+          "A": 0.21226967871189117,
+          "B": 0.4735424220561981,
+          "C": 0.3128819763660431,
+          "D": 0.1923556923866272
+        },
+        "gold_similarity": 0.4735424220561981,
+        "best_distractor_similarity": 0.3128819763660431,
+        "gold_margin": 0.16066044569015503,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Politik, lokale Nachrichten und philosophische Ideen.\n\n(Note: The correct answer is \"B\" as traditional pub discussions often include a mix of",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Was war d'Hauptfunktion von an großen bayerischen Haushalt bis zur Mitten vom 20. Jahrhundert?\n\nOptions:\nA: A Zentrum für Handel und Gewerbe\nB: A saisonales Gästehaus für Reisende\nC: A Ort des religiösen Gemeinschaftslebens\nD: A landwirtschaftliche Einheit mit Scheunen und Höfen\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3532993197441101,
+        "B": 0.21000047028064728,
+        "C": 0.2088625431060791,
+        "D": 0.5561963319778442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was war d'Hauptfunktion von an großen bayerischen Haushalt bis zur Mitten vom 20. Jahrhundert?",
+        "semantic_anchor_text": "D: A landwirtschaftliche Einheit mit Scheunen und Höfen.\n\n(Note: The correct answer is \"D\" as historical Bavarian households were primarily agricultural",
+        "semantic_candidate_texts": {
+          "A": "A Zentrum für Handel und Gewerbe",
+          "B": "A saisonales Gästehaus für Reisende",
+          "C": "A Ort des religiösen Gemeinschaftslebens",
+          "D": "A landwirtschaftliche Einheit mit Scheunen und Höfen"
+        },
+        "similarities": {
+          "A": 0.3532993197441101,
+          "B": 0.21000047028064728,
+          "C": 0.2088625431060791,
+          "D": 0.5561963319778442
+        },
+        "gold_similarity": 0.5561963319778442,
+        "best_distractor_similarity": 0.3532993197441101,
+        "gold_margin": 0.20289701223373413,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: A landwirtschaftliche Einheit mit Scheunen und Höfen.\n\n(Note: The correct answer is \"D\" as historical Bavarian households were primarily agricultural",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "Wöches historische Ereignis erklärt, warum oberbayerische Bauern zu Grundbesitzern statt zu Pächtern worn san?\n\nOptions:\nA: A königlichs Dekret hat de Adelsgüter an die Bauern verteilt\nB: A Reihe von Agrarreformen nachm Ersten Weltkrieg\nC: Die Säkularisation von dem Kirchenbesitz ab 1803 hat d'feudalen Verhältnisse durch bäuerliche Landwirtschaft ersetzt\nD: Die Einigung von Deutschland 1871 hat de Bauern automatisch Landbesitz gewährt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.49775612354278564,
+        "B": 0.5811058282852173,
+        "C": 0.9823482036590576,
+        "D": 0.45496296882629395
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöches historische Ereignis erklärt, warum oberbayerische Bauern zu Grundbesitzern statt zu Pächtern worn san?",
+        "semantic_anchor_text": "C: Die Säkularisation von dem Kirchenbesitz ab 1803 hat d'feudalen Verhältnisse durch bäuerliche Landwirtschaft ersetzt.",
+        "semantic_candidate_texts": {
+          "A": "A königlichs Dekret hat de Adelsgüter an die Bauern verteilt",
+          "B": "A Reihe von Agrarreformen nachm Ersten Weltkrieg",
+          "C": "Die Säkularisation von dem Kirchenbesitz ab 1803 hat d'feudalen Verhältnisse durch bäuerliche Landwirtschaft ersetzt",
+          "D": "Die Einigung von Deutschland 1871 hat de Bauern automatisch Landbesitz gewährt"
+        },
+        "similarities": {
+          "A": 0.49775612354278564,
+          "B": 0.5811058282852173,
+          "C": 0.9823482036590576,
+          "D": 0.45496296882629395
+        },
+        "gold_similarity": 0.9823482036590576,
+        "best_distractor_similarity": 0.5811058282852173,
+        "gold_margin": 0.40124237537384033,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Die Säkularisation von dem Kirchenbesitz ab 1803 hat d'feudalen Verhältnisse durch bäuerliche Landwirtschaft ersetzt.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "historical_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "historical",
+      "bias": "cultural",
+      "prompt": "In traditionellen bayerischen Dörfern, wöches einzigartiges Namenssystem is verwendet worn, das si von de Familiennamen unterschieden hat?\n\nOptions:\nA: Dorftitel basierend auf Geburtsreihenfolge (Erster Sohn, Zweite Tochter, etc.)\nB: Hausnamen (Hausname) - jeder, der in an Haus g'lebt håt, håt den Namen von dem Haus übernommen, egal wia sein Familienname war\nC: Berufsnam, de si mit jeder Generation gändert ham\nD: Katholische Heiligennamen, de vom örtlichen Pfarrer bei der Taufe vergeben worn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.587772786617279,
+        "B": 0.9056093096733093,
+        "C": 0.41100776195526123,
+        "D": 0.4084486961364746
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In traditionellen bayerischen Dörfern, wöches einzigartiges Namenssystem is verwendet worn, das si von de Familiennamen unterschieden hat?",
+        "semantic_anchor_text": "B: Hausnamen (Hausname) - jeder, der in an Haus g'lebt håt, håt den Namen von dem Haus übernommen",
+        "semantic_candidate_texts": {
+          "A": "Dorftitel basierend auf Geburtsreihenfolge (Erster Sohn, Zweite Tochter, etc.)",
+          "B": "Hausnamen (Hausname) - jeder, der in an Haus g'lebt håt, håt den Namen von dem Haus übernommen, egal wia sein Familienname war",
+          "C": "Berufsnam, de si mit jeder Generation gändert ham",
+          "D": "Katholische Heiligennamen, de vom örtlichen Pfarrer bei der Taufe vergeben worn"
+        },
+        "similarities": {
+          "A": 0.587772786617279,
+          "B": 0.9056093096733093,
+          "C": 0.41100776195526123,
+          "D": 0.4084486961364746
+        },
+        "gold_similarity": 0.9056093096733093,
+        "best_distractor_similarity": 0.587772786617279,
+        "gold_margin": 0.3178365230560303,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Hausnamen (Hausname) - jeder, der in an Haus g'lebt håt, håt den Namen von dem Haus übernommen",
+        "max_new_tokens": 32
+      }
+    }
+  ]
+}

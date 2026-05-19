@@ -1,0 +1,3661 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "leo-hessianai-7b-chat",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/leo-hessianai-7b-chat",
+  "source": "../other_models/leo-hessianai-7b-chat",
+  "dataset": "dataset/arts_and_identity.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 32006,
+    "pad_token_id": 32004
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_generated_answer",
+    "mcq_strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 41.88,
+  "results": [
+    {
+      "id": "arts_and_identity_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which composer is strongly associated with Bayreuth because his operas are performed at the Bayreuth Festival?\n\nOptions:\nA: Johannes Brahms\nB: Richard Wagner\nC: Joseph Haydn\nD: Felix Mendelssohn\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.28728848695755005,
+        "B": 0.5048021078109741,
+        "C": 0.23380744457244873,
+        "D": 0.21136954426765442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which composer is strongly associated with Bayreuth because his operas are performed at the Bayreuth Festival?",
+        "semantic_anchor_text": "B\n\nBayreuth is strongly associated with Richard Wagner's operas. They are performed at the Bayreuth Festival.\n\nNo follow",
+        "semantic_candidate_texts": {
+          "A": "Johannes Brahms",
+          "B": "Richard Wagner",
+          "C": "Joseph Haydn",
+          "D": "Felix Mendelssohn"
+        },
+        "similarities": {
+          "A": 0.28728848695755005,
+          "B": 0.5048021078109741,
+          "C": 0.23380744457244873,
+          "D": 0.21136954426765442
+        },
+        "gold_similarity": 0.5048021078109741,
+        "best_distractor_similarity": 0.28728848695755005,
+        "gold_margin": 0.21751362085342407,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B\n\nBayreuth is strongly associated with Richard Wagner's operas. They are performed at the Bayreuth Festival.\n\nNo follow",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "The Bayreuth Festival is best known for staging works from which genre?\n\nOptions:\nA: Ballet\nB: Oratorio\nC: Opera\nD: Jazz\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.24390241503715515,
+        "B": 0.2995437681674957,
+        "C": 0.6282172203063965,
+        "D": 0.17195594310760498
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The Bayreuth Festival is best known for staging works from which genre?",
+        "semantic_anchor_text": "C\nOpera\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "Ballet",
+          "B": "Oratorio",
+          "C": "Opera",
+          "D": "Jazz"
+        },
+        "similarities": {
+          "A": 0.24390241503715515,
+          "B": 0.2995437681674957,
+          "C": 0.6282172203063965,
+          "D": 0.17195594310760498
+        },
+        "gold_similarity": 0.6282172203063965,
+        "best_distractor_similarity": 0.2995437681674957,
+        "gold_margin": 0.32867345213890076,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C\nOpera\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which Munich museum is famous for its collection of European paintings from the 14th–18th centuries?\n\nOptions:\nA: Deutsches Museum\nB: Lenbachhaus\nC: Alte Pinakothek\nD: Haus der Kunst\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.23278293013572693,
+        "B": 0.30565983057022095,
+        "C": 0.2614407241344452,
+        "D": 0.3028431236743927
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which Munich museum is famous for its collection of European paintings from the 14th–18th centuries?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Deutsches Museum",
+          "B": "Lenbachhaus",
+          "C": "Alte Pinakothek",
+          "D": "Haus der Kunst"
+        },
+        "similarities": {
+          "A": 0.23278293013572693,
+          "B": 0.30565983057022095,
+          "C": 0.2614407241344452,
+          "D": 0.3028431236743927
+        },
+        "gold_similarity": 0.2614407241344452,
+        "best_distractor_similarity": 0.30565983057022095,
+        "gold_margin": -0.04421910643577576,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which Munich museum is especially associated with the artist Franz von Lenbach and the “Blue Rider” circle?\n\nOptions:\nA: Glyptothek\nB: Lenbachhaus\nC: Neue Pinakothek\nD: Bavarian National Museum\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.35185176134109497,
+        "B": 0.30565983057022095,
+        "C": 0.20168429613113403,
+        "D": 0.1533789485692978
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which Munich museum is especially associated with the artist Franz von Lenbach and the “Blue Rider” circle?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Glyptothek",
+          "B": "Lenbachhaus",
+          "C": "Neue Pinakothek",
+          "D": "Bavarian National Museum"
+        },
+        "similarities": {
+          "A": 0.35185176134109497,
+          "B": 0.30565983057022095,
+          "C": 0.20168429613113403,
+          "D": 0.1533789485692978
+        },
+        "gold_similarity": 0.30565983057022095,
+        "best_distractor_similarity": 0.35185176134109497,
+        "gold_margin": -0.04619193077087402,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "The Bavarian coat of arms features the blue-and-white lozenges historically linked to which ruling house?\n\nOptions:\nA: House of Welf\nB: House of Habsburg\nC: House of Wittelsbach\nD: House of Hohenzollern\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.25743812322616577,
+        "B": 0.16277402639389038,
+        "C": 0.2674848735332489,
+        "D": 0.22614340484142303
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The Bavarian coat of arms features the blue-and-white lozenges historically linked to which ruling house?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "House of Welf",
+          "B": "House of Habsburg",
+          "C": "House of Wittelsbach",
+          "D": "House of Hohenzollern"
+        },
+        "similarities": {
+          "A": 0.25743812322616577,
+          "B": 0.16277402639389038,
+          "C": 0.2674848735332489,
+          "D": 0.22614340484142303
+        },
+        "gold_similarity": 0.2674848735332489,
+        "best_distractor_similarity": 0.25743812322616577,
+        "gold_margin": 0.01004675030708313,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "“Mia san mia” is a phrase in which language/dialect family?\n\nOptions:\nA: Bavarian (Austro-Bavarian) dialect\nB: Low German\nC: Standard High German\nD: Swiss Romansh\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4412800073623657,
+        "B": 0.6380001902580261,
+        "C": 0.6856279373168945,
+        "D": 0.44811496138572693
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "“Mia san mia” is a phrase in which language/dialect family?",
+        "semantic_anchor_text": "D\nStandard High German\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "Bavarian (Austro-Bavarian) dialect",
+          "B": "Low German",
+          "C": "Standard High German",
+          "D": "Swiss Romansh"
+        },
+        "similarities": {
+          "A": 0.4412800073623657,
+          "B": 0.6380001902580261,
+          "C": 0.6856279373168945,
+          "D": 0.44811496138572693
+        },
+        "gold_similarity": 0.4412800073623657,
+        "best_distractor_similarity": 0.6856279373168945,
+        "gold_margin": -0.2443479299545288,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D\nStandard High German\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which color pair is most strongly associated with Bavarian identity on flags and symbols?\n\nOptions:\nA: Black and yellow\nB: Red and white\nC: Green and gold\nD: Blue and white\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.14666147530078888,
+        "B": 0.2664194703102112,
+        "C": 0.15430018305778503,
+        "D": 0.2403963804244995
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which color pair is most strongly associated with Bavarian identity on flags and symbols?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Black and yellow",
+          "B": "Red and white",
+          "C": "Green and gold",
+          "D": "Blue and white"
+        },
+        "similarities": {
+          "A": 0.14666147530078888,
+          "B": 0.2664194703102112,
+          "C": 0.15430018305778503,
+          "D": 0.2403963804244995
+        },
+        "gold_similarity": 0.2403963804244995,
+        "best_distractor_similarity": 0.2664194703102112,
+        "gold_margin": -0.02602308988571167,
+        "predicted_label": "B",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which major Munich museum focuses heavily on science and technology and is part of the city’s cultural identity?\n\nOptions:\nA: Alte Pinakothek\nB: Bavarian State Opera\nC: Deutsches Museum\nD: Residenz Museum\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.37637320160865784,
+        "B": 0.4541891813278198,
+        "C": 0.7163100242614746,
+        "D": 0.49428635835647583
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which major Munich museum focuses heavily on science and technology and is part of the city’s cultural identity?",
+        "semantic_anchor_text": "C: Deutsches Museum\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "Alte Pinakothek",
+          "B": "Bavarian State Opera",
+          "C": "Deutsches Museum",
+          "D": "Residenz Museum"
+        },
+        "similarities": {
+          "A": 0.37637320160865784,
+          "B": 0.4541891813278198,
+          "C": 0.7163100242614746,
+          "D": 0.49428635835647583
+        },
+        "gold_similarity": 0.7163100242614746,
+        "best_distractor_similarity": 0.49428635835647583,
+        "gold_margin": 0.22202366590499878,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Deutsches Museum\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which Bavarian city is especially known for its tradition of gingerbread (Lebkuchen), often tied to Christmas markets?\n\nOptions:\nA: Passau\nB: Nuremberg\nC: Rosenheim\nD: Landshut\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4059069752693176,
+        "B": 0.2915588617324829,
+        "C": 0.22981002926826477,
+        "D": 0.1981319785118103
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which Bavarian city is especially known for its tradition of gingerbread (Lebkuchen), often tied to Christmas markets?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Nuremberg",
+          "C": "Rosenheim",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.4059069752693176,
+          "B": 0.2915588617324829,
+          "C": 0.22981002926826477,
+          "D": 0.1981319785118103
+        },
+        "gold_similarity": 0.2915588617324829,
+        "best_distractor_similarity": 0.4059069752693176,
+        "gold_margin": -0.11434811353683472,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which art movement is closely linked to Munich through artists like Kandinsky and Marc and the name “Der Blaue Reiter”?\n\nOptions:\nA: Cubism\nB: Futurism\nC: Expressionism\nD: Surrealism\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.36885538697242737,
+        "B": 0.20344287157058716,
+        "C": 0.26573145389556885,
+        "D": 0.21436730027198792
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which art movement is closely linked to Munich through artists like Kandinsky and Marc and the name “Der Blaue Reiter”?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Cubism",
+          "B": "Futurism",
+          "C": "Expressionism",
+          "D": "Surrealism"
+        },
+        "similarities": {
+          "A": 0.36885538697242737,
+          "B": 0.20344287157058716,
+          "C": 0.26573145389556885,
+          "D": 0.21436730027198792
+        },
+        "gold_similarity": 0.26573145389556885,
+        "best_distractor_similarity": 0.36885538697242737,
+        "gold_margin": -0.10312393307685852,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "How did Franz Herzog von Bayern contribute to the public access of art collections?\n\nOptions:\nA: He opened all family castles as museums without restrictions\nB: He donated the majority of his modern art collection to the Wittelsbacher Ausgleichsfonds, which made them publicly accessible in institutions like the Pinakothek der Moderne\nC: He auctioned the art to private collectors and reinvested the proceeds\nD: He kept the collection strictly private for family use\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.0168899092823267,
+        "B": 0.01785210147500038,
+        "C": -0.016590502113103867,
+        "D": -0.0015891771763563156
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How did Franz Herzog von Bayern contribute to the public access of art collections?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "He opened all family castles as museums without restrictions",
+          "B": "He donated the majority of his modern art collection to the Wittelsbacher Ausgleichsfonds, which made them publicly accessible in institutions like the Pinakothek der Moderne",
+          "C": "He auctioned the art to private collectors and reinvested the proceeds",
+          "D": "He kept the collection strictly private for family use"
+        },
+        "similarities": {
+          "A": 0.0168899092823267,
+          "B": 0.01785210147500038,
+          "C": -0.016590502113103867,
+          "D": -0.0015891771763563156
+        },
+        "gold_similarity": 0.01785210147500038,
+        "best_distractor_similarity": 0.0168899092823267,
+        "gold_margin": 0.0009621921926736832,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Which theater group helped fuel the international “Bavaria hype” around 1900?\n\nOptions:\nA: The Munich Kammerspiele\nB: The Bavarian State Opera\nC: The Schliersee Farmers’ Theatre\nD: The Augsburg Puppet Theatre\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.26106446981430054,
+        "B": 0.15461385250091553,
+        "C": 0.19608929753303528,
+        "D": 0.16816914081573486
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which theater group helped fuel the international “Bavaria hype” around 1900?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "The Munich Kammerspiele",
+          "B": "The Bavarian State Opera",
+          "C": "The Schliersee Farmers’ Theatre",
+          "D": "The Augsburg Puppet Theatre"
+        },
+        "similarities": {
+          "A": 0.26106446981430054,
+          "B": 0.15461385250091553,
+          "C": 0.19608929753303528,
+          "D": 0.16816914081573486
+        },
+        "gold_similarity": 0.19608929753303528,
+        "best_distractor_similarity": 0.26106446981430054,
+        "gold_margin": -0.06497517228126526,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What is the historical significance of the Kunstbunker in Nuremberg?\n\nOptions:\nA: It was built in the 16th century to protect the city's gold reserves from invading armies\nB: It served as a secret meeting place for Bavarian resistance fighters during World War II\nC: It was used to store Nuremberg's art treasures and protect them from bombing raids during World War II\nD: It housed the Bavarian royal family's private art collection during the Napoleonic Wars\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.043870408087968826,
+        "B": 0.08649339526891708,
+        "C": 0.07514287531375885,
+        "D": 0.04715950787067413
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the historical significance of the Kunstbunker in Nuremberg?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "It was built in the 16th century to protect the city's gold reserves from invading armies",
+          "B": "It served as a secret meeting place for Bavarian resistance fighters during World War II",
+          "C": "It was used to store Nuremberg's art treasures and protect them from bombing raids during World War II",
+          "D": "It housed the Bavarian royal family's private art collection during the Napoleonic Wars"
+        },
+        "similarities": {
+          "A": 0.043870408087968826,
+          "B": 0.08649339526891708,
+          "C": 0.07514287531375885,
+          "D": 0.04715950787067413
+        },
+        "gold_similarity": 0.07514287531375885,
+        "best_distractor_similarity": 0.08649339526891708,
+        "gold_margin": -0.011350519955158234,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Why was 2025 a particularly special year for the Deutsches Museum in Munich?\n\nOptions:\nA: It reopened after a decade-long renovation of its entire main building\nB: It celebrated the 100th anniversary of the opening of its famous building on the Museumsinsel and attracted almost 1.7 million visitors\nC: It launched the largest science exhibition ever staged in Germany\nD: It received UNESCO World Heritage status for its unique collection of scientific instruments\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.05706816539168358,
+        "B": 0.061968907713890076,
+        "C": 0.04411580413579941,
+        "D": 0.04281747713685036
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Why was 2025 a particularly special year for the Deutsches Museum in Munich?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "It reopened after a decade-long renovation of its entire main building",
+          "B": "It celebrated the 100th anniversary of the opening of its famous building on the Museumsinsel and attracted almost 1.7 million visitors",
+          "C": "It launched the largest science exhibition ever staged in Germany",
+          "D": "It received UNESCO World Heritage status for its unique collection of scientific instruments"
+        },
+        "similarities": {
+          "A": 0.05706816539168358,
+          "B": 0.061968907713890076,
+          "C": 0.04411580413579941,
+          "D": 0.04281747713685036
+        },
+        "gold_similarity": 0.061968907713890076,
+        "best_distractor_similarity": 0.05706816539168358,
+        "gold_margin": 0.004900742322206497,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What makes the Alte Pinakothek in Munich particularly significant as an art museum?\n\nOptions:\nA: It holds the world's largest collection of German Expressionist paintings\nB: It is the oldest public art museum in the entire German-speaking world\nC: It houses one of the greatest collections of Rubens paintings and Albrecht Dürer's famous self-portrait\nD: It is the only Bavarian museum to display works loaned permanently from the Louvre in Paris\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.019722070544958115,
+        "B": -0.008148618042469025,
+        "C": 0.05388603359460831,
+        "D": -0.04153931513428688
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What makes the Alte Pinakothek in Munich particularly significant as an art museum?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "It holds the world's largest collection of German Expressionist paintings",
+          "B": "It is the oldest public art museum in the entire German-speaking world",
+          "C": "It houses one of the greatest collections of Rubens paintings and Albrecht Dürer's famous self-portrait",
+          "D": "It is the only Bavarian museum to display works loaned permanently from the Louvre in Paris"
+        },
+        "similarities": {
+          "A": 0.019722070544958115,
+          "B": -0.008148618042469025,
+          "C": 0.05388603359460831,
+          "D": -0.04153931513428688
+        },
+        "gold_similarity": 0.05388603359460831,
+        "best_distractor_similarity": 0.019722070544958115,
+        "gold_margin": 0.03416396304965019,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What does the record attendance at the Dokumentation Obersalzberg near Berchtesgaden suggest about Bavarian museum visitors?\n\nOptions:\nA: That tourists are increasingly interested in Alpine landscapes and outdoor activities\nB: That there is strong and growing public interest in confronting the history of National Socialism\nC: That Berchtesgaden has overtaken Munich as Bavaria's most popular tourist destination\nD: That younger generations are losing interest in contemporary art in favor of historical sites\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.015238720923662186,
+        "B": 0.09769254177808762,
+        "C": 0.09867539256811142,
+        "D": 0.06983576714992523
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the record attendance at the Dokumentation Obersalzberg near Berchtesgaden suggest about Bavarian museum visitors?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "That tourists are increasingly interested in Alpine landscapes and outdoor activities",
+          "B": "That there is strong and growing public interest in confronting the history of National Socialism",
+          "C": "That Berchtesgaden has overtaken Munich as Bavaria's most popular tourist destination",
+          "D": "That younger generations are losing interest in contemporary art in favor of historical sites"
+        },
+        "similarities": {
+          "A": 0.015238720923662186,
+          "B": 0.09769254177808762,
+          "C": 0.09867539256811142,
+          "D": 0.06983576714992523
+        },
+        "gold_similarity": 0.09769254177808762,
+        "best_distractor_similarity": 0.09867539256811142,
+        "gold_margin": -0.0009828507900238037,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What artistic movement is the Lenbachhaus in Munich particularly famous for?\n\nOptions:\nA: The Romantic landscape painting tradition of 19th century Bavaria\nB: The Bauhaus movement and its influence on modern German design\nC: The works of the Blauer Reiter artist group\nD: The Baroque portrait painting tradition of the Wittelsbach court\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.08389909565448761,
+        "B": 0.10539092123508453,
+        "C": 0.18415766954421997,
+        "D": 0.1448993682861328
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What artistic movement is the Lenbachhaus in Munich particularly famous for?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "The Romantic landscape painting tradition of 19th century Bavaria",
+          "B": "The Bauhaus movement and its influence on modern German design",
+          "C": "The works of the Blauer Reiter artist group",
+          "D": "The Baroque portrait painting tradition of the Wittelsbach court"
+        },
+        "similarities": {
+          "A": 0.08389909565448761,
+          "B": 0.10539092123508453,
+          "C": 0.18415766954421997,
+          "D": 0.1448993682861328
+        },
+        "gold_similarity": 0.18415766954421997,
+        "best_distractor_similarity": 0.1448993682861328,
+        "gold_margin": 0.03925830125808716,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What explanation does Bavarian Arts Minister Markus Blume give for the record museum attendance in 2025?\n\nOptions:\nA: A significant increase in international tourism to Bavaria following major marketing campaigns\nB: The introduction of free admission to all state museums across Bavaria\nC: Museums continuously reinventing themselves through high-quality special exhibitions, innovative education formats and digital offerings\nD: A government program offering school children free transport to Bavarian state museums\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": -0.020356321707367897,
+        "B": 0.043204858899116516,
+        "C": 0.06614376604557037,
+        "D": 0.06997960060834885
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What explanation does Bavarian Arts Minister Markus Blume give for the record museum attendance in 2025?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "A significant increase in international tourism to Bavaria following major marketing campaigns",
+          "B": "The introduction of free admission to all state museums across Bavaria",
+          "C": "Museums continuously reinventing themselves through high-quality special exhibitions, innovative education formats and digital offerings",
+          "D": "A government program offering school children free transport to Bavarian state museums"
+        },
+        "similarities": {
+          "A": -0.020356321707367897,
+          "B": 0.043204858899116516,
+          "C": 0.06614376604557037,
+          "D": 0.06997960060834885
+        },
+        "gold_similarity": 0.06614376604557037,
+        "best_distractor_similarity": 0.06997960060834885,
+        "gold_margin": -0.003835834562778473,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What controversy surrounded the Staatsgemäldesammlungen in Bavaria in 2025?\n\nOptions:\nA: A major theft of artworks from the Neue Pinakothek that remains unsolved\nB: Debates about potential mismanagement and the handling of art looted during the Nazi era\nC: A dispute between Munich and Berlin over the ownership of several medieval Bavarian paintings\nD: Accusations that entry prices had become too high for ordinary Bavarian families to afford\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.10179337114095688,
+        "B": 0.1213119626045227,
+        "C": 0.14607761800289154,
+        "D": 0.13790354132652283
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What controversy surrounded the Staatsgemäldesammlungen in Bavaria in 2025?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "A major theft of artworks from the Neue Pinakothek that remains unsolved",
+          "B": "Debates about potential mismanagement and the handling of art looted during the Nazi era",
+          "C": "A dispute between Munich and Berlin over the ownership of several medieval Bavarian paintings",
+          "D": "Accusations that entry prices had become too high for ordinary Bavarian families to afford"
+        },
+        "similarities": {
+          "A": 0.10179337114095688,
+          "B": 0.1213119626045227,
+          "C": 0.14607761800289154,
+          "D": 0.13790354132652283
+        },
+        "gold_similarity": 0.1213119626045227,
+        "best_distractor_similarity": 0.14607761800289154,
+        "gold_margin": -0.024765655398368835,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "How does the BMW Museum differ from the neighboring BMW Welt in Munich?\n\nOptions:\nA: The BMW Museum focuses exclusively on future electric vehicles while BMW Welt displays classic cars\nB: The BMW Museum is privately funded while BMW Welt receives state subsidies from the Bavarian government\nC: The BMW Museum charges admission and attracts fewer visitors than BMW Welt which draws millions for free\nD: The BMW Museum is open year round while BMW Welt only operates during the summer tourist season\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.03881502151489258,
+        "B": -0.012060224078595638,
+        "C": 0.03696724772453308,
+        "D": 0.0906272679567337
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How does the BMW Museum differ from the neighboring BMW Welt in Munich?",
+        "semantic_anchor_text": "C\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "The BMW Museum focuses exclusively on future electric vehicles while BMW Welt displays classic cars",
+          "B": "The BMW Museum is privately funded while BMW Welt receives state subsidies from the Bavarian government",
+          "C": "The BMW Museum charges admission and attracts fewer visitors than BMW Welt which draws millions for free",
+          "D": "The BMW Museum is open year round while BMW Welt only operates during the summer tourist season"
+        },
+        "similarities": {
+          "A": 0.03881502151489258,
+          "B": -0.012060224078595638,
+          "C": 0.03696724772453308,
+          "D": 0.0906272679567337
+        },
+        "gold_similarity": 0.03696724772453308,
+        "best_distractor_similarity": 0.0906272679567337,
+        "gold_margin": -0.05366002023220062,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Approximately what proportion of Bavaria's population is Catholic?\n\nOptions:\nA: One third\nB: One half\nC: Two thirds\nD: Three quarters\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.22489745914936066,
+        "B": 0.22872236371040344,
+        "C": 0.21871879696846008,
+        "D": 0.23741865158081055
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Approximately what proportion of Bavaria's population is Catholic?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "One third",
+          "B": "One half",
+          "C": "Two thirds",
+          "D": "Three quarters"
+        },
+        "similarities": {
+          "A": 0.22489745914936066,
+          "B": 0.22872236371040344,
+          "C": 0.21871879696846008,
+          "D": 0.23741865158081055
+        },
+        "gold_similarity": 0.21871879696846008,
+        "best_distractor_similarity": 0.23741865158081055,
+        "gold_margin": -0.018699854612350464,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Who, besides the nuclear family, might live under the same roof in a traditional Bavarian household?\n\nOptions:\nA: Local tradespeoples\nB: Neighbouring families sharing properties\nC: Only grandparents and no one else\nD: Extented family, farms and maids\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.14366964995861053,
+        "B": 0.12501753866672516,
+        "C": 0.11917977780103683,
+        "D": 0.13225317001342773
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Who, besides the nuclear family, might live under the same roof in a traditional Bavarian household?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Local tradespeoples",
+          "B": "Neighbouring families sharing properties",
+          "C": "Only grandparents and no one else",
+          "D": "Extented family, farms and maids"
+        },
+        "similarities": {
+          "A": 0.14366964995861053,
+          "B": 0.12501753866672516,
+          "C": 0.11917977780103683,
+          "D": 0.13225317001342773
+        },
+        "gold_similarity": 0.13225317001342773,
+        "best_distractor_similarity": 0.14366964995861053,
+        "gold_margin": -0.0114164799451828,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "What does the Hausname (house-name) system reflect about traditional Bavarian households?\n\nOptions:\nA: The acknowledgement of all people living under the same roof\nB: The architectural style and age of the building\nC: The wealth and social rank of the family who owned the house\nD: The number of farms animals the household kept\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.15891829133033752,
+        "B": 0.1534564048051834,
+        "C": 0.08556632697582245,
+        "D": 0.09618237614631653
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the Hausname (house-name) system reflect about traditional Bavarian households?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "The acknowledgement of all people living under the same roof",
+          "B": "The architectural style and age of the building",
+          "C": "The wealth and social rank of the family who owned the house",
+          "D": "The number of farms animals the household kept"
+        },
+        "similarities": {
+          "A": 0.15891829133033752,
+          "B": 0.1534564048051834,
+          "C": 0.08556632697582245,
+          "D": 0.09618237614631653
+        },
+        "gold_similarity": 0.15891829133033752,
+        "best_distractor_similarity": 0.1534564048051834,
+        "gold_margin": 0.005461886525154114,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "In Heimat films, what role does the church typically play?\n\nOptions:\nA: It is rarely shown\nB: It serves as a backdrop or a key part of the plot\nC: It is only mentioned in dialogue\nD: It represents conflict between characters\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.19437767565250397,
+        "B": 0.25711971521377563,
+        "C": 0.1885939985513687,
+        "D": 0.25668394565582275
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Heimat films, what role does the church typically play?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "It is rarely shown",
+          "B": "It serves as a backdrop or a key part of the plot",
+          "C": "It is only mentioned in dialogue",
+          "D": "It represents conflict between characters"
+        },
+        "similarities": {
+          "A": 0.19437767565250397,
+          "B": 0.25711971521377563,
+          "C": 0.1885939985513687,
+          "D": 0.25668394565582275
+        },
+        "gold_similarity": 0.25711971521377563,
+        "best_distractor_similarity": 0.25668394565582275,
+        "gold_margin": 0.00043576955795288086,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "How do people in rural Upper Bavarian villages who belong to big households typically address one another?\n\nOptions:\nA: By their official titles and professional roles\nB: By their first given names, as common elsewhere\nC: By their respective house-names rather than given or family names\nD: By the name of the village district they live in\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.160253643989563,
+        "B": 0.13306763768196106,
+        "C": 0.08657531440258026,
+        "D": 0.05938549339771271
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How do people in rural Upper Bavarian villages who belong to big households typically address one another?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "By their official titles and professional roles",
+          "B": "By their first given names, as common elsewhere",
+          "C": "By their respective house-names rather than given or family names",
+          "D": "By the name of the village district they live in"
+        },
+        "similarities": {
+          "A": 0.160253643989563,
+          "B": 0.13306763768196106,
+          "C": 0.08657531440258026,
+          "D": 0.05938549339771271
+        },
+        "gold_similarity": 0.08657531440258026,
+        "best_distractor_similarity": 0.160253643989563,
+        "gold_margin": -0.07367832958698273,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welcher Komponist ist stark mit Bayreuth verbunden, weil seine Opern bei den Bayreuther Festspielen aufgeführt werden?\n\nOptions:\nA: Johannes Brahms\nB: Richard Wagner\nC: Joseph Haydn\nD: Felix Mendelssohn\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.1877545565366745,
+        "B": 0.2191668152809143,
+        "C": 0.1724887490272522,
+        "D": 0.22263911366462708
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Komponist ist stark mit Bayreuth verbunden, weil seine Opern bei den Bayreuther Festspielen aufgeführt werden?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Johannes Brahms",
+          "B": "Richard Wagner",
+          "C": "Joseph Haydn",
+          "D": "Felix Mendelssohn"
+        },
+        "similarities": {
+          "A": 0.1877545565366745,
+          "B": 0.2191668152809143,
+          "C": 0.1724887490272522,
+          "D": 0.22263911366462708
+        },
+        "gold_similarity": 0.2191668152809143,
+        "best_distractor_similarity": 0.22263911366462708,
+        "gold_margin": -0.0034722983837127686,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Die Bayreuther Festspiele sind am besten bekannt für die Inszenierung von Werken welchen Genres?\n\nOptions:\nA: Ballett\nB: Oratorium\nC: Oper\nD: Jazz\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.11085867136716843,
+        "B": 0.2733002007007599,
+        "C": 0.4034821093082428,
+        "D": 0.17123287916183472
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Die Bayreuther Festspiele sind am besten bekannt für die Inszenierung von Werken welchen Genres?",
+        "semantic_anchor_text": "C\n\nFin.",
+        "semantic_candidate_texts": {
+          "A": "Ballett",
+          "B": "Oratorium",
+          "C": "Oper",
+          "D": "Jazz"
+        },
+        "similarities": {
+          "A": 0.11085867136716843,
+          "B": 0.2733002007007599,
+          "C": 0.4034821093082428,
+          "D": 0.17123287916183472
+        },
+        "gold_similarity": 0.4034821093082428,
+        "best_distractor_similarity": 0.2733002007007599,
+        "gold_margin": 0.1301819086074829,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C\n\nFin.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welches Münchner Museum ist berühmt für seine Sammlung europäischer Gemälde aus dem 14.–18. Jahrhundert?\n\nOptions:\nA: Deutsches Museum\nB: Lenbachhaus\nC: Alte Pinakothek\nD: Haus der Kunst\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.23278293013572693,
+        "B": 0.30565983057022095,
+        "C": 0.2614407241344452,
+        "D": 0.3028431236743927
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches Münchner Museum ist berühmt für seine Sammlung europäischer Gemälde aus dem 14.–18. Jahrhundert?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Deutsches Museum",
+          "B": "Lenbachhaus",
+          "C": "Alte Pinakothek",
+          "D": "Haus der Kunst"
+        },
+        "similarities": {
+          "A": 0.23278293013572693,
+          "B": 0.30565983057022095,
+          "C": 0.2614407241344452,
+          "D": 0.3028431236743927
+        },
+        "gold_similarity": 0.2614407241344452,
+        "best_distractor_similarity": 0.30565983057022095,
+        "gold_margin": -0.04421910643577576,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welches Münchner Museum ist besonders mit dem Künstler Franz von Lenbach und dem Kreis \"Der Blaue Reiter\" verbunden?\n\nOptions:\nA: Glyptothek\nB: Lenbachhaus\nC: Neue Pinakothek\nD: Bayerisches Nationalmuseum\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2805176377296448,
+        "B": 0.8561302423477173,
+        "C": 0.5000357627868652,
+        "D": 0.634557843208313
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches Münchner Museum ist besonders mit dem Künstler Franz von Lenbach und dem Kreis \"Der Blaue Reiter\" verbunden?",
+        "semantic_anchor_text": "Das Lenbachhaus\n\nFinish.",
+        "semantic_candidate_texts": {
+          "A": "Glyptothek",
+          "B": "Lenbachhaus",
+          "C": "Neue Pinakothek",
+          "D": "Bayerisches Nationalmuseum"
+        },
+        "similarities": {
+          "A": 0.2805176377296448,
+          "B": 0.8561302423477173,
+          "C": 0.5000357627868652,
+          "D": 0.634557843208313
+        },
+        "gold_similarity": 0.8561302423477173,
+        "best_distractor_similarity": 0.634557843208313,
+        "gold_margin": 0.2215723991394043,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das Lenbachhaus\n\nFinish.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Das bayerische Wappen zeigt die blau-weißen Rauten, die historisch mit welchem Herrscherhaus verbunden sind?\n\nOptions:\nA: Haus Welfen\nB: Haus Habsburg\nC: Haus Wittelsbach\nD: Haus Hohenzollern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5134945511817932,
+        "B": 0.6750395894050598,
+        "C": 0.5259432792663574,
+        "D": 0.5505850911140442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Das bayerische Wappen zeigt die blau-weißen Rauten, die historisch mit welchem Herrscherhaus verbunden sind?",
+        "semantic_anchor_text": "Das bayerische Wappen zeigt die blau-weißen Rauten, die historisch mit welchem Herrscherhaus verbunden sind?",
+        "semantic_candidate_texts": {
+          "A": "Haus Welfen",
+          "B": "Haus Habsburg",
+          "C": "Haus Wittelsbach",
+          "D": "Haus Hohenzollern"
+        },
+        "similarities": {
+          "A": 0.5134945511817932,
+          "B": 0.6750395894050598,
+          "C": 0.5259432792663574,
+          "D": 0.5505850911140442
+        },
+        "gold_similarity": 0.5259432792663574,
+        "best_distractor_similarity": 0.6750395894050598,
+        "gold_margin": -0.1490963101387024,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das bayerische Wappen zeigt die blau-weißen Rauten, die historisch mit welchem Herrscherhaus verbunden sind?",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Mia san mia ist eine Phrase in welcher Sprache/Dialektfamilie?\n\nOptions:\nA: Bairischer (Austro-Bairischer) Dialekt\nB: Niederdeutsch\nC: Standardhochdeutsch\nD: Schweizer Romanisch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5237100720405579,
+        "B": 0.11420124024152756,
+        "C": 0.13226735591888428,
+        "D": 0.315912127494812
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Mia san mia ist eine Phrase in welcher Sprache/Dialektfamilie?",
+        "semantic_anchor_text": "Mia san mia ist eine Phrase in welcher Sprache/Dialektfamilie?\n\nOptions:\nA: Bairischer (",
+        "semantic_candidate_texts": {
+          "A": "Bairischer (Austro-Bairischer) Dialekt",
+          "B": "Niederdeutsch",
+          "C": "Standardhochdeutsch",
+          "D": "Schweizer Romanisch"
+        },
+        "similarities": {
+          "A": 0.5237100720405579,
+          "B": 0.11420124024152756,
+          "C": 0.13226735591888428,
+          "D": 0.315912127494812
+        },
+        "gold_similarity": 0.5237100720405579,
+        "best_distractor_similarity": 0.315912127494812,
+        "gold_margin": 0.20779794454574585,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Mia san mia ist eine Phrase in welcher Sprache/Dialektfamilie?\n\nOptions:\nA: Bairischer (",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welches Farbpaar ist am stärksten mit der bayerischen Identität auf Flaggen und Symbolen verbunden?\n\nOptions:\nA: Schwarz und Gelb\nB: Rot und Weiß\nC: Grün und Gold\nD: Blau und Weiß\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8509681224822998,
+        "B": 0.5169878005981445,
+        "C": 0.44968587160110474,
+        "D": 0.5246059894561768
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches Farbpaar ist am stärksten mit der bayerischen Identität auf Flaggen und Symbolen verbunden?",
+        "semantic_anchor_text": "Schwarz und Gelb\n\nKeine Erklärung.",
+        "semantic_candidate_texts": {
+          "A": "Schwarz und Gelb",
+          "B": "Rot und Weiß",
+          "C": "Grün und Gold",
+          "D": "Blau und Weiß"
+        },
+        "similarities": {
+          "A": 0.8509681224822998,
+          "B": 0.5169878005981445,
+          "C": 0.44968587160110474,
+          "D": 0.5246059894561768
+        },
+        "gold_similarity": 0.5246059894561768,
+        "best_distractor_similarity": 0.8509681224822998,
+        "gold_margin": -0.32636213302612305,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Schwarz und Gelb\n\nKeine Erklärung.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welches große Münchner Museum konzentriert sich stark auf Wissenschaft und Technik und ist Teil der kulturellen Identität der Stadt?\n\nOptions:\nA: Alte Pinakothek\nB: Bayerische Staatsoper\nC: Deutsches Museum\nD: Residenzmuseum\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34293133020401,
+        "B": 0.5304700136184692,
+        "C": 0.674911379814148,
+        "D": 0.521884024143219
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches große Münchner Museum konzentriert sich stark auf Wissenschaft und Technik und ist Teil der kulturellen Identität der Stadt?",
+        "semantic_anchor_text": "C\nDeutsches Museum\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "Alte Pinakothek",
+          "B": "Bayerische Staatsoper",
+          "C": "Deutsches Museum",
+          "D": "Residenzmuseum"
+        },
+        "similarities": {
+          "A": 0.34293133020401,
+          "B": 0.5304700136184692,
+          "C": 0.674911379814148,
+          "D": 0.521884024143219
+        },
+        "gold_similarity": 0.674911379814148,
+        "best_distractor_similarity": 0.5304700136184692,
+        "gold_margin": 0.1444413661956787,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C\nDeutsches Museum\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welche bayerische Stadt ist besonders bekannt für ihre Tradition der Lebkuchen, die oft mit Weihnachtsmärkten verbunden sind?\n\nOptions:\nA: Passau\nB: Nürnberg\nC: Rosenheim\nD: Landshut\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.47123444080352783,
+        "B": 0.8257679343223572,
+        "C": 0.34193092584609985,
+        "D": 0.22665834426879883
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche bayerische Stadt ist besonders bekannt für ihre Tradition der Lebkuchen, die oft mit Weihnachtsmärkten verbunden sind?",
+        "semantic_anchor_text": "Nürnberg\n\nFinish.",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Nürnberg",
+          "C": "Rosenheim",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.47123444080352783,
+          "B": 0.8257679343223572,
+          "C": 0.34193092584609985,
+          "D": 0.22665834426879883
+        },
+        "gold_similarity": 0.8257679343223572,
+        "best_distractor_similarity": 0.47123444080352783,
+        "gold_margin": 0.35453349351882935,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Nürnberg\n\nFinish.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welche Kunstbewegung ist durch Künstler wie Kandinsky und Marc und den Namen \"Der Blaue Reiter\" eng mit München verbunden?\n\nOptions:\nA: Kubismus\nB: Futurismus\nC: Expressionismus\nD: Surrealismus\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4094993770122528,
+        "B": 0.22218208014965057,
+        "C": 0.26750215888023376,
+        "D": 0.22036510705947876
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Kunstbewegung ist durch Künstler wie Kandinsky und Marc und den Namen \"Der Blaue Reiter\" eng mit München verbunden?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Kubismus",
+          "B": "Futurismus",
+          "C": "Expressionismus",
+          "D": "Surrealismus"
+        },
+        "similarities": {
+          "A": 0.4094993770122528,
+          "B": 0.22218208014965057,
+          "C": 0.26750215888023376,
+          "D": 0.22036510705947876
+        },
+        "gold_similarity": 0.26750215888023376,
+        "best_distractor_similarity": 0.4094993770122528,
+        "gold_margin": -0.14199721813201904,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wie trug Franz Herzog von Bayern zum öffentlichen Zugang zu Kunstsammlungen bei?\n\nOptions:\nA: Er öffnete alle Familienschlösser ohne Einschränkungen als Museen\nB: Er spendete den Großteil seiner modernen Kunstsammlung dem Wittelsbacher Ausgleichsfonds, wodurch sie in Institutionen wie der Pinakothek der Moderne öffentlich zugänglich wurden\nC: Er versteigerte die Kunst an Privatsammler und investierte den Erlös neu\nD: Er hielt die Sammlung streng privat für den Familiengebrauch\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.10251326858997345,
+        "B": 0.03166220337152481,
+        "C": 0.017557255923748016,
+        "D": 0.02741706743836403
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie trug Franz Herzog von Bayern zum öffentlichen Zugang zu Kunstsammlungen bei?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Er öffnete alle Familienschlösser ohne Einschränkungen als Museen",
+          "B": "Er spendete den Großteil seiner modernen Kunstsammlung dem Wittelsbacher Ausgleichsfonds, wodurch sie in Institutionen wie der Pinakothek der Moderne öffentlich zugänglich wurden",
+          "C": "Er versteigerte die Kunst an Privatsammler und investierte den Erlös neu",
+          "D": "Er hielt die Sammlung streng privat für den Familiengebrauch"
+        },
+        "similarities": {
+          "A": 0.10251326858997345,
+          "B": 0.03166220337152481,
+          "C": 0.017557255923748016,
+          "D": 0.02741706743836403
+        },
+        "gold_similarity": 0.03166220337152481,
+        "best_distractor_similarity": 0.10251326858997345,
+        "gold_margin": -0.07085106521844864,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welche Theatergruppe half dabei, den internationalen \"Bayern-Hype\" um 1900 anzufachen?\n\nOptions:\nA: Die Münchner Kammerspiele\nB: Die Bayerische Staatsoper\nC: Das Schlierseer Bauerntheater\nD: Das Augsburger Puppentheater\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4986530542373657,
+        "B": 0.46339353919029236,
+        "C": 0.356210857629776,
+        "D": 0.3499019742012024
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Theatergruppe half dabei, den internationalen \"Bayern-Hype\" um 1900 anzufachen?",
+        "semantic_anchor_text": "Die Münchner Kammerspiele\n\nDo not add meta-commentary.\nDo not ask follow-up questions.\nFinish the",
+        "semantic_candidate_texts": {
+          "A": "Die Münchner Kammerspiele",
+          "B": "Die Bayerische Staatsoper",
+          "C": "Das Schlierseer Bauerntheater",
+          "D": "Das Augsburger Puppentheater"
+        },
+        "similarities": {
+          "A": 0.4986530542373657,
+          "B": 0.46339353919029236,
+          "C": 0.356210857629776,
+          "D": 0.3499019742012024
+        },
+        "gold_similarity": 0.356210857629776,
+        "best_distractor_similarity": 0.4986530542373657,
+        "gold_margin": -0.14244219660758972,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die Münchner Kammerspiele\n\nDo not add meta-commentary.\nDo not ask follow-up questions.\nFinish the",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Was ist die historische Bedeutung des Kunstbunkers in Nürnberg?\n\nOptions:\nA: Er wurde im 16. Jahrhundert gebaut, um die Goldreserven der Stadt vor eindringenden Armeen zu schützen\nB: Er diente als geheimer Treffpunkt für bayerische Widerstandskämpfer während des Zweiten Weltkriegs\nC: Er wurde genutzt, um Nürnbergs Kunstschätze zu lagern und sie während des Zweiten Weltkriegs vor Bombenangriffen zu schützen\nD: Er beherbergte die private Kunstsammlung der bayerischen Königsfamilie während der Napoleonischen Kriege\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.045734189450740814,
+        "B": 0.09766271710395813,
+        "C": 0.09872449934482574,
+        "D": 0.06900451332330704
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist die historische Bedeutung des Kunstbunkers in Nürnberg?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Er wurde im 16. Jahrhundert gebaut, um die Goldreserven der Stadt vor eindringenden Armeen zu schützen",
+          "B": "Er diente als geheimer Treffpunkt für bayerische Widerstandskämpfer während des Zweiten Weltkriegs",
+          "C": "Er wurde genutzt, um Nürnbergs Kunstschätze zu lagern und sie während des Zweiten Weltkriegs vor Bombenangriffen zu schützen",
+          "D": "Er beherbergte die private Kunstsammlung der bayerischen Königsfamilie während der Napoleonischen Kriege"
+        },
+        "similarities": {
+          "A": 0.045734189450740814,
+          "B": 0.09766271710395813,
+          "C": 0.09872449934482574,
+          "D": 0.06900451332330704
+        },
+        "gold_similarity": 0.09872449934482574,
+        "best_distractor_similarity": 0.09766271710395813,
+        "gold_margin": 0.0010617822408676147,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Warum war 2025 ein besonders besonderes Jahr für das Deutsche Museum in München?\n\nOptions:\nA: Es wurde nach einer jahrzehntelangen Renovierung seines gesamten Hauptgebäudes wiedereröffnet\nB: Es feierte den 100. Jahrestag der Eröffnung seines berühmten Gebäudes auf der Museumsinsel und zog fast 1,7 Millionen Besucher an\nC: Es startete die größte jemals in Deutschland inszenierte Wissenschaftsausstellung\nD: Es erhielt den UNESCO-Welterbestatus für seine einzigartige Sammlung wissenschaftlicher Instrumente\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.28295713663101196,
+        "B": 0.41552668809890747,
+        "C": 0.5890676975250244,
+        "D": 0.3244823217391968
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum war 2025 ein besonders besonderes Jahr für das Deutsche Museum in München?",
+        "semantic_anchor_text": "A\nWarum war 2025 ein besonders besonderes Jahr für das Deutsche Museum in München?\n\nAntwort:\nA:",
+        "semantic_candidate_texts": {
+          "A": "Es wurde nach einer jahrzehntelangen Renovierung seines gesamten Hauptgebäudes wiedereröffnet",
+          "B": "Es feierte den 100. Jahrestag der Eröffnung seines berühmten Gebäudes auf der Museumsinsel und zog fast 1,7 Millionen Besucher an",
+          "C": "Es startete die größte jemals in Deutschland inszenierte Wissenschaftsausstellung",
+          "D": "Es erhielt den UNESCO-Welterbestatus für seine einzigartige Sammlung wissenschaftlicher Instrumente"
+        },
+        "similarities": {
+          "A": 0.28295713663101196,
+          "B": 0.41552668809890747,
+          "C": 0.5890676975250244,
+          "D": 0.3244823217391968
+        },
+        "gold_similarity": 0.41552668809890747,
+        "best_distractor_similarity": 0.5890676975250244,
+        "gold_margin": -0.17354100942611694,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A\nWarum war 2025 ein besonders besonderes Jahr für das Deutsche Museum in München?\n\nAntwort:\nA:",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Was macht die Alte Pinakothek in München als Kunstmuseum besonders bedeutsam?\n\nOptions:\nA: Sie besitzt die weltweit größte Sammlung deutscher expressionistischer Gemälde\nB: Sie ist das älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum\nC: Sie beherbergt eine der größten Sammlungen von Rubens-Gemälden und Albrecht Dürers berühmtes Selbstporträt\nD: Sie ist das einzige bayerische Museum, das dauerhaft vom Louvre in Paris geliehene Werke ausstellt\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7131451368331909,
+        "B": 0.9677774906158447,
+        "C": 0.5699516534805298,
+        "D": 0.732048511505127
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was macht die Alte Pinakothek in München als Kunstmuseum besonders bedeutsam?",
+        "semantic_anchor_text": "B, sie ist das älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum.",
+        "semantic_candidate_texts": {
+          "A": "Sie besitzt die weltweit größte Sammlung deutscher expressionistischer Gemälde",
+          "B": "Sie ist das älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum",
+          "C": "Sie beherbergt eine der größten Sammlungen von Rubens-Gemälden und Albrecht Dürers berühmtes Selbstporträt",
+          "D": "Sie ist das einzige bayerische Museum, das dauerhaft vom Louvre in Paris geliehene Werke ausstellt"
+        },
+        "similarities": {
+          "A": 0.7131451368331909,
+          "B": 0.9677774906158447,
+          "C": 0.5699516534805298,
+          "D": 0.732048511505127
+        },
+        "gold_similarity": 0.5699516534805298,
+        "best_distractor_similarity": 0.9677774906158447,
+        "gold_margin": -0.39782583713531494,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B, sie ist das älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Was lässt die Rekordbesucherzahl bei der Dokumentation Obersalzberg bei Berchtesgaden über bayerische Museumsbesucher vermuten?\n\nOptions:\nA: Dass Touristen zunehmend an Alpenlandschaften und Outdoor-Aktivitäten interessiert sind\nB: Dass es ein starkes und wachsendes öffentliches Interesse an der Auseinandersetzung mit der Geschichte des Nationalsozialismus gibt\nC: Dass Berchtesgaden München als beliebtestes Touristenziel Bayerns überholt hat\nD: Dass jüngere Generationen das Interesse an zeitgenössischer Kunst zugunsten historischer Stätten verlieren\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.057924915105104446,
+        "B": 0.10534153878688812,
+        "C": 0.11940643191337585,
+        "D": 0.10483980178833008
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was lässt die Rekordbesucherzahl bei der Dokumentation Obersalzberg bei Berchtesgaden über bayerische Museumsbesucher vermuten?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Dass Touristen zunehmend an Alpenlandschaften und Outdoor-Aktivitäten interessiert sind",
+          "B": "Dass es ein starkes und wachsendes öffentliches Interesse an der Auseinandersetzung mit der Geschichte des Nationalsozialismus gibt",
+          "C": "Dass Berchtesgaden München als beliebtestes Touristenziel Bayerns überholt hat",
+          "D": "Dass jüngere Generationen das Interesse an zeitgenössischer Kunst zugunsten historischer Stätten verlieren"
+        },
+        "similarities": {
+          "A": 0.057924915105104446,
+          "B": 0.10534153878688812,
+          "C": 0.11940643191337585,
+          "D": 0.10483980178833008
+        },
+        "gold_similarity": 0.10534153878688812,
+        "best_distractor_similarity": 0.11940643191337585,
+        "gold_margin": -0.014064893126487732,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Für welche künstlerische Bewegung ist das Lenbachhaus in München besonders berühmt?\n\nOptions:\nA: Die romantische Landschaftsmalerei-Tradition des 19. Jahrhunderts in Bayern\nB: Die Bauhaus-Bewegung und ihr Einfluss auf modernes deutsches Design\nC: Die Werke der Künstlergruppe Blauer Reiter\nD: Die barocke Porträtmalerei-Tradition des Wittelsbacher Hofes\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.09096233546733856,
+        "B": 0.13034868240356445,
+        "C": 0.18851596117019653,
+        "D": 0.10084995627403259
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Für welche künstlerische Bewegung ist das Lenbachhaus in München besonders berühmt?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Die romantische Landschaftsmalerei-Tradition des 19. Jahrhunderts in Bayern",
+          "B": "Die Bauhaus-Bewegung und ihr Einfluss auf modernes deutsches Design",
+          "C": "Die Werke der Künstlergruppe Blauer Reiter",
+          "D": "Die barocke Porträtmalerei-Tradition des Wittelsbacher Hofes"
+        },
+        "similarities": {
+          "A": 0.09096233546733856,
+          "B": 0.13034868240356445,
+          "C": 0.18851596117019653,
+          "D": 0.10084995627403259
+        },
+        "gold_similarity": 0.18851596117019653,
+        "best_distractor_similarity": 0.13034868240356445,
+        "gold_margin": 0.05816727876663208,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welche Erklärung gibt der bayerische Kunstminister Markus Blume für die Rekordbesucherzahlen in Museen 2025?\n\nOptions:\nA: Ein signifikanter Anstieg des internationalen Tourismus nach Bayern infolge großer Marketingkampagnen\nB: Die Einführung freien Eintritts in alle staatlichen Museen in ganz Bayern\nC: Museen erfinden sich kontinuierlich neu durch hochwertige Sonderausstellungen, innovative Bildungsformate und digitale Angebote\nD: Ein Regierungsprogramm, das Schulkindern kostenlosen Transport zu bayerischen Staatsmuseen bietet\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": -0.01401766762137413,
+        "B": 0.05490445718169212,
+        "C": 0.08255087584257126,
+        "D": 0.0773705542087555
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Erklärung gibt der bayerische Kunstminister Markus Blume für die Rekordbesucherzahlen in Museen 2025?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Ein signifikanter Anstieg des internationalen Tourismus nach Bayern infolge großer Marketingkampagnen",
+          "B": "Die Einführung freien Eintritts in alle staatlichen Museen in ganz Bayern",
+          "C": "Museen erfinden sich kontinuierlich neu durch hochwertige Sonderausstellungen, innovative Bildungsformate und digitale Angebote",
+          "D": "Ein Regierungsprogramm, das Schulkindern kostenlosen Transport zu bayerischen Staatsmuseen bietet"
+        },
+        "similarities": {
+          "A": -0.01401766762137413,
+          "B": 0.05490445718169212,
+          "C": 0.08255087584257126,
+          "D": 0.0773705542087555
+        },
+        "gold_similarity": 0.08255087584257126,
+        "best_distractor_similarity": 0.0773705542087555,
+        "gold_margin": 0.005180321633815765,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welche Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA: Ein großer Diebstahl von Kunstwerken aus der Neuen Pinakothek, der ungelöst bleibt\nB: Debatten über potenzielle Misswirtschaft und den Umgang mit während der NS-Zeit geraubter Kunst\nC: Ein Streit zwischen München und Berlin über den Besitz mehrerer mittelalterlicher bayerischer Gemälde\nD: Vorwürfe, dass die Eintrittspreise für gewöhnliche bayerische Familien zu hoch geworden seien\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4690960943698883,
+        "B": 0.6458251476287842,
+        "C": 0.7904970645904541,
+        "D": 0.5183268189430237
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?",
+        "semantic_anchor_text": "Welche Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA:",
+        "semantic_candidate_texts": {
+          "A": "Ein großer Diebstahl von Kunstwerken aus der Neuen Pinakothek, der ungelöst bleibt",
+          "B": "Debatten über potenzielle Misswirtschaft und den Umgang mit während der NS-Zeit geraubter Kunst",
+          "C": "Ein Streit zwischen München und Berlin über den Besitz mehrerer mittelalterlicher bayerischer Gemälde",
+          "D": "Vorwürfe, dass die Eintrittspreise für gewöhnliche bayerische Familien zu hoch geworden seien"
+        },
+        "similarities": {
+          "A": 0.4690960943698883,
+          "B": 0.6458251476287842,
+          "C": 0.7904970645904541,
+          "D": 0.5183268189430237
+        },
+        "gold_similarity": 0.6458251476287842,
+        "best_distractor_similarity": 0.7904970645904541,
+        "gold_margin": -0.14467191696166992,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Welche Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA:",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wie unterscheidet sich das BMW Museum von der benachbarten BMW Welt in München?\n\nOptions:\nA: Das BMW Museum konzentriert sich ausschließlich auf zukünftige Elektrofahrzeuge, während die BMW Welt Oldtimer ausstellt\nB: Das BMW Museum wird privat finanziert, während die BMW Welt staatliche Zuschüsse von der bayerischen Regierung erhält\nC: Das BMW Museum verlangt Eintritt und zieht weniger Besucher an als die BMW Welt, die Millionen kostenlos anzieht\nD: Das BMW Museum ist ganzjährig geöffnet, während die BMW Welt nur während der Sommertouristensaison betrieben wird\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": -0.07065369188785553,
+        "B": -0.023381877690553665,
+        "C": 0.027710460126399994,
+        "D": -0.04298825189471245
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie unterscheidet sich das BMW Museum von der benachbarten BMW Welt in München?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "Das BMW Museum konzentriert sich ausschließlich auf zukünftige Elektrofahrzeuge, während die BMW Welt Oldtimer ausstellt",
+          "B": "Das BMW Museum wird privat finanziert, während die BMW Welt staatliche Zuschüsse von der bayerischen Regierung erhält",
+          "C": "Das BMW Museum verlangt Eintritt und zieht weniger Besucher an als die BMW Welt, die Millionen kostenlos anzieht",
+          "D": "Das BMW Museum ist ganzjährig geöffnet, während die BMW Welt nur während der Sommertouristensaison betrieben wird"
+        },
+        "similarities": {
+          "A": -0.07065369188785553,
+          "B": -0.023381877690553665,
+          "C": 0.027710460126399994,
+          "D": -0.04298825189471245
+        },
+        "gold_similarity": 0.027710460126399994,
+        "best_distractor_similarity": -0.023381877690553665,
+        "gold_margin": 0.05109233781695366,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Ungefähr welcher Anteil der bayerischen Bevölkerung ist katholisch?\n\nOptions:\nA: Ein Drittel\nB: Die Hälfte\nC: Zwei Drittel\nD: Drei Viertel\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.24734166264533997,
+        "B": 0.3584238290786743,
+        "C": 0.2945014238357544,
+        "D": 0.24999594688415527
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Ungefähr welcher Anteil der bayerischen Bevölkerung ist katholisch?",
+        "semantic_anchor_text": "Die richtige Antwort ist $\\text{B}$.\n\nQuelle:\nStatistisches Jahrbuch von Bayern, 2020.",
+        "semantic_candidate_texts": {
+          "A": "Ein Drittel",
+          "B": "Die Hälfte",
+          "C": "Zwei Drittel",
+          "D": "Drei Viertel"
+        },
+        "similarities": {
+          "A": 0.24734166264533997,
+          "B": 0.3584238290786743,
+          "C": 0.2945014238357544,
+          "D": 0.24999594688415527
+        },
+        "gold_similarity": 0.2945014238357544,
+        "best_distractor_similarity": 0.3584238290786743,
+        "gold_margin": -0.06392240524291992,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die richtige Antwort ist $\\text{B}$.\n\nQuelle:\nStatistisches Jahrbuch von Bayern, 2020.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wer könnte außer der Kernfamilie unter demselben Dach in einem traditionellen bayerischen Haushalt leben?\n\nOptions:\nA: Örtliche Handwerker\nB: Nachbarfamilien, die sich Eigentum teilen\nC: Nur Großeltern und niemand sonst\nD: Erweiterte Familie, Knechte und Mägde\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.19206660985946655,
+        "B": 0.14901135861873627,
+        "C": 0.08698372542858124,
+        "D": 0.20439371466636658
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer könnte außer der Kernfamilie unter demselben Dach in einem traditionellen bayerischen Haushalt leben?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Örtliche Handwerker",
+          "B": "Nachbarfamilien, die sich Eigentum teilen",
+          "C": "Nur Großeltern und niemand sonst",
+          "D": "Erweiterte Familie, Knechte und Mägde"
+        },
+        "similarities": {
+          "A": 0.19206660985946655,
+          "B": 0.14901135861873627,
+          "C": 0.08698372542858124,
+          "D": 0.20439371466636658
+        },
+        "gold_similarity": 0.20439371466636658,
+        "best_distractor_similarity": 0.19206660985946655,
+        "gold_margin": 0.012327104806900024,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Was spiegelt das Hausname-System über traditionelle bayerische Haushalte wider?\n\nOptions:\nA: Die Anerkennung aller Menschen, die unter demselben Dach leben\nB: Den architektonischen Stil und das Alter des Gebäudes\nC: Den Wohlstand und sozialen Rang der Familie, die das Haus besaß\nD: Die Anzahl der Nutztiere, die der Haushalt hielt\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.30394265055656433,
+        "B": 0.36629030108451843,
+        "C": 0.3922096788883209,
+        "D": 0.2348518967628479
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was spiegelt das Hausname-System über traditionelle bayerische Haushalte wider?",
+        "semantic_anchor_text": "B, D\n\nErklärung:\nDer Hausname-System ist ein System, das in Bayern verwendet wird, um Häuser nach dem Namen oder",
+        "semantic_candidate_texts": {
+          "A": "Die Anerkennung aller Menschen, die unter demselben Dach leben",
+          "B": "Den architektonischen Stil und das Alter des Gebäudes",
+          "C": "Den Wohlstand und sozialen Rang der Familie, die das Haus besaß",
+          "D": "Die Anzahl der Nutztiere, die der Haushalt hielt"
+        },
+        "similarities": {
+          "A": 0.30394265055656433,
+          "B": 0.36629030108451843,
+          "C": 0.3922096788883209,
+          "D": 0.2348518967628479
+        },
+        "gold_similarity": 0.30394265055656433,
+        "best_distractor_similarity": 0.3922096788883209,
+        "gold_margin": -0.08826702833175659,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B, D\n\nErklärung:\nDer Hausname-System ist ein System, das in Bayern verwendet wird, um Häuser nach dem Namen oder",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "In Heimatfilmen, welche Rolle spielt typischerweise die Kirche?\n\nOptions:\nA: Sie wird selten gezeigt\nB: Sie dient als Kulisse oder als zentraler Teil der Handlung\nC: Sie wird nur im Dialog erwähnt\nD: Sie repräsentiert Konflikte zwischen den Figuren\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.24118247628211975,
+        "B": 0.3179028630256653,
+        "C": 0.2680489718914032,
+        "D": 0.24338692426681519
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Heimatfilmen, welche Rolle spielt typischerweise die Kirche?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Sie wird selten gezeigt",
+          "B": "Sie dient als Kulisse oder als zentraler Teil der Handlung",
+          "C": "Sie wird nur im Dialog erwähnt",
+          "D": "Sie repräsentiert Konflikte zwischen den Figuren"
+        },
+        "similarities": {
+          "A": 0.24118247628211975,
+          "B": 0.3179028630256653,
+          "C": 0.2680489718914032,
+          "D": 0.24338692426681519
+        },
+        "gold_similarity": 0.3179028630256653,
+        "best_distractor_similarity": 0.2680489718914032,
+        "gold_margin": 0.049853891134262085,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wie sprechen sich Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, typischerweise an?\n\nOptions:\nA: Mit ihren offiziellen Titeln und beruflichen Rollen\nB: Mit ihren Vornamen, wie anderswo üblich\nC: Mit ihren jeweiligen Hausnamen statt Vor- oder Familiennamen\nD: Mit dem Namen des Dorfviertels, in dem sie leben\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.37419432401657104,
+        "B": 0.4003177285194397,
+        "C": 0.3011974096298218,
+        "D": 0.26926445960998535
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie sprechen sich Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, typischerweise an?",
+        "semantic_anchor_text": "B, B, D",
+        "semantic_candidate_texts": {
+          "A": "Mit ihren offiziellen Titeln und beruflichen Rollen",
+          "B": "Mit ihren Vornamen, wie anderswo üblich",
+          "C": "Mit ihren jeweiligen Hausnamen statt Vor- oder Familiennamen",
+          "D": "Mit dem Namen des Dorfviertels, in dem sie leben"
+        },
+        "similarities": {
+          "A": 0.37419432401657104,
+          "B": 0.4003177285194397,
+          "C": 0.3011974096298218,
+          "D": 0.26926445960998535
+        },
+        "gold_similarity": 0.3011974096298218,
+        "best_distractor_similarity": 0.4003177285194397,
+        "gold_margin": -0.09912031888961792,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B, B, D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welcha Komponist is stark mit Bayreuth verbundn, weil seine Opern bei de Bayreuther Festspielen aufgeführt wern?\n\nOptions:\nA: Johannes Brahms\nB: Richard Wagner\nC: Joseph Haydn\nD: Felix Mendelssohn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.39106258749961853,
+        "B": 0.6185654401779175,
+        "C": 0.27248769998550415,
+        "D": 0.31870904564857483
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcha Komponist is stark mit Bayreuth verbundn, weil seine Opern bei de Bayreuther Festspielen aufgeführt wern?",
+        "semantic_anchor_text": "B\nRichard Wagner ist stark mit Bayreuth verbundn, weil seine Opern bei de Bayreuther Festspielen aufgeführt wern.",
+        "semantic_candidate_texts": {
+          "A": "Johannes Brahms",
+          "B": "Richard Wagner",
+          "C": "Joseph Haydn",
+          "D": "Felix Mendelssohn"
+        },
+        "similarities": {
+          "A": 0.39106258749961853,
+          "B": 0.6185654401779175,
+          "C": 0.27248769998550415,
+          "D": 0.31870904564857483
+        },
+        "gold_similarity": 0.6185654401779175,
+        "best_distractor_similarity": 0.39106258749961853,
+        "gold_margin": 0.22750285267829895,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B\nRichard Wagner ist stark mit Bayreuth verbundn, weil seine Opern bei de Bayreuther Festspielen aufgeführt wern.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "De Bayreuther Festspiele sind am besten bekannt für de Inszenierung von Werken vo welcham Genre?\n\nOptions:\nA: Ballett\nB: Oratorium\nC: Oper\nD: Jazz\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3026595115661621,
+        "B": 0.3777860999107361,
+        "C": 0.5036055445671082,
+        "D": 0.2536442279815674
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "De Bayreuther Festspiele sind am besten bekannt für de Inszenierung von Werken vo welcham Genre?",
+        "semantic_anchor_text": "De Bayreuther Festspiele sind am besten bekannt für de Inszenierung von Werken vo Opern.\n\nDo not add meta-comment",
+        "semantic_candidate_texts": {
+          "A": "Ballett",
+          "B": "Oratorium",
+          "C": "Oper",
+          "D": "Jazz"
+        },
+        "similarities": {
+          "A": 0.3026595115661621,
+          "B": 0.3777860999107361,
+          "C": 0.5036055445671082,
+          "D": 0.2536442279815674
+        },
+        "gold_similarity": 0.5036055445671082,
+        "best_distractor_similarity": 0.3777860999107361,
+        "gold_margin": 0.12581944465637207,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "De Bayreuther Festspiele sind am besten bekannt für de Inszenierung von Werken vo Opern.\n\nDo not add meta-comment",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchas Museum in Minga is berühmt für de Sammlung europäischer Gemälde aus dem 14.–18. Jahrhundert?\n\nOptions:\nA: Deutsches Museum\nB: Lenbachhaus\nC: Alte Pinakothek\nD: Haus der Kunst\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.700459361076355,
+        "B": 0.6612182259559631,
+        "C": 0.3795159161090851,
+        "D": 0.6056879758834839
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchas Museum in Minga is berühmt für de Sammlung europäischer Gemälde aus dem 14.–18. Jahrhundert?",
+        "semantic_anchor_text": "Das Lenbachhaus ist ein Museum in Minga, das für seine Sammlung europäischer Gemälde aus dem 14. bis 1",
+        "semantic_candidate_texts": {
+          "A": "Deutsches Museum",
+          "B": "Lenbachhaus",
+          "C": "Alte Pinakothek",
+          "D": "Haus der Kunst"
+        },
+        "similarities": {
+          "A": 0.700459361076355,
+          "B": 0.6612182259559631,
+          "C": 0.3795159161090851,
+          "D": 0.6056879758834839
+        },
+        "gold_similarity": 0.3795159161090851,
+        "best_distractor_similarity": 0.700459361076355,
+        "gold_margin": -0.3209434449672699,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das Lenbachhaus ist ein Museum in Minga, das für seine Sammlung europäischer Gemälde aus dem 14. bis 1",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchas Museum in Minga ist besonders mit dem Künstler Franz von Lenbach und dem Kreis von de \"Der Blaue Reiter\" verbundn?\n\nOptions:\nA: Glyptothek\nB: Lenbachhaus\nC: Neue Pinakothek\nD: Bayerisches Nationalmuseum\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.13606497645378113,
+        "B": 0.7798020839691162,
+        "C": 0.36920833587646484,
+        "D": 0.6601989269256592
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchas Museum in Minga ist besonders mit dem Künstler Franz von Lenbach und dem Kreis von de \"Der Blaue Reiter\" verbundn?",
+        "semantic_anchor_text": "Das Lenbachhaus ist ein Museum in Minga, das sich auf die Werke von Franz von Lenbach und anderen Künstlern des \"B",
+        "semantic_candidate_texts": {
+          "A": "Glyptothek",
+          "B": "Lenbachhaus",
+          "C": "Neue Pinakothek",
+          "D": "Bayerisches Nationalmuseum"
+        },
+        "similarities": {
+          "A": 0.13606497645378113,
+          "B": 0.7798020839691162,
+          "C": 0.36920833587646484,
+          "D": 0.6601989269256592
+        },
+        "gold_similarity": 0.7798020839691162,
+        "best_distractor_similarity": 0.6601989269256592,
+        "gold_margin": 0.11960315704345703,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das Lenbachhaus ist ein Museum in Minga, das sich auf die Werke von Franz von Lenbach und anderen Künstlern des \"B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Das boarische Wappn zeigt de blau-weißen Rauten, welchane historisch mit welcham Herrscherhaus verbundn san?\n\nOptions:\nA: Haus Welfen\nB: Haus Habsburg\nC: Haus Wittelsbach\nD: Haus Hohenzollern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6620824337005615,
+        "B": 0.6317546367645264,
+        "C": 0.6304282546043396,
+        "D": 0.6260257959365845
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Das boarische Wappn zeigt de blau-weißen Rauten, welchane historisch mit welcham Herrscherhaus verbundn san?",
+        "semantic_anchor_text": "Das Wappen von Braunschweig und Lüneburg zeigt blaue und weiße Rauten, die historisch mit dem Haus Welfen",
+        "semantic_candidate_texts": {
+          "A": "Haus Welfen",
+          "B": "Haus Habsburg",
+          "C": "Haus Wittelsbach",
+          "D": "Haus Hohenzollern"
+        },
+        "similarities": {
+          "A": 0.6620824337005615,
+          "B": 0.6317546367645264,
+          "C": 0.6304282546043396,
+          "D": 0.6260257959365845
+        },
+        "gold_similarity": 0.6304282546043396,
+        "best_distractor_similarity": 0.6620824337005615,
+        "gold_margin": -0.031654179096221924,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das Wappen von Braunschweig und Lüneburg zeigt blaue und weiße Rauten, die historisch mit dem Haus Welfen",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Mia san mia is a Phrase in welchana Sprache/Dialektfamilie?\n\nOptions:\nA: Bairischer (Austro-Bairischer) Dialekt\nB: Niederdeutsch\nC: Standardhochdeutsch\nD: Schweizer Romanisch\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "A",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5337410569190979,
+        "B": 0.1329193413257599,
+        "C": 0.14019736647605896,
+        "D": 0.3317107558250427
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Mia san mia is a Phrase in welchana Sprache/Dialektfamilie?",
+        "semantic_anchor_text": "Mia san mia ist ein Ausdruck in welchem Dialekt/Sprache?\n\nOptionen:\nA: Bairisch (",
+        "semantic_candidate_texts": {
+          "A": "Bairischer (Austro-Bairischer) Dialekt",
+          "B": "Niederdeutsch",
+          "C": "Standardhochdeutsch",
+          "D": "Schweizer Romanisch"
+        },
+        "similarities": {
+          "A": 0.5337410569190979,
+          "B": 0.1329193413257599,
+          "C": 0.14019736647605896,
+          "D": 0.3317107558250427
+        },
+        "gold_similarity": 0.5337410569190979,
+        "best_distractor_similarity": 0.3317107558250427,
+        "gold_margin": 0.20203030109405518,
+        "predicted_label": "A",
+        "gold_label": "A",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Mia san mia ist ein Ausdruck in welchem Dialekt/Sprache?\n\nOptionen:\nA: Bairisch (",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchas Farbpaar is am stärksten mit da boarischen Identität auf de Flaggen und Symbolen verbundn?\n\nOptions:\nA: Schwarz und Gelb\nB: Rot und Weiß\nC: Grün und Gold\nD: Blau und Weiß\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.14969366788864136,
+        "B": 0.11856799572706223,
+        "C": 0.0784960389137268,
+        "D": 0.1289791762828827
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchas Farbpaar is am stärksten mit da boarischen Identität auf de Flaggen und Symbolen verbundn?",
+        "semantic_anchor_text": "Schwarz und Gelb\n\nDo not add any additional text.",
+        "semantic_candidate_texts": {
+          "A": "Schwarz und Gelb",
+          "B": "Rot und Weiß",
+          "C": "Grün und Gold",
+          "D": "Blau und Weiß"
+        },
+        "similarities": {
+          "A": 0.14969366788864136,
+          "B": 0.11856799572706223,
+          "C": 0.0784960389137268,
+          "D": 0.1289791762828827
+        },
+        "gold_similarity": 0.1289791762828827,
+        "best_distractor_similarity": 0.14969366788864136,
+        "gold_margin": -0.020714491605758667,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Schwarz und Gelb\n\nDo not add any additional text.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welches große Münchner Museum konzentriert sich stark auf Wissenschaft und Technik und ist Teil der kulturellen Identität der Stadt?\n\nOptions:\nA: Alte Pinakothek\nB: Bayerische Staatsoper\nC: Deutsches Museum\nD: Residenzmuseum\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.24803957343101501,
+        "B": 0.6058568358421326,
+        "C": 0.8322250843048096,
+        "D": 0.5649657249450684
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welches große Münchner Museum konzentriert sich stark auf Wissenschaft und Technik und ist Teil der kulturellen Identität der Stadt?",
+        "semantic_anchor_text": "C - Deutsches Museum\n\n(Explanation: The Deutsches Museum is a highly regarded museum in Munich, Germany, that focuses heavily on",
+        "semantic_candidate_texts": {
+          "A": "Alte Pinakothek",
+          "B": "Bayerische Staatsoper",
+          "C": "Deutsches Museum",
+          "D": "Residenzmuseum"
+        },
+        "similarities": {
+          "A": 0.24803957343101501,
+          "B": 0.6058568358421326,
+          "C": 0.8322250843048096,
+          "D": 0.5649657249450684
+        },
+        "gold_similarity": 0.8322250843048096,
+        "best_distractor_similarity": 0.6058568358421326,
+        "gold_margin": 0.226368248462677,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C - Deutsches Museum\n\n(Explanation: The Deutsches Museum is a highly regarded museum in Munich, Germany, that focuses heavily on",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchane boarische Stod ist besonders bekannt für ihre Tradition da Lebkuchen, die oft mit Weihnachtsmärkten verbundn san?\n\nOptions:\nA: Passau\nB: Nürnberg\nC: Rosenheim\nD: Landshut\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.1069861352443695,
+        "B": 0.13344073295593262,
+        "C": 0.1370730698108673,
+        "D": 0.5168297290802002
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchane boarische Stod ist besonders bekannt für ihre Tradition da Lebkuchen, die oft mit Weihnachtsmärkten verbundn san?",
+        "semantic_anchor_text": "Landshut\n\nDo not add any punctuation.",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Nürnberg",
+          "C": "Rosenheim",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.1069861352443695,
+          "B": 0.13344073295593262,
+          "C": 0.1370730698108673,
+          "D": 0.5168297290802002
+        },
+        "gold_similarity": 0.13344073295593262,
+        "best_distractor_similarity": 0.5168297290802002,
+        "gold_margin": -0.3833889961242676,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Landshut\n\nDo not add any punctuation.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchane Kunstbewegung is durch Künstler wie Kandinsky und Marc und den Namen \"Der Blaue Reiter\" eng mit München verbundn?\n\nOptions:\nA: Kubismus\nB: Futurismus\nC: Expressionismus\nD: Surrealismus\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6059595942497253,
+        "B": 0.44865792989730835,
+        "C": 1.0,
+        "D": 0.4795159697532654
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchane Kunstbewegung is durch Künstler wie Kandinsky und Marc und den Namen \"Der Blaue Reiter\" eng mit München verbundn?",
+        "semantic_anchor_text": "Expressionismus",
+        "semantic_candidate_texts": {
+          "A": "Kubismus",
+          "B": "Futurismus",
+          "C": "Expressionismus",
+          "D": "Surrealismus"
+        },
+        "similarities": {
+          "A": 0.6059595942497253,
+          "B": 0.44865792989730835,
+          "C": 1.0,
+          "D": 0.4795159697532654
+        },
+        "gold_similarity": 1.0,
+        "best_distractor_similarity": 0.6059595942497253,
+        "gold_margin": 0.39404040575027466,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Expressionismus",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wia trug Franz Herzog von Bayern zum öffentlichen Zugang zu Kunstsammlungen bei?\n\nOptions:\nA: Er hat alle Familienschlösser ohne Einschränkungen als Museen aufgmacht\nB: Er hat an Großteil von seiner modernen Kunstsammlung dem Wittelsbacher Ausgleichsfonds gschenkd, wodurch sie in Institutionen wia da Pinakothek der Moderne öffentlich zugänglich worn san\nC: Er hat de Kunst an Privatsammler versteigert und den Erlös neu investiert\nD: Er hat de Sammlung streng privat für den Familiengebrauch ghaltn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.11758093535900116,
+        "B": 0.07842700183391571,
+        "C": 0.04123915731906891,
+        "D": 0.05601043254137039
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia trug Franz Herzog von Bayern zum öffentlichen Zugang zu Kunstsammlungen bei?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Er hat alle Familienschlösser ohne Einschränkungen als Museen aufgmacht",
+          "B": "Er hat an Großteil von seiner modernen Kunstsammlung dem Wittelsbacher Ausgleichsfonds gschenkd, wodurch sie in Institutionen wia da Pinakothek der Moderne öffentlich zugänglich worn san",
+          "C": "Er hat de Kunst an Privatsammler versteigert und den Erlös neu investiert",
+          "D": "Er hat de Sammlung streng privat für den Familiengebrauch ghaltn"
+        },
+        "similarities": {
+          "A": 0.11758093535900116,
+          "B": 0.07842700183391571,
+          "C": 0.04123915731906891,
+          "D": 0.05601043254137039
+        },
+        "gold_similarity": 0.07842700183391571,
+        "best_distractor_similarity": 0.11758093535900116,
+        "gold_margin": -0.03915393352508545,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchane Theatergruppe holf dabei, den internationalen \"Bayern-Hype\" um 1900 anzuhaucha?\n\nOptions:\nA: De Münchner Kammerspiele\nB: De Bayerische Staatsoper\nC: S'Schlierseer Bauerntheater\nD: S'Augsburger Puppentheater\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7292042970657349,
+        "B": 0.6082726716995239,
+        "C": 0.5553569197654724,
+        "D": 0.49088364839553833
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchane Theatergruppe holf dabei, den internationalen \"Bayern-Hype\" um 1900 anzuhaucha?",
+        "semantic_anchor_text": "Die Münchner Kammerspiele halfen dabei, den internationalen \"Bayern-Hype\" um 1900 anzu",
+        "semantic_candidate_texts": {
+          "A": "De Münchner Kammerspiele",
+          "B": "De Bayerische Staatsoper",
+          "C": "S'Schlierseer Bauerntheater",
+          "D": "S'Augsburger Puppentheater"
+        },
+        "similarities": {
+          "A": 0.7292042970657349,
+          "B": 0.6082726716995239,
+          "C": 0.5553569197654724,
+          "D": 0.49088364839553833
+        },
+        "gold_similarity": 0.5553569197654724,
+        "best_distractor_similarity": 0.7292042970657349,
+        "gold_margin": -0.17384737730026245,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die Münchner Kammerspiele halfen dabei, den internationalen \"Bayern-Hype\" um 1900 anzu",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wos is de historische Bedeutung vo de Kunstbunkers in Nürnberg?\n\nOptions:\nA: Es is im 16. Jahrhundert baut worn, um de Goldreserven von da Stadt vor eindringenden Armeen z'schützn\nB: Er hat als geheimer Treffpunkt für bayerische Widerstandskämpfer während vom Zweiten Weltkrieg dient\nC: Er is nutzd worn, um Nürnbergs Kunstschätze z'lagern und sie während vom Zweiten Weltkrieg vor Bombenangriffen z'schützn\nD: Er hat de private Kunstsammlung von da bayerischen Königsfamilie während von de Napoleonischen Kriege beherbergt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.07080737501382828,
+        "B": 0.10467265546321869,
+        "C": 0.09442372620105743,
+        "D": 0.05627330392599106
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is de historische Bedeutung vo de Kunstbunkers in Nürnberg?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Es is im 16. Jahrhundert baut worn, um de Goldreserven von da Stadt vor eindringenden Armeen z'schützn",
+          "B": "Er hat als geheimer Treffpunkt für bayerische Widerstandskämpfer während vom Zweiten Weltkrieg dient",
+          "C": "Er is nutzd worn, um Nürnbergs Kunstschätze z'lagern und sie während vom Zweiten Weltkrieg vor Bombenangriffen z'schützn",
+          "D": "Er hat de private Kunstsammlung von da bayerischen Königsfamilie während von de Napoleonischen Kriege beherbergt"
+        },
+        "similarities": {
+          "A": 0.07080737501382828,
+          "B": 0.10467265546321869,
+          "C": 0.09442372620105743,
+          "D": 0.05627330392599106
+        },
+        "gold_similarity": 0.09442372620105743,
+        "best_distractor_similarity": 0.10467265546321869,
+        "gold_margin": -0.010248929262161255,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Warum war 2025 a bsonders bsonderes Jahr für as Deutsche Museum in Minga?\n\nOptions:\nA: Es is nach ana jahrzehntelangen Renovierung von seim gesamten Hauptgebäude wiedereröffnet worn\nB: Es hat den 100. Jahrestag von da Eröffnung von seim berühmten Gebäude auf da Museumsinsel gfeiert und hat fast 1,7 Millionen Besucher angzogn\nC: Es hat de größte Wissenschaftsausstellung, de je in Deutschland inszeniert worn is, gstartet\nD: Es hat den UNESCO-Welterbestatus für seine einzigartige Sammlung von wissenschaftlichen Instrumenten kriagt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.29519134759902954,
+        "B": 0.38118940591812134,
+        "C": 0.5720077157020569,
+        "D": 0.2849522531032562
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Warum war 2025 a bsonders bsonderes Jahr für as Deutsche Museum in Minga?",
+        "semantic_anchor_text": "A, B, C oder D als deine Lösung.\\n\\nDas Deutsche Museum in München war im Jahr 2025 ein",
+        "semantic_candidate_texts": {
+          "A": "Es is nach ana jahrzehntelangen Renovierung von seim gesamten Hauptgebäude wiedereröffnet worn",
+          "B": "Es hat den 100. Jahrestag von da Eröffnung von seim berühmten Gebäude auf da Museumsinsel gfeiert und hat fast 1,7 Millionen Besucher angzogn",
+          "C": "Es hat de größte Wissenschaftsausstellung, de je in Deutschland inszeniert worn is, gstartet",
+          "D": "Es hat den UNESCO-Welterbestatus für seine einzigartige Sammlung von wissenschaftlichen Instrumenten kriagt"
+        },
+        "similarities": {
+          "A": 0.29519134759902954,
+          "B": 0.38118940591812134,
+          "C": 0.5720077157020569,
+          "D": 0.2849522531032562
+        },
+        "gold_similarity": 0.38118940591812134,
+        "best_distractor_similarity": 0.5720077157020569,
+        "gold_margin": -0.19081830978393555,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A, B, C oder D als deine Lösung.\\n\\nDas Deutsche Museum in München war im Jahr 2025 ein",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wos mocht de Oide Pinakothek in Minga ois Kunstmuseum bsonders bdeutsam?\n\nOptions:\nA: Sie hat de weltweit größte Sammlung von deutschen expressionistischen Gemälden\nB: Sie is des älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum\nC: Sie beherbergt oana von de größten Sammlungen von Rubens-Gemälden und Albrecht Dürers berühmtes Selbstporträt\nD: Sie is des einzige bayerische Museum, des dauerhaft vom Louvre in Paris geliehene Werke ausstellt\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.09280839562416077,
+        "B": 0.07313040643930435,
+        "C": 0.16639116406440735,
+        "D": -0.007242970168590546
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos mocht de Oide Pinakothek in Minga ois Kunstmuseum bsonders bdeutsam?",
+        "semantic_anchor_text": "B",
+        "semantic_candidate_texts": {
+          "A": "Sie hat de weltweit größte Sammlung von deutschen expressionistischen Gemälden",
+          "B": "Sie is des älteste öffentliche Kunstmuseum im gesamten deutschsprachigen Raum",
+          "C": "Sie beherbergt oana von de größten Sammlungen von Rubens-Gemälden und Albrecht Dürers berühmtes Selbstporträt",
+          "D": "Sie is des einzige bayerische Museum, des dauerhaft vom Louvre in Paris geliehene Werke ausstellt"
+        },
+        "similarities": {
+          "A": 0.09280839562416077,
+          "B": 0.07313040643930435,
+          "C": 0.16639116406440735,
+          "D": -0.007242970168590546
+        },
+        "gold_similarity": 0.16639116406440735,
+        "best_distractor_similarity": 0.09280839562416077,
+        "gold_margin": 0.07358276844024658,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wos lässt die Rekordbesucherzahl bei da Dokumentation Obersalzberg bei Berchtesgaden über boarische Museumsbesucher vermuten?\n\nOptions:\nA: Dass Touristen immer mehr an Alpenlandschaften und Outdoor-Aktivitäten interessiert san\nB: Dass es a starkes und wachsendes öffentliches Interesse an da Auseinandersetzung mit da Geschichte vom Nationalsozialismus gibt\nC: Dass Berchtesgaden München als beliebtigstes Touristenziel in Bayern überholt hat\nD: Dass jüngere Generationen s'Interesse an zeitgenössischer Kunst zugunsten von historischen Stätten verlieren\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.5222499370574951,
+        "B": 0.4812079966068268,
+        "C": 0.7031482458114624,
+        "D": 0.2823733687400818
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos lässt die Rekordbesucherzahl bei da Dokumentation Obersalzberg bei Berchtesgaden über boarische Museumsbesucher vermuten?",
+        "semantic_anchor_text": "Die Rekordbesucherzahl bei da Dokumentation Obersalzberg bei Berchtesgaden lässt vermuten, dass es a starkes",
+        "semantic_candidate_texts": {
+          "A": "Dass Touristen immer mehr an Alpenlandschaften und Outdoor-Aktivitäten interessiert san",
+          "B": "Dass es a starkes und wachsendes öffentliches Interesse an da Auseinandersetzung mit da Geschichte vom Nationalsozialismus gibt",
+          "C": "Dass Berchtesgaden München als beliebtigstes Touristenziel in Bayern überholt hat",
+          "D": "Dass jüngere Generationen s'Interesse an zeitgenössischer Kunst zugunsten von historischen Stätten verlieren"
+        },
+        "similarities": {
+          "A": 0.5222499370574951,
+          "B": 0.4812079966068268,
+          "C": 0.7031482458114624,
+          "D": 0.2823733687400818
+        },
+        "gold_similarity": 0.4812079966068268,
+        "best_distractor_similarity": 0.7031482458114624,
+        "gold_margin": -0.22194024920463562,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die Rekordbesucherzahl bei da Dokumentation Obersalzberg bei Berchtesgaden lässt vermuten, dass es a starkes",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Für welchane künstlerische Bewegung is das Lenbachhaus in München bsonders berühmt?\n\nOptions:\nA: De romantische Landschaftsmalerei-Tradition vom 19. Jahrhundert in Bayern\nB: De Bauhaus-Bewegung und ihr Einfluss auf modernes deutsches Design\nC: De Werke von da Künstlergruppe Blauer Reiter\nD: De barocke Porträtmalerei-Tradition vom Wittelsbacher Hof\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.6625755429267883,
+        "B": 0.5856054425239563,
+        "C": 0.6407438516616821,
+        "D": 0.629599392414093
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Für welchane künstlerische Bewegung is das Lenbachhaus in München bsonders berühmt?",
+        "semantic_anchor_text": "Das Lenbachhaus in München ist für seine Werke von der Künstlergruppe Blauer Reiter bekannt.\n\nFinish the answer and stop.",
+        "semantic_candidate_texts": {
+          "A": "De romantische Landschaftsmalerei-Tradition vom 19. Jahrhundert in Bayern",
+          "B": "De Bauhaus-Bewegung und ihr Einfluss auf modernes deutsches Design",
+          "C": "De Werke von da Künstlergruppe Blauer Reiter",
+          "D": "De barocke Porträtmalerei-Tradition vom Wittelsbacher Hof"
+        },
+        "similarities": {
+          "A": 0.6625755429267883,
+          "B": 0.5856054425239563,
+          "C": 0.6407438516616821,
+          "D": 0.629599392414093
+        },
+        "gold_similarity": 0.6407438516616821,
+        "best_distractor_similarity": 0.6625755429267883,
+        "gold_margin": -0.0218316912651062,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Das Lenbachhaus in München ist für seine Werke von der Künstlergruppe Blauer Reiter bekannt.\n\nFinish the answer and stop.",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchane Erklärung gibt der boarische Kunstminister Markus Blume für die Rekordbesucherzahlen in Museen 2025?\n\nOptions:\nA: A deutlicher Anstieg vom internationalen Tourismus nach Bayern durch große Marketingkampagnen\nB: De Einführung von freiem Eintritt in alle staatlichen Museen in ganz Bayern\nC: Museen erfinden si kontinuierlich neu durch hochwertige Sonderausstellungen, innovative Bildungsformate und digitale Angebote\nD: A Regierungsprogramm, des Schulkindern kostenlosen Transport zu bayerischen Staatsmuseen bietet\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.016780972480773926,
+        "B": 0.06530814617872238,
+        "C": 0.07766661792993546,
+        "D": 0.07494771480560303
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchane Erklärung gibt der boarische Kunstminister Markus Blume für die Rekordbesucherzahlen in Museen 2025?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "A deutlicher Anstieg vom internationalen Tourismus nach Bayern durch große Marketingkampagnen",
+          "B": "De Einführung von freiem Eintritt in alle staatlichen Museen in ganz Bayern",
+          "C": "Museen erfinden si kontinuierlich neu durch hochwertige Sonderausstellungen, innovative Bildungsformate und digitale Angebote",
+          "D": "A Regierungsprogramm, des Schulkindern kostenlosen Transport zu bayerischen Staatsmuseen bietet"
+        },
+        "similarities": {
+          "A": 0.016780972480773926,
+          "B": 0.06530814617872238,
+          "C": 0.07766661792993546,
+          "D": 0.07494771480560303
+        },
+        "gold_similarity": 0.07766661792993546,
+        "best_distractor_similarity": 0.07494771480560303,
+        "gold_margin": 0.002718903124332428,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Welchane Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA: A großer Kunstraub aus da Neuen Pinakothek, der bis heut ungelöst bleibt\nB: Debatten über potenzielle Misswirtschaft und den Umgang mit Kunst, de während da NS-Zeit geraubt worn is\nC: A Streit zwischen München und Berlin über den Besitz von mehreren mittelalterlichen bayerischen Gemälden\nD: Vorwürfe, dass de Eintrittspreise für gewöhnliche bayerische Familien z'hoch worn san\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.46655988693237305,
+        "B": 0.6724400520324707,
+        "C": 0.7859530448913574,
+        "D": 0.579828143119812
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welchane Kontroverse umgab die Staatsgemäldesammlungen in Bayern 2025?",
+        "semantic_anchor_text": "Welche Kontroversen umgaben die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA:",
+        "semantic_candidate_texts": {
+          "A": "A großer Kunstraub aus da Neuen Pinakothek, der bis heut ungelöst bleibt",
+          "B": "Debatten über potenzielle Misswirtschaft und den Umgang mit Kunst, de während da NS-Zeit geraubt worn is",
+          "C": "A Streit zwischen München und Berlin über den Besitz von mehreren mittelalterlichen bayerischen Gemälden",
+          "D": "Vorwürfe, dass de Eintrittspreise für gewöhnliche bayerische Familien z'hoch worn san"
+        },
+        "similarities": {
+          "A": 0.46655988693237305,
+          "B": 0.6724400520324707,
+          "C": 0.7859530448913574,
+          "D": 0.579828143119812
+        },
+        "gold_similarity": 0.6724400520324707,
+        "best_distractor_similarity": 0.7859530448913574,
+        "gold_margin": -0.11351299285888672,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Welche Kontroversen umgaben die Staatsgemäldesammlungen in Bayern 2025?\n\nOptions:\nA:",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wia unterscheidet sich das BMW Museum von der benachbarten BMW Welt in München?\n\nOptions:\nA: S'BMW Museum konzentriert si ausschließlich auf zukünftige Elektrofahrzeuge, während de BMW Welt Oldtimer ausstellt\nB: S'BMW Museum wird privat finanziert, während de BMW Welt staatliche Zuschüsse von da bayerischen Regierung kriagt\nC: S'BMW Museum verlangt Eintritt und zieht weniger Besucher an als de BMW Welt, de Millionen kostenlos anzieht\nD: S'BMW Museum is ganzjährig offen, während de BMW Welt nur während da Sommertouristensaison betrieben wird\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": -0.029072478413581848,
+        "B": 0.033920153975486755,
+        "C": 0.05265624821186066,
+        "D": 0.008857063949108124
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia unterscheidet sich das BMW Museum von der benachbarten BMW Welt in München?",
+        "semantic_anchor_text": "D",
+        "semantic_candidate_texts": {
+          "A": "S'BMW Museum konzentriert si ausschließlich auf zukünftige Elektrofahrzeuge, während de BMW Welt Oldtimer ausstellt",
+          "B": "S'BMW Museum wird privat finanziert, während de BMW Welt staatliche Zuschüsse von da bayerischen Regierung kriagt",
+          "C": "S'BMW Museum verlangt Eintritt und zieht weniger Besucher an als de BMW Welt, de Millionen kostenlos anzieht",
+          "D": "S'BMW Museum is ganzjährig offen, während de BMW Welt nur während da Sommertouristensaison betrieben wird"
+        },
+        "similarities": {
+          "A": -0.029072478413581848,
+          "B": 0.033920153975486755,
+          "C": 0.05265624821186066,
+          "D": 0.008857063949108124
+        },
+        "gold_similarity": 0.05265624821186066,
+        "best_distractor_similarity": 0.033920153975486755,
+        "gold_margin": 0.0187360942363739,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Ungefähr welchaner Anteil der bayerischen Bevölkerung is katholisch?\n\nOptions:\nA: Ein Drittel\nB: De Hälfte\nC: Zwoa Drittel\nD: Drei Viertel\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.31951770186424255,
+        "B": 0.3652230501174927,
+        "C": 0.35974910855293274,
+        "D": 0.3118915557861328
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Ungefähr welchaner Anteil der bayerischen Bevölkerung is katholisch?",
+        "semantic_anchor_text": "Die richtige Antwort ist $\\text{B}$.\n\nQuelle:\nDie Bevölkerung Bayerns betrug 2020 etwa 13",
+        "semantic_candidate_texts": {
+          "A": "Ein Drittel",
+          "B": "De Hälfte",
+          "C": "Zwoa Drittel",
+          "D": "Drei Viertel"
+        },
+        "similarities": {
+          "A": 0.31951770186424255,
+          "B": 0.3652230501174927,
+          "C": 0.35974910855293274,
+          "D": 0.3118915557861328
+        },
+        "gold_similarity": 0.35974910855293274,
+        "best_distractor_similarity": 0.3652230501174927,
+        "gold_margin": -0.0054739415645599365,
+        "predicted_label": "B",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die richtige Antwort ist $\\text{B}$.\n\nQuelle:\nDie Bevölkerung Bayerns betrug 2020 etwa 13",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wer kannt außer da Kernfamilie unter demselben Dach in einem traditionellen boarischen Haushalt lebn?\n\nOptions:\nA: Örtliche Handwerker\nB: Nachbarsfamilien, de si Eigentum teiln\nC: Nur de Großeltern und sonst niemand\nD: Erweiterte Familie, Knechte und Mägde\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.19206660985946655,
+        "B": 0.1586923599243164,
+        "C": 0.10542508959770203,
+        "D": 0.20439371466636658
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer kannt außer da Kernfamilie unter demselben Dach in einem traditionellen boarischen Haushalt lebn?",
+        "semantic_anchor_text": "C",
+        "semantic_candidate_texts": {
+          "A": "Örtliche Handwerker",
+          "B": "Nachbarsfamilien, de si Eigentum teiln",
+          "C": "Nur de Großeltern und sonst niemand",
+          "D": "Erweiterte Familie, Knechte und Mägde"
+        },
+        "similarities": {
+          "A": 0.19206660985946655,
+          "B": 0.1586923599243164,
+          "C": 0.10542508959770203,
+          "D": 0.20439371466636658
+        },
+        "gold_similarity": 0.20439371466636658,
+        "best_distractor_similarity": 0.19206660985946655,
+        "gold_margin": 0.012327104806900024,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wos spiegelt das Hausname-System über traditionelle boarische Haushalte wider?\n\nOptions:\nA: De Anerkennung von allen Leit, de unter demselben Dach lebn\nB: Den architektonischen Stil und s'Alter vom Gebäude\nC: Den Wohlstand und sozialen Rang von da Familie, de s'Haus bsessen hat\nD: De Anzahl von de Nutztiere, de da Haushalt ghaltn hat\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.396762490272522,
+        "B": 0.442019522190094,
+        "C": 0.6832878589630127,
+        "D": 0.37928175926208496
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos spiegelt das Hausname-System über traditionelle boarische Haushalte wider?",
+        "semantic_anchor_text": "B, D, C, A.\n\nExplanation:\nThe house number system in traditional Bohemian households reflected the social status and economic rank",
+        "semantic_candidate_texts": {
+          "A": "De Anerkennung von allen Leit, de unter demselben Dach lebn",
+          "B": "Den architektonischen Stil und s'Alter vom Gebäude",
+          "C": "Den Wohlstand und sozialen Rang von da Familie, de s'Haus bsessen hat",
+          "D": "De Anzahl von de Nutztiere, de da Haushalt ghaltn hat"
+        },
+        "similarities": {
+          "A": 0.396762490272522,
+          "B": 0.442019522190094,
+          "C": 0.6832878589630127,
+          "D": 0.37928175926208496
+        },
+        "gold_similarity": 0.396762490272522,
+        "best_distractor_similarity": 0.6832878589630127,
+        "gold_margin": -0.2865253686904907,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B, D, C, A.\n\nExplanation:\nThe house number system in traditional Bohemian households reflected the social status and economic rank",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "In Heimatfilmen, welchane Rolle spuid typischerweise de Kirche?\n\nOptions:\nA: Sie wird selten gezeigt\nB: Sie dient als Kulisse oder als zentraler Teil von da Handlung\nC: Sie wird nur im Dialog erwähnt\nD: Sie stellt Konflikte zwischen de Figuren dar\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3011287450790405,
+        "B": 0.46514761447906494,
+        "C": 0.26858606934547424,
+        "D": 0.3348827362060547
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "In Heimatfilmen, welchane Rolle spuid typischerweise de Kirche?",
+        "semantic_anchor_text": "Die Kirche spielt in Heimatfilmen typischerweise eine wichtige Rolle.\n\nOption A: In Heimatfilmen wird die Kirche selten geze",
+        "semantic_candidate_texts": {
+          "A": "Sie wird selten gezeigt",
+          "B": "Sie dient als Kulisse oder als zentraler Teil von da Handlung",
+          "C": "Sie wird nur im Dialog erwähnt",
+          "D": "Sie stellt Konflikte zwischen de Figuren dar"
+        },
+        "similarities": {
+          "A": 0.3011287450790405,
+          "B": 0.46514761447906494,
+          "C": 0.26858606934547424,
+          "D": 0.3348827362060547
+        },
+        "gold_similarity": 0.46514761447906494,
+        "best_distractor_similarity": 0.3348827362060547,
+        "gold_margin": 0.13026487827301025,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "Die Kirche spielt in Heimatfilmen typischerweise eine wichtige Rolle.\n\nOption A: In Heimatfilmen wird die Kirche selten geze",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "arts_and_identity_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "arts_and_identity",
+      "bias": "cultural",
+      "prompt": "Wie sprechn sich Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, typischerweise an?\n\nOptions:\nA: Mit ihre offiziellen Titeln und beruflichen Rollen\nB: Mit ihre Vornamen, wia's anderswo üblich is\nC: Mit ihre jeweiligen Hausnamen statt Vor- oder Familiennamen\nD: Mit dem Namen von dem Dorfviertel, in dem sie lebn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.316085547208786,
+        "B": 0.4063214957714081,
+        "C": 0.3562746047973633,
+        "D": 0.46240949630737305
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie sprechn sich Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, typischerweise an?",
+        "semantic_anchor_text": "B, C, D\n\nDie Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, verwenden w",
+        "semantic_candidate_texts": {
+          "A": "Mit ihre offiziellen Titeln und beruflichen Rollen",
+          "B": "Mit ihre Vornamen, wia's anderswo üblich is",
+          "C": "Mit ihre jeweiligen Hausnamen statt Vor- oder Familiennamen",
+          "D": "Mit dem Namen von dem Dorfviertel, in dem sie lebn"
+        },
+        "similarities": {
+          "A": 0.316085547208786,
+          "B": 0.4063214957714081,
+          "C": 0.3562746047973633,
+          "D": 0.46240949630737305
+        },
+        "gold_similarity": 0.3562746047973633,
+        "best_distractor_similarity": 0.46240949630737305,
+        "gold_margin": -0.10613489151000977,
+        "predicted_label": "D",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B, C, D\n\nDie Menschen in ländlichen oberbayerischen Dörfern, die zu großen Haushalten gehören, verwenden w",
+        "max_new_tokens": 32
+      }
+    }
+  ]
+}

@@ -1,0 +1,3661 @@
+{
+  "run_timestamp": "20260511_140938",
+  "target_name": "occiglot-7b-eu5-instruct",
+  "target_kind": "named_model",
+  "checkpoint": null,
+  "hf_dir": "../other_models/occiglot-7b-eu5-instruct",
+  "source": "../other_models/occiglot-7b-eu5-instruct",
+  "dataset": "dataset/landscape.json",
+  "filters": {
+    "type": null,
+    "lang": null,
+    "category": null,
+    "bias": null
+  },
+  "generation_config": {
+    "generate_items": {
+      "max_new_tokens": 32,
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "repetition_penalty": 1.15,
+      "no_repeat_ngram_size": 3
+    },
+    "scoring_items": {
+      "do_sample": false
+    },
+    "eos_token_id": 2,
+    "pad_token_id": 2
+  },
+  "diagnostic_config": {
+    "mcq_strategy": "semantic_embed_generated_answer",
+    "mcq_strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+    "available_mcq_strategies": {
+      "letter": "Score answer letters A/B/C/D directly with a language-localized prompt.",
+      "option_text": "Score full option texts instead of letters using total logprob.",
+      "option_text_avg": "Score full option texts by average logprob per token.",
+      "letter_shuffled": "Deterministically shuffle displayed answer positions and map back to original labels.",
+      "generate_letter": "Generate with a language-localized prompt that asks for the answer letter only.",
+      "generate_option_text": "Generate with a language-localized prompt that asks for the exact option text only.",
+      "generate_letter_and_text": "Generate with a language-localized prompt that asks for letter first, then option text.",
+      "embed_contextual_option": "Use the prompt final hidden-state anchor and compare it to prompt-conditioned option embeddings with cosine similarity.",
+      "embed_isolated_option": "Use the prompt final hidden-state anchor and compare it to isolated option-text embeddings with cosine similarity.",
+      "semantic_embed_option": "Use an external multilingual sentence embedding model to compare the question text to independent option texts.",
+      "semantic_embed_contextual_option": "Use an external multilingual sentence embedding model to compare the question text to question+answer candidate texts.",
+      "semantic_embed_generated_answer": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text."
+    },
+    "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "semantic_batch_size": 64,
+    "semantic_strategies": [
+      "semantic_embed_contextual_option",
+      "semantic_embed_generated_answer",
+      "semantic_embed_option"
+    ],
+    "mcq_generate_max_new_tokens": 32,
+    "analysis_goal": "Diagnose whether poor MCQ accuracy is driven by answer-letter bias, position bias, tokenizer length effects, generation parsing issues, hidden-state semantic alignment, or external multilingual sentence-embedding similarity.",
+    "metric_taxonomy": "This run mixes probability-based metrics (logprob scoring), embedding-based metrics (cosine similarity over hidden-state embeddings), external semantic sentence-embedding metrics (semantic_* strategies), and generated-text-based metrics (generate_* strategies)."
+  },
+  "seconds": 30.93,
+  "results": [
+    {
+      "id": "landscape_en_001",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What is the highest mountain in Bavaria?\n\nOptions:\nA: Zugspitze\nB: Nebelhorn\nC: Watzmann\nD: Jenner\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.47650817036628723,
+        "B": 0.3486972451210022,
+        "C": 0.4783932566642761,
+        "D": 0.3862287700176239
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the highest mountain in Bavaria?",
+        "semantic_anchor_text": "A: Zugspitze<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Zugspitze",
+          "B": "Nebelhorn",
+          "C": "Watzmann",
+          "D": "Jenner"
+        },
+        "similarities": {
+          "A": 0.47650817036628723,
+          "B": 0.3486972451210022,
+          "C": 0.4783932566642761,
+          "D": 0.3862287700176239
+        },
+        "gold_similarity": 0.47650817036628723,
+        "best_distractor_similarity": 0.4783932566642761,
+        "gold_margin": -0.0018850862979888916,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Zugspitze<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_002",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which national park is in the Bavarian Alps near Königssee and Watzmann?\n\nOptions:\nA: Bavarian Forest National Park\nB: Black Forest National Park\nC: Saxon Switzerland NP\nD: Berchtesgaden National Park\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6823168396949768,
+        "B": 0.5476691722869873,
+        "C": 0.47159266471862793,
+        "D": 0.8998476266860962
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which national park is in the Bavarian Alps near Königssee and Watzmann?",
+        "semantic_anchor_text": "D: Berchtesgaden National Park<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Bavarian Forest National Park",
+          "B": "Black Forest National Park",
+          "C": "Saxon Switzerland NP",
+          "D": "Berchtesgaden National Park"
+        },
+        "similarities": {
+          "A": 0.6823168396949768,
+          "B": 0.5476691722869873,
+          "C": 0.47159266471862793,
+          "D": 0.8998476266860962
+        },
+        "gold_similarity": 0.8998476266860962,
+        "best_distractor_similarity": 0.6823168396949768,
+        "gold_margin": 0.21753078699111938,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Berchtesgaden National Park<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_003",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which lake is famously at the foot of the Zugspitze near Garmisch-Partenkirchen?\n\nOptions:\nA: Tegernsee\nB: Königssee\nC: Chiemsee\nD: Eibsee\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.30279454588890076,
+        "B": 0.3734823763370514,
+        "C": 0.3223157227039337,
+        "D": 0.749269962310791
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which lake is famously at the foot of the Zugspitze near Garmisch-Partenkirchen?",
+        "semantic_anchor_text": "D: Eibsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Tegernsee",
+          "B": "Königssee",
+          "C": "Chiemsee",
+          "D": "Eibsee"
+        },
+        "similarities": {
+          "A": 0.30279454588890076,
+          "B": 0.3734823763370514,
+          "C": 0.3223157227039337,
+          "D": 0.749269962310791
+        },
+        "gold_similarity": 0.749269962310791,
+        "best_distractor_similarity": 0.3734823763370514,
+        "gold_margin": 0.3757875859737396,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Eibsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_004",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "The Partnach Gorge (Partnachklamm) is best associated with which Bavarian town area?\n\nOptions:\nA: Passau\nB: Regensburg\nC: Garmisch-Partenkirchen\nD: Würzburg\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36959877610206604,
+        "B": 0.4746854901313782,
+        "C": 0.7824680805206299,
+        "D": 0.5327588319778442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The Partnach Gorge (Partnachklamm) is best associated with which Bavarian town area?",
+        "semantic_anchor_text": "C: Garmisch-Partenkirchen<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Regensburg",
+          "C": "Garmisch-Partenkirchen",
+          "D": "Würzburg"
+        },
+        "similarities": {
+          "A": 0.36959877610206604,
+          "B": 0.4746854901313782,
+          "C": 0.7824680805206299,
+          "D": 0.5327588319778442
+        },
+        "gold_similarity": 0.7824680805206299,
+        "best_distractor_similarity": 0.5327588319778442,
+        "gold_margin": 0.24970924854278564,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Garmisch-Partenkirchen<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_005",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which mountain is strongly associated with the Berchtesgaden area and is one of Germany’s best-known peaks?\n\nOptions:\nA: Feldberg\nB: Brocken\nC: Watzmann\nD: Schneekoppe\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34274643659591675,
+        "B": 0.2758598029613495,
+        "C": 0.7406213283538818,
+        "D": 0.2507646083831787
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which mountain is strongly associated with the Berchtesgaden area and is one of Germany’s best-known peaks?",
+        "semantic_anchor_text": "C: Watzmann<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Feldberg",
+          "B": "Brocken",
+          "C": "Watzmann",
+          "D": "Schneekoppe"
+        },
+        "similarities": {
+          "A": 0.34274643659591675,
+          "B": 0.2758598029613495,
+          "C": 0.7406213283538818,
+          "D": 0.2507646083831787
+        },
+        "gold_similarity": 0.7406213283538818,
+        "best_distractor_similarity": 0.34274643659591675,
+        "gold_margin": 0.3978748917579651,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Watzmann<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_006",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which river flows through Munich and continues north toward the Danube?\n\nOptions:\nA: Main\nB: Inn\nC: Lech\nD: Isar\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2726653516292572,
+        "B": 0.26089030504226685,
+        "C": 0.15036223828792572,
+        "D": 0.682689368724823
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which river flows through Munich and continues north toward the Danube?",
+        "semantic_anchor_text": "D: Isar<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Main",
+          "B": "Inn",
+          "C": "Lech",
+          "D": "Isar"
+        },
+        "similarities": {
+          "A": 0.2726653516292572,
+          "B": 0.26089030504226685,
+          "C": 0.15036223828792572,
+          "D": 0.682689368724823
+        },
+        "gold_similarity": 0.682689368724823,
+        "best_distractor_similarity": 0.2726653516292572,
+        "gold_margin": 0.4100240170955658,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Isar<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_007",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which major river flows past Regensburg in Bavaria?\n\nOptions:\nA: Rhine\nB: Elbe\nC: Oder\nD: Danube\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.47972625494003296,
+        "B": 0.2826005816459656,
+        "C": 0.515866756439209,
+        "D": 0.7311036586761475
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which major river flows past Regensburg in Bavaria?",
+        "semantic_anchor_text": "D: Danube<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Rhine",
+          "B": "Elbe",
+          "C": "Oder",
+          "D": "Danube"
+        },
+        "similarities": {
+          "A": 0.47972625494003296,
+          "B": 0.2826005816459656,
+          "C": 0.515866756439209,
+          "D": 0.7311036586761475
+        },
+        "gold_similarity": 0.7311036586761475,
+        "best_distractor_similarity": 0.515866756439209,
+        "gold_margin": 0.21523690223693848,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Danube<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_008",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which large Bavarian lake is the biggest entirely within Bavaria?\n\nOptions:\nA: Starnberger See\nB: Ammersee\nC: Walchensee\nD: Chiemsee\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.17266787588596344,
+        "B": 0.4727206230163574,
+        "C": 0.307442843914032,
+        "D": 0.7456521987915039
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which large Bavarian lake is the biggest entirely within Bavaria?",
+        "semantic_anchor_text": "D: Chiemsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Starnberger See",
+          "B": "Ammersee",
+          "C": "Walchensee",
+          "D": "Chiemsee"
+        },
+        "similarities": {
+          "A": 0.17266787588596344,
+          "B": 0.4727206230163574,
+          "C": 0.307442843914032,
+          "D": 0.7456521987915039
+        },
+        "gold_similarity": 0.7456521987915039,
+        "best_distractor_similarity": 0.4727206230163574,
+        "gold_margin": 0.2729315757751465,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Chiemsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_009",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "The Allgäu region in southwest Bavaria is especially known for:\n\nOptions:\nA: Flat coastal plains\nB: Alpine meadows and foothills landscapes\nC: Desert basins\nD: Volcanic activtiy\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5627211928367615,
+        "B": 0.8586608171463013,
+        "C": 0.4934366047382355,
+        "D": 0.39250949025154114
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "The Allgäu region in southwest Bavaria is especially known for:",
+        "semantic_anchor_text": "B: Alpine meadows and foothills landscapes<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Flat coastal plains",
+          "B": "Alpine meadows and foothills landscapes",
+          "C": "Desert basins",
+          "D": "Volcanic activtiy"
+        },
+        "similarities": {
+          "A": 0.5627211928367615,
+          "B": 0.8586608171463013,
+          "C": 0.4934366047382355,
+          "D": 0.39250949025154114
+        },
+        "gold_similarity": 0.8586608171463013,
+        "best_distractor_similarity": 0.5627211928367615,
+        "gold_margin": 0.2959396243095398,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Alpine meadows and foothills landscapes<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_010",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What is an Alm in the Bavarian Alpine context?\n\nOptions:\nA: A salt mine\nB: A river ferry\nC: A castle tower\nD: An alpine pasture used seasonally for grazing\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2149563878774643,
+        "B": 0.1424330770969391,
+        "C": 0.14190441370010376,
+        "D": 0.878675639629364
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is an Alm in the Bavarian Alpine context?",
+        "semantic_anchor_text": "D: An alpine pasture used seasonally for grazing<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "A salt mine",
+          "B": "A river ferry",
+          "C": "A castle tower",
+          "D": "An alpine pasture used seasonally for grazing"
+        },
+        "similarities": {
+          "A": 0.2149563878774643,
+          "B": 0.1424330770969391,
+          "C": 0.14190441370010376,
+          "D": 0.878675639629364
+        },
+        "gold_similarity": 0.878675639629364,
+        "best_distractor_similarity": 0.2149563878774643,
+        "gold_margin": 0.6637192517518997,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: An alpine pasture used seasonally for grazing<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_011",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which Bavarian independent city (kreisfreie Stadt) grew the most in population between 2010 and 2020?\n\nOptions:\nA: Munich\nB: Regensburg\nC: Augsburg\nD: Landshut\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.21358633041381836,
+        "B": 0.2713457942008972,
+        "C": 0.23220206797122955,
+        "D": 0.697674036026001
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which Bavarian independent city (kreisfreie Stadt) grew the most in population between 2010 and 2020?",
+        "semantic_anchor_text": "D: Landshut<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Munich",
+          "B": "Regensburg",
+          "C": "Augsburg",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.21358633041381836,
+          "B": 0.2713457942008972,
+          "C": 0.23220206797122955,
+          "D": 0.697674036026001
+        },
+        "gold_similarity": 0.697674036026001,
+        "best_distractor_similarity": 0.2713457942008972,
+        "gold_margin": 0.42632824182510376,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Landshut<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_012",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which parts of Bavaria are most affected by fog?\n\nOptions:\nA: The Alpine peaks and mountain regions in the south\nB: The river valleys such as the Danube, Isar and Lech valleys\nC: The Franconian highlands in the north of Bavaria\nD: The urban areas around Munich and Nuremberg\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8986426591873169,
+        "B": 0.5631564855575562,
+        "C": 0.6237813830375671,
+        "D": 0.2844502627849579
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which parts of Bavaria are most affected by fog?",
+        "semantic_anchor_text": "A: The Alpine peaks and mountain regions in the south<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "The Alpine peaks and mountain regions in the south",
+          "B": "The river valleys such as the Danube, Isar and Lech valleys",
+          "C": "The Franconian highlands in the north of Bavaria",
+          "D": "The urban areas around Munich and Nuremberg"
+        },
+        "similarities": {
+          "A": 0.8986426591873169,
+          "B": 0.5631564855575562,
+          "C": 0.6237813830375671,
+          "D": 0.2844502627849579
+        },
+        "gold_similarity": 0.5631564855575562,
+        "best_distractor_similarity": 0.8986426591873169,
+        "gold_margin": -0.33548617362976074,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: The Alpine peaks and mountain regions in the south<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_013",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which of the four Bavarian regions is known for its Alpine landscapes, lakes and castles, and hosts the state capital Munich?\n\nOptions:\nA: Franconia\nB: Swabia\nC: Upper Bavaria\nD: Eastern Bavaria\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2781958281993866,
+        "B": 0.32825249433517456,
+        "C": 0.742391049861908,
+        "D": 0.6868700981140137
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which of the four Bavarian regions is known for its Alpine landscapes, lakes and castles, and hosts the state capital Munich?",
+        "semantic_anchor_text": "C: Upper Bavaria<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Franconia",
+          "B": "Swabia",
+          "C": "Upper Bavaria",
+          "D": "Eastern Bavaria"
+        },
+        "similarities": {
+          "A": 0.2781958281993866,
+          "B": 0.32825249433517456,
+          "C": 0.742391049861908,
+          "D": 0.6868700981140137
+        },
+        "gold_similarity": 0.742391049861908,
+        "best_distractor_similarity": 0.6868700981140137,
+        "gold_margin": 0.05552095174789429,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Upper Bavaria<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_014",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Which famous tourist attraction is located in the Swabian region of Bavaria?\n\nOptions:\nA: The Oktoberfest in Munich\nB: The medieval old town of Nuremberg\nC: Neuschwanstein Castle\nD: The Bavarian Forest National Park\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3137083947658539,
+        "B": 0.3503841459751129,
+        "C": 0.8146186470985413,
+        "D": 0.30342620611190796
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Which famous tourist attraction is located in the Swabian region of Bavaria?",
+        "semantic_anchor_text": "C: Neuschwanstein Castle<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "The Oktoberfest in Munich",
+          "B": "The medieval old town of Nuremberg",
+          "C": "Neuschwanstein Castle",
+          "D": "The Bavarian Forest National Park"
+        },
+        "similarities": {
+          "A": 0.3137083947658539,
+          "B": 0.3503841459751129,
+          "C": 0.8146186470985413,
+          "D": 0.30342620611190796
+        },
+        "gold_similarity": 0.8146186470985413,
+        "best_distractor_similarity": 0.3503841459751129,
+        "gold_margin": 0.46423450112342834,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Neuschwanstein Castle<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_015",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What are the key industries associated with Eastern Bavaria, which includes the Oberpfalz and Lower Bavaria?\n\nOptions:\nA: Technology, media and finance\nB: Automotive and mechanical engineering as well as glass and ceramics production\nC: Environmental technology and renewable energy\nD: Tourism, agriculture and food production\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23013228178024292,
+        "B": 0.9018536806106567,
+        "C": 0.12193883955478668,
+        "D": 0.2136974036693573
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What are the key industries associated with Eastern Bavaria, which includes the Oberpfalz and Lower Bavaria?",
+        "semantic_anchor_text": "B: Automotive and mechanical engineering as well as glass and ceramics production<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Technology, media and finance",
+          "B": "Automotive and mechanical engineering as well as glass and ceramics production",
+          "C": "Environmental technology and renewable energy",
+          "D": "Tourism, agriculture and food production"
+        },
+        "similarities": {
+          "A": 0.23013228178024292,
+          "B": 0.9018536806106567,
+          "C": 0.12193883955478668,
+          "D": 0.2136974036693573
+        },
+        "gold_similarity": 0.9018536806106567,
+        "best_distractor_similarity": 0.23013228178024292,
+        "gold_margin": 0.6717213988304138,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Automotive and mechanical engineering as well as glass and ceramics production<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_016",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What makes the Funtensee near Berchtesgaden meteorologically unusual?\n\nOptions:\nA: It is the highest lake in Bavaria and never fully thaws in summer\nB: It sits in a hollow where cold air sinks and collects, creating one of the coldest spots in Germany\nC: It is fed entirely by glacial meltwater keeping it permanently below five degrees\nD: It is surrounded by north-facing cliffs that block sunlight throughout the entire year\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9242432117462158,
+        "B": 0.5686439275741577,
+        "C": 0.4694558084011078,
+        "D": 0.4031496047973633
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What makes the Funtensee near Berchtesgaden meteorologically unusual?",
+        "semantic_anchor_text": "A: It is the highest lake in Bavaria and never fully thaws in summer<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "It is the highest lake in Bavaria and never fully thaws in summer",
+          "B": "It sits in a hollow where cold air sinks and collects, creating one of the coldest spots in Germany",
+          "C": "It is fed entirely by glacial meltwater keeping it permanently below five degrees",
+          "D": "It is surrounded by north-facing cliffs that block sunlight throughout the entire year"
+        },
+        "similarities": {
+          "A": 0.9242432117462158,
+          "B": 0.5686439275741577,
+          "C": 0.4694558084011078,
+          "D": 0.4031496047973633
+        },
+        "gold_similarity": 0.5686439275741577,
+        "best_distractor_similarity": 0.9242432117462158,
+        "gold_margin": -0.3555992841720581,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: It is the highest lake in Bavaria and never fully thaws in summer<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_017",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What is historically significant about the underground rock passages beneath Nuremberg?\n\nOptions:\nA: They were built by the Romans as part of an ancient military fortification system\nB: They were originally created to store beer at cool temperatures year-round and grew to cover 25,000 square metres\nC: They served as a secret royal treasury for the Wittelsbach dynasty during the Middle Ages\nD: They were carved out during World War II as emergency shelters for the civilian population\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.34596842527389526,
+        "B": 0.2008143961429596,
+        "C": 0.9420249462127686,
+        "D": 0.2882954180240631
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is historically significant about the underground rock passages beneath Nuremberg?",
+        "semantic_anchor_text": "C: They served as a secret royal treasury for the Wittelsbach dynasty during the Middle Ages<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "They were built by the Romans as part of an ancient military fortification system",
+          "B": "They were originally created to store beer at cool temperatures year-round and grew to cover 25,000 square metres",
+          "C": "They served as a secret royal treasury for the Wittelsbach dynasty during the Middle Ages",
+          "D": "They were carved out during World War II as emergency shelters for the civilian population"
+        },
+        "similarities": {
+          "A": 0.34596842527389526,
+          "B": 0.2008143961429596,
+          "C": 0.9420249462127686,
+          "D": 0.2882954180240631
+        },
+        "gold_similarity": 0.2008143961429596,
+        "best_distractor_similarity": 0.9420249462127686,
+        "gold_margin": -0.741210550069809,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: They served as a secret royal treasury for the Wittelsbach dynasty during the Middle Ages<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_018",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What is the Breitachklamm and why is it particularly appealing in summer?\n\nOptions:\nA: A high Alpine plateau near Garmisch offering panoramic views across Bavaria\nB: A natural lake in the Allgäu region fed by glacial streams with consistently cold water\nC: The deepest gorge in Central Europe, offering cool temperatures and an impressive natural landscape\nD: A river valley in Lower Bavaria known for its shaded cycling and walking paths\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6366099119186401,
+        "B": 0.49370771646499634,
+        "C": 0.939469575881958,
+        "D": 0.5550366640090942
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What is the Breitachklamm and why is it particularly appealing in summer?",
+        "semantic_anchor_text": "C: The deepest gorge in Central Europe, offering cool temperatures and an impressive natural landscape<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "A high Alpine plateau near Garmisch offering panoramic views across Bavaria",
+          "B": "A natural lake in the Allgäu region fed by glacial streams with consistently cold water",
+          "C": "The deepest gorge in Central Europe, offering cool temperatures and an impressive natural landscape",
+          "D": "A river valley in Lower Bavaria known for its shaded cycling and walking paths"
+        },
+        "similarities": {
+          "A": 0.6366099119186401,
+          "B": 0.49370771646499634,
+          "C": 0.939469575881958,
+          "D": 0.5550366640090942
+        },
+        "gold_similarity": 0.939469575881958,
+        "best_distractor_similarity": 0.6366099119186401,
+        "gold_margin": 0.30285966396331787,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: The deepest gorge in Central Europe, offering cool temperatures and an impressive natural landscape<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_019",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What makes the Augsburg city forest particularly remarkable among Bavarian urban green spaces?\n\nOptions:\nA: It is home to the largest open-air theatre in southern Germany\nB: It contains the highest concentration of ancient oak trees in the entire Alpine foothills region\nC: Augsburg is Bavaria's largest municipal forest owner and its city forest was named forest of the year in 2024\nD: It is the only urban forest in Bavaria with a protected UNESCO biosphere reserve status\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4050907790660858,
+        "B": 0.4480644762516022,
+        "C": 0.9644423723220825,
+        "D": 0.6877652406692505
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What makes the Augsburg city forest particularly remarkable among Bavarian urban green spaces?",
+        "semantic_anchor_text": "C: Augsburg is Bavaria's largest municipal forest owner and its city forest was named forest of the year in 2024<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "It is home to the largest open-air theatre in southern Germany",
+          "B": "It contains the highest concentration of ancient oak trees in the entire Alpine foothills region",
+          "C": "Augsburg is Bavaria's largest municipal forest owner and its city forest was named forest of the year in 2024",
+          "D": "It is the only urban forest in Bavaria with a protected UNESCO biosphere reserve status"
+        },
+        "similarities": {
+          "A": 0.4050907790660858,
+          "B": 0.4480644762516022,
+          "C": 0.9644423723220825,
+          "D": 0.6877652406692505
+        },
+        "gold_similarity": 0.9644423723220825,
+        "best_distractor_similarity": 0.6877652406692505,
+        "gold_margin": 0.27667713165283203,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Augsburg is Bavaria's largest municipal forest owner and its city forest was named forest of the year in 2024<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_020",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "What does the Schulerloch cave near Essing in the Altmühltal have that no other show cave in the world possesses?\n\nOptions:\nA: A natural underground waterfall that visitors can walk behind safely\nB: A colony of over 500 bats that have been individually named and tracked by researchers\nC: The only freestanding water basin found in any publicly accessible show cave worldwide\nD: A prehistoric burial site containing the remains of both Neanderthals and early modern humans\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "C",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9403513669967651,
+        "B": 0.14283311367034912,
+        "C": 0.6281794309616089,
+        "D": 0.35652729868888855
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "What does the Schulerloch cave near Essing in the Altmühltal have that no other show cave in the world possesses?",
+        "semantic_anchor_text": "A: A natural underground waterfall that visitors can walk behind safely<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "A natural underground waterfall that visitors can walk behind safely",
+          "B": "A colony of over 500 bats that have been individually named and tracked by researchers",
+          "C": "The only freestanding water basin found in any publicly accessible show cave worldwide",
+          "D": "A prehistoric burial site containing the remains of both Neanderthals and early modern humans"
+        },
+        "similarities": {
+          "A": 0.9403513669967651,
+          "B": 0.14283311367034912,
+          "C": 0.6281794309616089,
+          "D": 0.35652729868888855
+        },
+        "gold_similarity": 0.6281794309616089,
+        "best_distractor_similarity": 0.9403513669967651,
+        "gold_margin": -0.31217193603515625,
+        "predicted_label": "A",
+        "gold_label": "C",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: A natural underground waterfall that visitors can walk behind safely<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_021",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "How do you call a small-scale basic farming unit in Bavaria?\n\nOptions:\nA: Agrarbuisness\nB: Hof\nC: Bauernhof\nD: Farmhaus\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.15035340189933777,
+        "B": 0.2840799391269684,
+        "C": 0.7242088317871094,
+        "D": 0.27537956833839417
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How do you call a small-scale basic farming unit in Bavaria?",
+        "semantic_anchor_text": "C: Bauernhof<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Agrarbuisness",
+          "B": "Hof",
+          "C": "Bauernhof",
+          "D": "Farmhaus"
+        },
+        "similarities": {
+          "A": 0.15035340189933777,
+          "B": 0.2840799391269684,
+          "C": 0.7242088317871094,
+          "D": 0.27537956833839417
+        },
+        "gold_similarity": 0.2840799391269684,
+        "best_distractor_similarity": 0.7242088317871094,
+        "gold_margin": -0.440128892660141,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bauernhof<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_022",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Compared to Austrailia what size are farms in the region of Bavaria?\n\nOptions:\nA: Very small\nB: small\nC: big\nD: huge\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.11591793596744537,
+        "B": 0.18650582432746887,
+        "C": 0.20228663086891174,
+        "D": 0.13434185087680817
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Compared to Austrailia what size are farms in the region of Bavaria?",
+        "semantic_anchor_text": "B<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Very small",
+          "B": "small",
+          "C": "big",
+          "D": "huge"
+        },
+        "similarities": {
+          "A": 0.11591793596744537,
+          "B": 0.18650582432746887,
+          "C": 0.20228663086891174,
+          "D": 0.13434185087680817
+        },
+        "gold_similarity": 0.11591793596744537,
+        "best_distractor_similarity": 0.20228663086891174,
+        "gold_margin": -0.08636869490146637,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_023",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "How do rural bavarians feel after spending time in nature?\n\nOptions:\nA: Exhausted and overwhelmed\nB: Happier and healthier\nC: Indiffernent and Unchanged\nD: Anxious and restless\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23466786742210388,
+        "B": 0.7668001055717468,
+        "C": 0.3313124179840088,
+        "D": 0.23865830898284912
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "How do rural bavarians feel after spending time in nature?",
+        "semantic_anchor_text": "B: Happier and healthier<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Exhausted and overwhelmed",
+          "B": "Happier and healthier",
+          "C": "Indiffernent and Unchanged",
+          "D": "Anxious and restless"
+        },
+        "similarities": {
+          "A": 0.23466786742210388,
+          "B": 0.7668001055717468,
+          "C": 0.3313124179840088,
+          "D": 0.23865830898284912
+        },
+        "gold_similarity": 0.7668001055717468,
+        "best_distractor_similarity": 0.3313124179840088,
+        "gold_margin": 0.43548768758773804,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Happier and healthier<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_024",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Do houses in Upper Bavaria have social personalities?\n\nOptions:\nA: No at all\nB: Yes because people living in the area have an interest in 'Hausgeschichte'\nC: Yes, because the houses are painted so colourful, it s almost like they have different personalities.\nD: Yes, because villagers tend to gather in houses rather than in the streets\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": -0.0014452994801104069,
+        "B": 0.3923707604408264,
+        "C": 0.9210017919540405,
+        "D": 0.4000309705734253
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Do houses in Upper Bavaria have social personalities?",
+        "semantic_anchor_text": "C: Yes, because the houses are painted so colourful, it s almost like they have different personalities.<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "No at all",
+          "B": "Yes because people living in the area have an interest in 'Hausgeschichte'",
+          "C": "Yes, because the houses are painted so colourful, it s almost like they have different personalities.",
+          "D": "Yes, because villagers tend to gather in houses rather than in the streets"
+        },
+        "similarities": {
+          "A": -0.0014452994801104069,
+          "B": 0.3923707604408264,
+          "C": 0.9210017919540405,
+          "D": 0.4000309705734253
+        },
+        "gold_similarity": 0.3923707604408264,
+        "best_distractor_similarity": 0.9210017919540405,
+        "gold_margin": -0.5286310315132141,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Yes, because the houses are painted so colourful, it s almost like they have different personalities.<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_en_025",
+      "lang": "en",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Who lives in Bavarian home steads?\n\nOptions:\nA: Predominatly Singles\nB: Predominantly Couples\nC: Predominantly Small Scale Families\nD: Predominantly Multigenerational Families\n\nReply with the exact option text only. No explanation.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4678536653518677,
+        "B": 0.6751729249954224,
+        "C": 0.6888176798820496,
+        "D": 0.8695598244667053
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Who lives in Bavarian home steads?",
+        "semantic_anchor_text": "D: Predominantly Multigenerational Families<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Predominatly Singles",
+          "B": "Predominantly Couples",
+          "C": "Predominantly Small Scale Families",
+          "D": "Predominantly Multigenerational Families"
+        },
+        "similarities": {
+          "A": 0.4678536653518677,
+          "B": 0.6751729249954224,
+          "C": 0.6888176798820496,
+          "D": 0.8695598244667053
+        },
+        "gold_similarity": 0.8695598244667053,
+        "best_distractor_similarity": 0.6888176798820496,
+        "gold_margin": 0.18074214458465576,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Predominantly Multigenerational Families<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_001",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was ist der höchste Berg in Bayern?\n\nOptions:\nA: Zugspitze\nB: Nebelhorn\nC: Watzmann\nD: Jenner\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.47650817036628723,
+        "B": 0.3486972451210022,
+        "C": 0.4783932566642761,
+        "D": 0.3862287700176239
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist der höchste Berg in Bayern?",
+        "semantic_anchor_text": "A: Zugspitze<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Zugspitze",
+          "B": "Nebelhorn",
+          "C": "Watzmann",
+          "D": "Jenner"
+        },
+        "similarities": {
+          "A": 0.47650817036628723,
+          "B": 0.3486972451210022,
+          "C": 0.4783932566642761,
+          "D": 0.3862287700176239
+        },
+        "gold_similarity": 0.47650817036628723,
+        "best_distractor_similarity": 0.4783932566642761,
+        "gold_margin": -0.0018850862979888916,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Zugspitze<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_002",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher Nationalpark liegt in den Bayerischen Alpen nahe dem Königssee und dem Watzmann?\n\nOptions:\nA: Nationalpark Bayerischer Wald\nB: Nationalpark Schwarzwald\nC: Nationalpark Sächsische Schweiz\nD: Nationalpark Berchtesgaden\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7506870031356812,
+        "B": 0.6958906650543213,
+        "C": 0.7481393814086914,
+        "D": 0.8995676040649414
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Nationalpark liegt in den Bayerischen Alpen nahe dem Königssee und dem Watzmann?",
+        "semantic_anchor_text": "D: Nationalpark Berchtesgaden<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Nationalpark Bayerischer Wald",
+          "B": "Nationalpark Schwarzwald",
+          "C": "Nationalpark Sächsische Schweiz",
+          "D": "Nationalpark Berchtesgaden"
+        },
+        "similarities": {
+          "A": 0.7506870031356812,
+          "B": 0.6958906650543213,
+          "C": 0.7481393814086914,
+          "D": 0.8995676040649414
+        },
+        "gold_similarity": 0.8995676040649414,
+        "best_distractor_similarity": 0.7506870031356812,
+        "gold_margin": 0.14888060092926025,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Nationalpark Berchtesgaden<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_003",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher See liegt berühmt am Fuße der Zugspitze nahe Garmisch-Partenkirchen?\n\nOptions:\nA: Tegernsee\nB: Königssee\nC: Chiemsee\nD: Eibsee\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.30279454588890076,
+        "B": 0.3734823763370514,
+        "C": 0.3223157227039337,
+        "D": 0.749269962310791
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher See liegt berühmt am Fuße der Zugspitze nahe Garmisch-Partenkirchen?",
+        "semantic_anchor_text": "D: Eibsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Tegernsee",
+          "B": "Königssee",
+          "C": "Chiemsee",
+          "D": "Eibsee"
+        },
+        "similarities": {
+          "A": 0.30279454588890076,
+          "B": 0.3734823763370514,
+          "C": 0.3223157227039337,
+          "D": 0.749269962310791
+        },
+        "gold_similarity": 0.749269962310791,
+        "best_distractor_similarity": 0.3734823763370514,
+        "gold_margin": 0.3757875859737396,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Eibsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_004",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Die Partnachklamm wird am besten mit welcher bayerischen Stadt bzw. Region assoziiert?\n\nOptions:\nA: Passau\nB: Regensburg\nC: Garmisch-Partenkirchen\nD: Würzburg\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36959877610206604,
+        "B": 0.4746854901313782,
+        "C": 0.7824680805206299,
+        "D": 0.5327588319778442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Die Partnachklamm wird am besten mit welcher bayerischen Stadt bzw. Region assoziiert?",
+        "semantic_anchor_text": "C: Garmisch-Partenkirchen<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Regensburg",
+          "C": "Garmisch-Partenkirchen",
+          "D": "Würzburg"
+        },
+        "similarities": {
+          "A": 0.36959877610206604,
+          "B": 0.4746854901313782,
+          "C": 0.7824680805206299,
+          "D": 0.5327588319778442
+        },
+        "gold_similarity": 0.7824680805206299,
+        "best_distractor_similarity": 0.5327588319778442,
+        "gold_margin": 0.24970924854278564,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Garmisch-Partenkirchen<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_005",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher Berg ist stark mit der Region Berchtesgaden verbunden und ist einer der bekanntesten Gipfel Deutschlands?\n\nOptions:\nA: Feldberg\nB: Brocken\nC: Watzmann\nD: Schneekoppe\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34274643659591675,
+        "B": 0.2758598029613495,
+        "C": 0.7406213283538818,
+        "D": 0.2507646083831787
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Berg ist stark mit der Region Berchtesgaden verbunden und ist einer der bekanntesten Gipfel Deutschlands?",
+        "semantic_anchor_text": "C: Watzmann<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Feldberg",
+          "B": "Brocken",
+          "C": "Watzmann",
+          "D": "Schneekoppe"
+        },
+        "similarities": {
+          "A": 0.34274643659591675,
+          "B": 0.2758598029613495,
+          "C": 0.7406213283538818,
+          "D": 0.2507646083831787
+        },
+        "gold_similarity": 0.7406213283538818,
+        "best_distractor_similarity": 0.34274643659591675,
+        "gold_margin": 0.3978748917579651,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Watzmann<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_006",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher Fluss fließt durch München und weiter nördlich Richtung Donau?\n\nOptions:\nA: Main\nB: Inn\nC: Lech\nD: Isar\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2726653516292572,
+        "B": 0.26089030504226685,
+        "C": 0.15036223828792572,
+        "D": 0.682689368724823
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher Fluss fließt durch München und weiter nördlich Richtung Donau?",
+        "semantic_anchor_text": "D: Isar<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Main",
+          "B": "Inn",
+          "C": "Lech",
+          "D": "Isar"
+        },
+        "similarities": {
+          "A": 0.2726653516292572,
+          "B": 0.26089030504226685,
+          "C": 0.15036223828792572,
+          "D": 0.682689368724823
+        },
+        "gold_similarity": 0.682689368724823,
+        "best_distractor_similarity": 0.2726653516292572,
+        "gold_margin": 0.4100240170955658,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Isar<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_007",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher große Fluss fließt an Regensburg in Bayern vorbei?\n\nOptions:\nA: Rhein\nB: Elbe\nC: Oder\nD: Donau\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36909019947052,
+        "B": 0.2552166283130646,
+        "C": 0.5013531446456909,
+        "D": 0.6676130890846252
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher große Fluss fließt an Regensburg in Bayern vorbei?",
+        "semantic_anchor_text": "D: Donau<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Rhein",
+          "B": "Elbe",
+          "C": "Oder",
+          "D": "Donau"
+        },
+        "similarities": {
+          "A": 0.36909019947052,
+          "B": 0.2552166283130646,
+          "C": 0.5013531446456909,
+          "D": 0.6676130890846252
+        },
+        "gold_similarity": 0.6676130890846252,
+        "best_distractor_similarity": 0.5013531446456909,
+        "gold_margin": 0.16625994443893433,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Donau<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_008",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welcher große bayerische See ist der größte, der vollständig in Bayern liegt?\n\nOptions:\nA: Starnberger See\nB: Ammersee\nC: Walchensee\nD: Chiemsee\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.17266787588596344,
+        "B": 0.4727206230163574,
+        "C": 0.307442843914032,
+        "D": 0.7456521987915039
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welcher große bayerische See ist der größte, der vollständig in Bayern liegt?",
+        "semantic_anchor_text": "D: Chiemsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Starnberger See",
+          "B": "Ammersee",
+          "C": "Walchensee",
+          "D": "Chiemsee"
+        },
+        "similarities": {
+          "A": 0.17266787588596344,
+          "B": 0.4727206230163574,
+          "C": 0.307442843914032,
+          "D": 0.7456521987915039
+        },
+        "gold_similarity": 0.7456521987915039,
+        "best_distractor_similarity": 0.4727206230163574,
+        "gold_margin": 0.2729315757751465,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Chiemsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_009",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Die Allgäu-Region im Südwesten Bayerns ist besonders bekannt für:\n\nOptions:\nA: Flache Küstenebenen\nB: Alpine Wiesen und Voralpenlandschaft\nC: Wüstenbecken\nD: Vulkanische Aktivität\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.31077879667282104,
+        "B": 0.7515406608581543,
+        "C": 0.5448036193847656,
+        "D": 0.20745331048965454
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Die Allgäu-Region im Südwesten Bayerns ist besonders bekannt für:",
+        "semantic_anchor_text": "B: Alpine Wiesen und Voralpenlandschaft<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Flache Küstenebenen",
+          "B": "Alpine Wiesen und Voralpenlandschaft",
+          "C": "Wüstenbecken",
+          "D": "Vulkanische Aktivität"
+        },
+        "similarities": {
+          "A": 0.31077879667282104,
+          "B": 0.7515406608581543,
+          "C": 0.5448036193847656,
+          "D": 0.20745331048965454
+        },
+        "gold_similarity": 0.7515406608581543,
+        "best_distractor_similarity": 0.5448036193847656,
+        "gold_margin": 0.20673704147338867,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Alpine Wiesen und Voralpenlandschaft<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_010",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was ist eine Alm im bayerischen Alpenkontext?\n\nOptions:\nA: Ein Salzbergwerk\nB: Eine Flussfähre\nC: Ein Schlossturm\nD: Eine alpine Weide, die saisonal zur Beweidung genutzt wird\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4748651087284088,
+        "B": 0.28722164034843445,
+        "C": 0.2181316614151001,
+        "D": 0.8846818804740906
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist eine Alm im bayerischen Alpenkontext?",
+        "semantic_anchor_text": "D: Eine alpine Weide, die saisonal zur Beweidung genutzt wird<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Ein Salzbergwerk",
+          "B": "Eine Flussfähre",
+          "C": "Ein Schlossturm",
+          "D": "Eine alpine Weide, die saisonal zur Beweidung genutzt wird"
+        },
+        "similarities": {
+          "A": 0.4748651087284088,
+          "B": 0.28722164034843445,
+          "C": 0.2181316614151001,
+          "D": 0.8846818804740906
+        },
+        "gold_similarity": 0.8846818804740906,
+        "best_distractor_similarity": 0.4748651087284088,
+        "gold_margin": 0.40981677174568176,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Eine alpine Weide, die saisonal zur Beweidung genutzt wird<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_011",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welche bayerische kreisfreie Stadt wuchs zwischen 2010 und 2020 am stärksten in der Bevölkerung?\n\nOptions:\nA: München\nB: Regensburg\nC: Augsburg\nD: Landshut\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7024021148681641,
+        "B": 0.48039644956588745,
+        "C": 0.5884219408035278,
+        "D": 0.22277674078941345
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche bayerische kreisfreie Stadt wuchs zwischen 2010 und 2020 am stärksten in der Bevölkerung?",
+        "semantic_anchor_text": "A: München<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "München",
+          "B": "Regensburg",
+          "C": "Augsburg",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.7024021148681641,
+          "B": 0.48039644956588745,
+          "C": 0.5884219408035278,
+          "D": 0.22277674078941345
+        },
+        "gold_similarity": 0.22277674078941345,
+        "best_distractor_similarity": 0.7024021148681641,
+        "gold_margin": -0.4796253740787506,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: München<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_012",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welche Teile Bayerns sind am stärksten von Nebel betroffen?\n\nOptions:\nA: Die alpinen Gipfel und Bergregionen im Süden\nB: Die Flusstäler wie das Donau-, Isar- und Lechtal\nC: Das fränkische Hochland im Norden Bayerns\nD: Die städtischen Gebiete um München und Nürnberg\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8192840814590454,
+        "B": 0.5655313730239868,
+        "C": 0.799073338508606,
+        "D": 0.6042576432228088
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche Teile Bayerns sind am stärksten von Nebel betroffen?",
+        "semantic_anchor_text": "A: Die alpinen Gipfel und Bergregionen im Süden<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Die alpinen Gipfel und Bergregionen im Süden",
+          "B": "Die Flusstäler wie das Donau-, Isar- und Lechtal",
+          "C": "Das fränkische Hochland im Norden Bayerns",
+          "D": "Die städtischen Gebiete um München und Nürnberg"
+        },
+        "similarities": {
+          "A": 0.8192840814590454,
+          "B": 0.5655313730239868,
+          "C": 0.799073338508606,
+          "D": 0.6042576432228088
+        },
+        "gold_similarity": 0.5655313730239868,
+        "best_distractor_similarity": 0.8192840814590454,
+        "gold_margin": -0.2537527084350586,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Die alpinen Gipfel und Bergregionen im Süden<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_013",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welche der vier bayerischen Regionen ist bekannt für ihre Alpenlandschaften, Seen und Schlösser und beherbergt die Landeshauptstadt München?\n\nOptions:\nA: Franken\nB: Schwaben\nC: Oberbayern\nD: Ostbayern\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4033723473548889,
+        "B": 0.4643920958042145,
+        "C": 0.701570987701416,
+        "D": 0.41622060537338257
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche der vier bayerischen Regionen ist bekannt für ihre Alpenlandschaften, Seen und Schlösser und beherbergt die Landeshauptstadt München?",
+        "semantic_anchor_text": "C: Oberbayern<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Franken",
+          "B": "Schwaben",
+          "C": "Oberbayern",
+          "D": "Ostbayern"
+        },
+        "similarities": {
+          "A": 0.4033723473548889,
+          "B": 0.4643920958042145,
+          "C": 0.701570987701416,
+          "D": 0.41622060537338257
+        },
+        "gold_similarity": 0.701570987701416,
+        "best_distractor_similarity": 0.4643920958042145,
+        "gold_margin": 0.23717889189720154,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Oberbayern<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_014",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Welche berühmte Touristenattraktion befindet sich in der schwäbischen Region Bayerns?\n\nOptions:\nA: Das Oktoberfest in München\nB: Die mittelalterliche Altstadt von Nürnberg\nC: Schloss Neuschwanstein\nD: Nationalpark Bayerischer Wald\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.32539159059524536,
+        "B": 0.4086834192276001,
+        "C": 0.753821611404419,
+        "D": 0.42372286319732666
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Welche berühmte Touristenattraktion befindet sich in der schwäbischen Region Bayerns?",
+        "semantic_anchor_text": "C: Schloss Neuschwanstein<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Das Oktoberfest in München",
+          "B": "Die mittelalterliche Altstadt von Nürnberg",
+          "C": "Schloss Neuschwanstein",
+          "D": "Nationalpark Bayerischer Wald"
+        },
+        "similarities": {
+          "A": 0.32539159059524536,
+          "B": 0.4086834192276001,
+          "C": 0.753821611404419,
+          "D": 0.42372286319732666
+        },
+        "gold_similarity": 0.753821611404419,
+        "best_distractor_similarity": 0.42372286319732666,
+        "gold_margin": 0.3300987482070923,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Schloss Neuschwanstein<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_015",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was sind die Schlüsselindustrien in Ostbayern, das die Oberpfalz und Niederbayern umfasst?\n\nOptions:\nA: Technologie, Medien und Finanzen\nB: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion\nC: Umwelttechnologie und erneuerbare Energien\nD: Tourismus, Landwirtschaft und Lebensmittelproduktion\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23116028308868408,
+        "B": 0.9088767170906067,
+        "C": 0.15037168562412262,
+        "D": 0.27920007705688477
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was sind die Schlüsselindustrien in Ostbayern, das die Oberpfalz und Niederbayern umfasst?",
+        "semantic_anchor_text": "B: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Technologie, Medien und Finanzen",
+          "B": "Automobil- und Maschinenbau sowie Glas- und Keramikproduktion",
+          "C": "Umwelttechnologie und erneuerbare Energien",
+          "D": "Tourismus, Landwirtschaft und Lebensmittelproduktion"
+        },
+        "similarities": {
+          "A": 0.23116028308868408,
+          "B": 0.9088767170906067,
+          "C": 0.15037168562412262,
+          "D": 0.27920007705688477
+        },
+        "gold_similarity": 0.9088767170906067,
+        "best_distractor_similarity": 0.27920007705688477,
+        "gold_margin": 0.6296766400337219,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_016",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was macht den Funtensee bei Berchtesgaden meteorologisch ungewöhnlich?\n\nOptions:\nA: Er ist der höchste See in Bayern und taut im Sommer nie vollständig auf\nB: Er liegt in einer Mulde, in der kalte Luft absinkt und sich sammelt, wodurch einer der kältesten Orte Deutschlands entsteht\nC: Er wird vollständig von Gletscherschmelzwasser gespeist und bleibt permanent unter fünf Grad\nD: Er ist von nach Norden ausgerichteten Klippen umgeben, die das ganze Jahr über das Sonnenlicht blockieren\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.3055489659309387,
+        "B": 0.8371659517288208,
+        "C": 0.42265474796295166,
+        "D": 0.43031439185142517
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was macht den Funtensee bei Berchtesgaden meteorologisch ungewöhnlich?",
+        "semantic_anchor_text": "B: Er liegt in einer Mulde, in der kalte Luft absinkt und sich sammelt, wodurch einer der kältest",
+        "semantic_candidate_texts": {
+          "A": "Er ist der höchste See in Bayern und taut im Sommer nie vollständig auf",
+          "B": "Er liegt in einer Mulde, in der kalte Luft absinkt und sich sammelt, wodurch einer der kältesten Orte Deutschlands entsteht",
+          "C": "Er wird vollständig von Gletscherschmelzwasser gespeist und bleibt permanent unter fünf Grad",
+          "D": "Er ist von nach Norden ausgerichteten Klippen umgeben, die das ganze Jahr über das Sonnenlicht blockieren"
+        },
+        "similarities": {
+          "A": 0.3055489659309387,
+          "B": 0.8371659517288208,
+          "C": 0.42265474796295166,
+          "D": 0.43031439185142517
+        },
+        "gold_similarity": 0.8371659517288208,
+        "best_distractor_similarity": 0.43031439185142517,
+        "gold_margin": 0.40685155987739563,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Er liegt in einer Mulde, in der kalte Luft absinkt und sich sammelt, wodurch einer der kältest",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_017",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was ist historisch bedeutsam an den unterirdischen Felsgängen unter Nürnberg?\n\nOptions:\nA: Sie wurden von den Römern als Teil einer antiken Militärbefestigung gebaut\nB: Sie wurden ursprünglich geschaffen, um Bier das ganze Jahr über bei kühlen Temperaturen zu lagern, und wuchsen auf 25.000 Quadratmeter an\nC: Sie dienten als geheime königliche Schatzkammer der Wittelsbacher Dynastie im Mittelalter\nD: Sie wurden während des Zweiten Weltkriegs als Notunterkünfte für die Zivilbevölkerung ausgehoben\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.9251534342765808,
+        "B": 0.29009369015693665,
+        "C": 0.5050069093704224,
+        "D": 0.3990049362182617
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist historisch bedeutsam an den unterirdischen Felsgängen unter Nürnberg?",
+        "semantic_anchor_text": "A: Sie wurden von den Römern als Teil einer antiken Militärbefestigung gebaut<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Sie wurden von den Römern als Teil einer antiken Militärbefestigung gebaut",
+          "B": "Sie wurden ursprünglich geschaffen, um Bier das ganze Jahr über bei kühlen Temperaturen zu lagern, und wuchsen auf 25.000 Quadratmeter an",
+          "C": "Sie dienten als geheime königliche Schatzkammer der Wittelsbacher Dynastie im Mittelalter",
+          "D": "Sie wurden während des Zweiten Weltkriegs als Notunterkünfte für die Zivilbevölkerung ausgehoben"
+        },
+        "similarities": {
+          "A": 0.9251534342765808,
+          "B": 0.29009369015693665,
+          "C": 0.5050069093704224,
+          "D": 0.3990049362182617
+        },
+        "gold_similarity": 0.29009369015693665,
+        "best_distractor_similarity": 0.9251534342765808,
+        "gold_margin": -0.6350597441196442,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Sie wurden von den Römern als Teil einer antiken Militärbefestigung gebaut<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_018",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was ist die Breitachklamm und warum ist sie im Sommer besonders reizvoll?\n\nOptions:\nA: Ein hochalpines Plateau bei Garmisch mit Panoramablick über Bayern\nB: Ein natürlicher See im Allgäu, der von Gletscherbächen gespeist wird und konstant kaltes Wasser hat\nC: Die tiefste Schlucht Mitteleuropas, die kühle Temperaturen und eine beeindruckende Naturlandschaft bietet\nD: Ein Flusstal in Niederbayern, bekannt für seine schattigen Rad- und Wanderwege\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6436635255813599,
+        "B": 0.6467280983924866,
+        "C": 0.9685413241386414,
+        "D": 0.5174431800842285
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was ist die Breitachklamm und warum ist sie im Sommer besonders reizvoll?",
+        "semantic_anchor_text": "C: Die tiefste Schlucht Mitteleuropas, die kühle Temperaturen und eine beeindruckende Naturlandschaft",
+        "semantic_candidate_texts": {
+          "A": "Ein hochalpines Plateau bei Garmisch mit Panoramablick über Bayern",
+          "B": "Ein natürlicher See im Allgäu, der von Gletscherbächen gespeist wird und konstant kaltes Wasser hat",
+          "C": "Die tiefste Schlucht Mitteleuropas, die kühle Temperaturen und eine beeindruckende Naturlandschaft bietet",
+          "D": "Ein Flusstal in Niederbayern, bekannt für seine schattigen Rad- und Wanderwege"
+        },
+        "similarities": {
+          "A": 0.6436635255813599,
+          "B": 0.6467280983924866,
+          "C": 0.9685413241386414,
+          "D": 0.5174431800842285
+        },
+        "gold_similarity": 0.9685413241386414,
+        "best_distractor_similarity": 0.6467280983924866,
+        "gold_margin": 0.3218132257461548,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Die tiefste Schlucht Mitteleuropas, die kühle Temperaturen und eine beeindruckende Naturlandschaft",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_019",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was macht den Augsburger Stadtwald unter den bayerischen urbanen Grünflächen besonders bemerkenswert?\n\nOptions:\nA: Er beherbergt das größte Freilichttheater in Süddeutschland\nB: Er enthält die höchste Konzentration alter Eichen im gesamten Alpenvorland\nC: Augsburg ist Bayerns größter kommunaler Waldbesitzer und sein Stadtwald wurde 2024 zum Wald des Jahres gekürt\nD: Er ist der einzige Stadtwald in Bayern mit einem geschützten UNESCO-Biosphärenreservat-Status\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5186519622802734,
+        "B": 0.4496033787727356,
+        "C": 0.9730616211891174,
+        "D": 0.7226067781448364
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was macht den Augsburger Stadtwald unter den bayerischen urbanen Grünflächen besonders bemerkenswert?",
+        "semantic_anchor_text": "C: Augsburg ist Bayerns größter kommunaler Waldbesitzer und sein Stadtwald wurde 2024 zum Wald des Jahres",
+        "semantic_candidate_texts": {
+          "A": "Er beherbergt das größte Freilichttheater in Süddeutschland",
+          "B": "Er enthält die höchste Konzentration alter Eichen im gesamten Alpenvorland",
+          "C": "Augsburg ist Bayerns größter kommunaler Waldbesitzer und sein Stadtwald wurde 2024 zum Wald des Jahres gekürt",
+          "D": "Er ist der einzige Stadtwald in Bayern mit einem geschützten UNESCO-Biosphärenreservat-Status"
+        },
+        "similarities": {
+          "A": 0.5186519622802734,
+          "B": 0.4496033787727356,
+          "C": 0.9730616211891174,
+          "D": 0.7226067781448364
+        },
+        "gold_similarity": 0.9730616211891174,
+        "best_distractor_similarity": 0.7226067781448364,
+        "gold_margin": 0.250454843044281,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Augsburg ist Bayerns größter kommunaler Waldbesitzer und sein Stadtwald wurde 2024 zum Wald des Jahres",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_020",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was besitzt die Schulerloch-Höhle bei Essing im Altmühltal, das keine andere Schauhöhle der Welt hat?\n\nOptions:\nA: Einen natürlichen unterirdischen Wasserfall, hinter dem Besucher sicher gehen können\nB: Eine Kolonie von über 500 Fledermäusen, die einzeln benannt und von Forschern verfolgt wurden\nC: Das einzige freistehende Wasserbecken, das in einer öffentlich zugänglichen Schauhöhle weltweit zu finden ist\nD: Eine prähistorische Begräbnisstätte mit Überresten von sowohl Neandertalern als auch frühen modernen Menschen\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7239745855331421,
+        "B": 0.2859343886375427,
+        "C": 0.9420158863067627,
+        "D": 0.388367235660553
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was besitzt die Schulerloch-Höhle bei Essing im Altmühltal, das keine andere Schauhöhle der Welt hat?",
+        "semantic_anchor_text": "C: Das einzige freistehende Wasserbecken, das in einer öffentlich zugänglichen Schauhöhle welt",
+        "semantic_candidate_texts": {
+          "A": "Einen natürlichen unterirdischen Wasserfall, hinter dem Besucher sicher gehen können",
+          "B": "Eine Kolonie von über 500 Fledermäusen, die einzeln benannt und von Forschern verfolgt wurden",
+          "C": "Das einzige freistehende Wasserbecken, das in einer öffentlich zugänglichen Schauhöhle weltweit zu finden ist",
+          "D": "Eine prähistorische Begräbnisstätte mit Überresten von sowohl Neandertalern als auch frühen modernen Menschen"
+        },
+        "similarities": {
+          "A": 0.7239745855331421,
+          "B": 0.2859343886375427,
+          "C": 0.9420158863067627,
+          "D": 0.388367235660553
+        },
+        "gold_similarity": 0.9420158863067627,
+        "best_distractor_similarity": 0.7239745855331421,
+        "gold_margin": 0.2180413007736206,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Das einzige freistehende Wasserbecken, das in einer öffentlich zugänglichen Schauhöhle welt",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_021",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wie nennt man eine kleinbäuerliche Grundeinheit in Bayern?\n\nOptions:\nA: Agrarbusiness\nB: Hof\nC: Bauernhof\nD: Farmhaus\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.03697774186730385,
+        "B": 0.2840799391269684,
+        "C": 0.7242088317871094,
+        "D": 0.27537956833839417
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie nennt man eine kleinbäuerliche Grundeinheit in Bayern?",
+        "semantic_anchor_text": "C: Bauernhof<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Agrarbusiness",
+          "B": "Hof",
+          "C": "Bauernhof",
+          "D": "Farmhaus"
+        },
+        "similarities": {
+          "A": 0.03697774186730385,
+          "B": 0.2840799391269684,
+          "C": 0.7242088317871094,
+          "D": 0.27537956833839417
+        },
+        "gold_similarity": 0.2840799391269684,
+        "best_distractor_similarity": 0.7242088317871094,
+        "gold_margin": -0.440128892660141,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bauernhof<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_022",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Im Vergleich zu Australien, welche Größe haben Bauernhöfe in der Region Bayern?\n\nOptions:\nA: Sehr klein\nB: Klein\nC: Groß\nD: Riesig\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.13689009845256805,
+        "B": 0.15572352707386017,
+        "C": 0.31240344047546387,
+        "D": 0.26735180616378784
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Vergleich zu Australien, welche Größe haben Bauernhöfe in der Region Bayern?",
+        "semantic_anchor_text": "C: Groß<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Sehr klein",
+          "B": "Klein",
+          "C": "Groß",
+          "D": "Riesig"
+        },
+        "similarities": {
+          "A": 0.13689009845256805,
+          "B": 0.15572352707386017,
+          "C": 0.31240344047546387,
+          "D": 0.26735180616378784
+        },
+        "gold_similarity": 0.13689009845256805,
+        "best_distractor_similarity": 0.31240344047546387,
+        "gold_margin": -0.1755133420228958,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Groß<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_023",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wie fühlen sich ländliche Bayern nach Zeit in der Natur?\n\nOptions:\nA: Erschöpft und überfordert\nB: Glücklicher und gesünder\nC: Gleichgültig und unverändert\nD: Ängstlich und unruhig\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34146928787231445,
+        "B": 0.7950067520141602,
+        "C": 0.34721341729164124,
+        "D": 0.20558033883571625
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wie fühlen sich ländliche Bayern nach Zeit in der Natur?",
+        "semantic_anchor_text": "B: Glücklicher und gesünder<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Erschöpft und überfordert",
+          "B": "Glücklicher und gesünder",
+          "C": "Gleichgültig und unverändert",
+          "D": "Ängstlich und unruhig"
+        },
+        "similarities": {
+          "A": 0.34146928787231445,
+          "B": 0.7950067520141602,
+          "C": 0.34721341729164124,
+          "D": 0.20558033883571625
+        },
+        "gold_similarity": 0.7950067520141602,
+        "best_distractor_similarity": 0.34721341729164124,
+        "gold_margin": 0.4477933347225189,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Glücklicher und gesünder<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_024",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Haben Häuser in Oberbayern soziale Persönlichkeiten?\n\nOptions:\nA: Überhaupt nicht\nB: Ja, weil die Menschen in der Gegend Interesse an 'Hausgeschichte' haben\nC: Ja, weil die Häuser so farbenfroh bemalt sind, dass es fast so ist, als hätten sie verschiedene Persönlichkeiten\nD: Ja, weil sich Dorfbewohner eher in Häusern als auf den Straßen versammeln\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.08933991193771362,
+        "B": 0.6774584650993347,
+        "C": 0.49021971225738525,
+        "D": 0.9383311867713928
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Haben Häuser in Oberbayern soziale Persönlichkeiten?",
+        "semantic_anchor_text": "D: Ja, weil sich Dorfbewohner eher in Häusern als auf den Straßen versammeln<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Überhaupt nicht",
+          "B": "Ja, weil die Menschen in der Gegend Interesse an 'Hausgeschichte' haben",
+          "C": "Ja, weil die Häuser so farbenfroh bemalt sind, dass es fast so ist, als hätten sie verschiedene Persönlichkeiten",
+          "D": "Ja, weil sich Dorfbewohner eher in Häusern als auf den Straßen versammeln"
+        },
+        "similarities": {
+          "A": 0.08933991193771362,
+          "B": 0.6774584650993347,
+          "C": 0.49021971225738525,
+          "D": 0.9383311867713928
+        },
+        "gold_similarity": 0.6774584650993347,
+        "best_distractor_similarity": 0.9383311867713928,
+        "gold_margin": -0.2608727216720581,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Ja, weil sich Dorfbewohner eher in Häusern als auf den Straßen versammeln<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_de_025",
+      "lang": "de",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wer lebt in bayerischen Gehöften?\n\nOptions:\nA: Überwiegend Singles\nB: Überwiegend Paare\nC: Überwiegend Kleinfamilien\nD: Überwiegend Mehrgenerationenfamilien\n\nAntworte nur mit dem exakten Optionstext. Keine Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.3546466827392578,
+        "B": 0.48265260457992554,
+        "C": 0.7292931079864502,
+        "D": 0.6460695266723633
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer lebt in bayerischen Gehöften?",
+        "semantic_anchor_text": "C: Überwiegend Kleinfamilien<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Überwiegend Singles",
+          "B": "Überwiegend Paare",
+          "C": "Überwiegend Kleinfamilien",
+          "D": "Überwiegend Mehrgenerationenfamilien"
+        },
+        "similarities": {
+          "A": 0.3546466827392578,
+          "B": 0.48265260457992554,
+          "C": 0.7292931079864502,
+          "D": 0.6460695266723633
+        },
+        "gold_similarity": 0.6460695266723633,
+        "best_distractor_similarity": 0.7292931079864502,
+        "gold_margin": -0.08322358131408691,
+        "predicted_label": "C",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Überwiegend Kleinfamilien<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_001",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wos is da hechste Berg vo Bayern?\n\nOptions:\nA: Zugspitze\nB: Nebelhorn\nC: Watzmann\nD: Jenner\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.47650817036628723,
+        "B": 0.3486972451210022,
+        "C": 0.4783932566642761,
+        "D": 0.3862287700176239
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wos is da hechste Berg vo Bayern?",
+        "semantic_anchor_text": "A: Zugspitze<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Zugspitze",
+          "B": "Nebelhorn",
+          "C": "Watzmann",
+          "D": "Jenner"
+        },
+        "similarities": {
+          "A": 0.47650817036628723,
+          "B": 0.3486972451210022,
+          "C": 0.4783932566642761,
+          "D": 0.3862287700176239
+        },
+        "gold_similarity": 0.47650817036628723,
+        "best_distractor_similarity": 0.4783932566642761,
+        "gold_margin": -0.0018850862979888916,
+        "predicted_label": "C",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: Zugspitze<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_002",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher Nationalpark liegt in de Bayerischen Alpen nahe beim Königssee und'n Watzmann?\n\nOptions:\nA: Nationalpark Bayerischer Wald\nB: Nationalpark Schwarzwald\nC: Nationalpark Sächsische Schweiz\nD: Nationalpark Berchtesgaden\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.7506870031356812,
+        "B": 0.6958906650543213,
+        "C": 0.7481393814086914,
+        "D": 0.8995676040649414
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher Nationalpark liegt in de Bayerischen Alpen nahe beim Königssee und'n Watzmann?",
+        "semantic_anchor_text": "D: Nationalpark Berchtesgaden<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Nationalpark Bayerischer Wald",
+          "B": "Nationalpark Schwarzwald",
+          "C": "Nationalpark Sächsische Schweiz",
+          "D": "Nationalpark Berchtesgaden"
+        },
+        "similarities": {
+          "A": 0.7506870031356812,
+          "B": 0.6958906650543213,
+          "C": 0.7481393814086914,
+          "D": 0.8995676040649414
+        },
+        "gold_similarity": 0.8995676040649414,
+        "best_distractor_similarity": 0.7506870031356812,
+        "gold_margin": 0.14888060092926025,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Nationalpark Berchtesgaden<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_003",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher See liegt berühmt am Fuß von da Zugspitze nahe bei Garmisch-Partenkirchen?\n\nOptions:\nA: Tegernsee\nB: Königssee\nC: Chiemsee\nD: Eibsee\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.30279454588890076,
+        "B": 0.3734823763370514,
+        "C": 0.3223157227039337,
+        "D": 0.749269962310791
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher See liegt berühmt am Fuß von da Zugspitze nahe bei Garmisch-Partenkirchen?",
+        "semantic_anchor_text": "D: Eibsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Tegernsee",
+          "B": "Königssee",
+          "C": "Chiemsee",
+          "D": "Eibsee"
+        },
+        "similarities": {
+          "A": 0.30279454588890076,
+          "B": 0.3734823763370514,
+          "C": 0.3223157227039337,
+          "D": 0.749269962310791
+        },
+        "gold_similarity": 0.749269962310791,
+        "best_distractor_similarity": 0.3734823763370514,
+        "gold_margin": 0.3757875859737396,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Eibsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_004",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "D'Partnachklamm wird am besten mit wöcher bayerischen Stadt bzw. Region assoziiert?\n\nOptions:\nA: Passau\nB: Regensburg\nC: Garmisch-Partenkirchen\nD: Würzburg\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36959877610206604,
+        "B": 0.4746854901313782,
+        "C": 0.7824680805206299,
+        "D": 0.5327588319778442
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "D'Partnachklamm wird am besten mit wöcher bayerischen Stadt bzw. Region assoziiert?",
+        "semantic_anchor_text": "C: Garmisch-Partenkirchen<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Passau",
+          "B": "Regensburg",
+          "C": "Garmisch-Partenkirchen",
+          "D": "Würzburg"
+        },
+        "similarities": {
+          "A": 0.36959877610206604,
+          "B": 0.4746854901313782,
+          "C": 0.7824680805206299,
+          "D": 0.5327588319778442
+        },
+        "gold_similarity": 0.7824680805206299,
+        "best_distractor_similarity": 0.5327588319778442,
+        "gold_margin": 0.24970924854278564,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Garmisch-Partenkirchen<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_005",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher Berg is stark mit da Region Berchtesgaden verbunden und is oaner von de bekanntesten Gipfel von Deutschland?\n\nOptions:\nA: Feldberg\nB: Brocken\nC: Watzmann\nD: Schneekoppe\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34274643659591675,
+        "B": 0.2758598029613495,
+        "C": 0.7406213283538818,
+        "D": 0.2507646083831787
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher Berg is stark mit da Region Berchtesgaden verbunden und is oaner von de bekanntesten Gipfel von Deutschland?",
+        "semantic_anchor_text": "C: Watzmann<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Feldberg",
+          "B": "Brocken",
+          "C": "Watzmann",
+          "D": "Schneekoppe"
+        },
+        "similarities": {
+          "A": 0.34274643659591675,
+          "B": 0.2758598029613495,
+          "C": 0.7406213283538818,
+          "D": 0.2507646083831787
+        },
+        "gold_similarity": 0.7406213283538818,
+        "best_distractor_similarity": 0.34274643659591675,
+        "gold_margin": 0.3978748917579651,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Watzmann<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_006",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher Fluss fließt durch Minga und weiter nördlich Richtung Donau?\n\nOptions:\nA: Main\nB: Inn\nC: Lech\nD: Isar\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.2726653516292572,
+        "B": 0.26089030504226685,
+        "C": 0.15036223828792572,
+        "D": 0.682689368724823
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher Fluss fließt durch Minga und weiter nördlich Richtung Donau?",
+        "semantic_anchor_text": "D: Isar<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Main",
+          "B": "Inn",
+          "C": "Lech",
+          "D": "Isar"
+        },
+        "similarities": {
+          "A": 0.2726653516292572,
+          "B": 0.26089030504226685,
+          "C": 0.15036223828792572,
+          "D": 0.682689368724823
+        },
+        "gold_similarity": 0.682689368724823,
+        "best_distractor_similarity": 0.2726653516292572,
+        "gold_margin": 0.4100240170955658,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Isar<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_007",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher große Fluss fließt an Regensburg in Bayern vorbei?\n\nOptions:\nA: Rhein\nB: Elbe\nC: Oder\nD: Donau\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36909019947052,
+        "B": 0.2552166283130646,
+        "C": 0.5013531446456909,
+        "D": 0.6676130890846252
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher große Fluss fließt an Regensburg in Bayern vorbei?",
+        "semantic_anchor_text": "D: Donau<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Rhein",
+          "B": "Elbe",
+          "C": "Oder",
+          "D": "Donau"
+        },
+        "similarities": {
+          "A": 0.36909019947052,
+          "B": 0.2552166283130646,
+          "C": 0.5013531446456909,
+          "D": 0.6676130890846252
+        },
+        "gold_similarity": 0.6676130890846252,
+        "best_distractor_similarity": 0.5013531446456909,
+        "gold_margin": 0.16625994443893433,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Donau<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_008",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöcher große bayerische See is da größte, der vollständig in Bayern liegt?\n\nOptions:\nA: Starnberger See\nB: Ammersee\nC: Walchensee\nD: Chiemsee\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.17266787588596344,
+        "B": 0.4727206230163574,
+        "C": 0.307442843914032,
+        "D": 0.7456521987915039
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöcher große bayerische See is da größte, der vollständig in Bayern liegt?",
+        "semantic_anchor_text": "D: Chiemsee<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Starnberger See",
+          "B": "Ammersee",
+          "C": "Walchensee",
+          "D": "Chiemsee"
+        },
+        "similarities": {
+          "A": 0.17266787588596344,
+          "B": 0.4727206230163574,
+          "C": 0.307442843914032,
+          "D": 0.7456521987915039
+        },
+        "gold_similarity": 0.7456521987915039,
+        "best_distractor_similarity": 0.4727206230163574,
+        "gold_margin": 0.2729315757751465,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Chiemsee<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_009",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "D'Allgäu-Region im Südwesten von Bayern is besonders bekannt für:\n\nOptions:\nA: Flache Küstenebenen\nB: Alpine Wiesen und Voralpenlandschaft\nC: Wüstenbecken\nD: Vulkanische Aktivität\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.31077879667282104,
+        "B": 0.7515406608581543,
+        "C": 0.5448036193847656,
+        "D": 0.20745331048965454
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "D'Allgäu-Region im Südwesten von Bayern is besonders bekannt für:",
+        "semantic_anchor_text": "B: Alpine Wiesen und Voralpenlandschaft<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Flache Küstenebenen",
+          "B": "Alpine Wiesen und Voralpenlandschaft",
+          "C": "Wüstenbecken",
+          "D": "Vulkanische Aktivität"
+        },
+        "similarities": {
+          "A": 0.31077879667282104,
+          "B": 0.7515406608581543,
+          "C": 0.5448036193847656,
+          "D": 0.20745331048965454
+        },
+        "gold_similarity": 0.7515406608581543,
+        "best_distractor_similarity": 0.5448036193847656,
+        "gold_margin": 0.20673704147338867,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Alpine Wiesen und Voralpenlandschaft<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_010",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was is a Alm im bayerischen Alpenkontext?\n\nOptions:\nA: Ein Salzbergwerk\nB: A Flussfähre\nC: A Schlossturm\nD: A alpine Weide, die saisonal zur Beweidung g'nutzt werd\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5080888271331787,
+        "B": 0.3214881420135498,
+        "C": 0.28294387459754944,
+        "D": 0.8631827235221863
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was is a Alm im bayerischen Alpenkontext?",
+        "semantic_anchor_text": "D: A alpine Weide, die saisonal zur Beweidung g'nutzt werd<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Ein Salzbergwerk",
+          "B": "A Flussfähre",
+          "C": "A Schlossturm",
+          "D": "A alpine Weide, die saisonal zur Beweidung g'nutzt werd"
+        },
+        "similarities": {
+          "A": 0.5080888271331787,
+          "B": 0.3214881420135498,
+          "C": 0.28294387459754944,
+          "D": 0.8631827235221863
+        },
+        "gold_similarity": 0.8631827235221863,
+        "best_distractor_similarity": 0.5080888271331787,
+        "gold_margin": 0.35509389638900757,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: A alpine Weide, die saisonal zur Beweidung g'nutzt werd<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_011",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöche bayerische kreisfreie Stadt is zwischen 2010 und 2020 am stärksten in da Bevölkerung gwachsen?\n\nOptions:\nA: München\nB: Regensburg\nC: Augsburg\nD: Landshut\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "D",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.7024021148681641,
+        "B": 0.48039644956588745,
+        "C": 0.5884219408035278,
+        "D": 0.22277674078941345
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche bayerische kreisfreie Stadt is zwischen 2010 und 2020 am stärksten in da Bevölkerung gwachsen?",
+        "semantic_anchor_text": "A: München<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "München",
+          "B": "Regensburg",
+          "C": "Augsburg",
+          "D": "Landshut"
+        },
+        "similarities": {
+          "A": 0.7024021148681641,
+          "B": 0.48039644956588745,
+          "C": 0.5884219408035278,
+          "D": 0.22277674078941345
+        },
+        "gold_similarity": 0.22277674078941345,
+        "best_distractor_similarity": 0.7024021148681641,
+        "gold_margin": -0.4796253740787506,
+        "predicted_label": "A",
+        "gold_label": "D",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: München<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_012",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöche Teile von Bayern san am stärksten vom Nebel betroffen?\n\nOptions:\nA: De alpinen Gipfel und Bergregionen im Süden\nB: De Flusstäler wie das Donau-, Isar- und Lechtal\nC: Des fränkische Hochland im Norden Bayerns\nD: De städtischen Gebiete um München und Nürnberg\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "A",
+      "parsed_answer": "A",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.8804143667221069,
+        "B": 0.5591104626655579,
+        "C": 0.7061426639556885,
+        "D": 0.5398372411727905
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche Teile von Bayern san am stärksten vom Nebel betroffen?",
+        "semantic_anchor_text": "A: De alpinen Gipfel und Bergregionen im Süden<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "De alpinen Gipfel und Bergregionen im Süden",
+          "B": "De Flusstäler wie das Donau-, Isar- und Lechtal",
+          "C": "Des fränkische Hochland im Norden Bayerns",
+          "D": "De städtischen Gebiete um München und Nürnberg"
+        },
+        "similarities": {
+          "A": 0.8804143667221069,
+          "B": 0.5591104626655579,
+          "C": 0.7061426639556885,
+          "D": 0.5398372411727905
+        },
+        "gold_similarity": 0.5591104626655579,
+        "best_distractor_similarity": 0.8804143667221069,
+        "gold_margin": -0.3213039040565491,
+        "predicted_label": "A",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "A: De alpinen Gipfel und Bergregionen im Süden<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_013",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöche von de vier bayerischen Regionen is bekannt für ihre Alpenlandschaften, Seen und Schlösser und beherbergt d'Landeshauptstadt Minga?\n\nOptions:\nA: Franken\nB: Schwaben\nC: Oberbayern\nD: Ostbayern\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.4033723473548889,
+        "B": 0.4643920958042145,
+        "C": 0.701570987701416,
+        "D": 0.41622060537338257
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche von de vier bayerischen Regionen is bekannt für ihre Alpenlandschaften, Seen und Schlösser und beherbergt d'Landeshauptstadt Minga?",
+        "semantic_anchor_text": "C: Oberbayern<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Franken",
+          "B": "Schwaben",
+          "C": "Oberbayern",
+          "D": "Ostbayern"
+        },
+        "similarities": {
+          "A": 0.4033723473548889,
+          "B": 0.4643920958042145,
+          "C": 0.701570987701416,
+          "D": 0.41622060537338257
+        },
+        "gold_similarity": 0.701570987701416,
+        "best_distractor_similarity": 0.4643920958042145,
+        "gold_margin": 0.23717889189720154,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Oberbayern<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_014",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wöche berühmte Touristenattraktion befindt si in da schwäbischen Region von Bayern?\n\nOptions:\nA: Des Oktoberfest in München\nB: De mittelalterliche Altstadt vo Nürnberg\nC: Schloss Neuschwanstein\nD: Nationalpark Bayerischer Wald\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.36377230286598206,
+        "B": 0.4645116925239563,
+        "C": 0.753821611404419,
+        "D": 0.42372286319732666
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wöche berühmte Touristenattraktion befindt si in da schwäbischen Region von Bayern?",
+        "semantic_anchor_text": "C: Schloss Neuschwanstein<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Des Oktoberfest in München",
+          "B": "De mittelalterliche Altstadt vo Nürnberg",
+          "C": "Schloss Neuschwanstein",
+          "D": "Nationalpark Bayerischer Wald"
+        },
+        "similarities": {
+          "A": 0.36377230286598206,
+          "B": 0.4645116925239563,
+          "C": 0.753821611404419,
+          "D": 0.42372286319732666
+        },
+        "gold_similarity": 0.753821611404419,
+        "best_distractor_similarity": 0.4645116925239563,
+        "gold_margin": 0.28930991888046265,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Schloss Neuschwanstein<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_015",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was san d'Schlüsselindustrien in Ostbayern, das d'Oberpfalz und Niederbayern umfasst?\n\nOptions:\nA: Technologie, Medien und Finanzen\nB: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion\nC: Umwelttechnologie und erneuerbare Energien\nD: Tourismus, Landwirtschaft und Lebensmittelproduktion\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.23116028308868408,
+        "B": 0.9088767170906067,
+        "C": 0.15037168562412262,
+        "D": 0.27920007705688477
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was san d'Schlüsselindustrien in Ostbayern, das d'Oberpfalz und Niederbayern umfasst?",
+        "semantic_anchor_text": "B: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Technologie, Medien und Finanzen",
+          "B": "Automobil- und Maschinenbau sowie Glas- und Keramikproduktion",
+          "C": "Umwelttechnologie und erneuerbare Energien",
+          "D": "Tourismus, Landwirtschaft und Lebensmittelproduktion"
+        },
+        "similarities": {
+          "A": 0.23116028308868408,
+          "B": 0.9088767170906067,
+          "C": 0.15037168562412262,
+          "D": 0.27920007705688477
+        },
+        "gold_similarity": 0.9088767170906067,
+        "best_distractor_similarity": 0.27920007705688477,
+        "gold_margin": 0.6296766400337219,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Automobil- und Maschinenbau sowie Glas- und Keramikproduktion<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_016",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was macht'n Funtensee bei Berchtesgaden meteorologisch ungewöhnlich?\n\nOptions:\nA: Er ist da hechste See in Bayern und taut im Sommer nie vollständig auf\nB: Er liegt in ana Mulde, wo d'kalte Luft absinkt und si sammelt, wodurch oaner von de kältesten Ort in Deutschland entsteht\nC: Er werd vollständig vo Gletscherschmelzwasser gspeist und bleibt dauerhaft unter fünf Grad\nD: Er is vo nach Norden ausgerichteten Klippen umgeben, de des ganze Jahr über's Sonnenlicht blockiern.\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.4834166467189789,
+        "B": 0.5207750797271729,
+        "C": 0.45207059383392334,
+        "D": 0.9352306127548218
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was macht'n Funtensee bei Berchtesgaden meteorologisch ungewöhnlich?",
+        "semantic_anchor_text": "D: Er is vo nach Norden ausgerichteten Klippen umgeben, de des ganze Jahr über's Sonnenlicht blockiern",
+        "semantic_candidate_texts": {
+          "A": "Er ist da hechste See in Bayern und taut im Sommer nie vollständig auf",
+          "B": "Er liegt in ana Mulde, wo d'kalte Luft absinkt und si sammelt, wodurch oaner von de kältesten Ort in Deutschland entsteht",
+          "C": "Er werd vollständig vo Gletscherschmelzwasser gspeist und bleibt dauerhaft unter fünf Grad",
+          "D": "Er is vo nach Norden ausgerichteten Klippen umgeben, de des ganze Jahr über's Sonnenlicht blockiern."
+        },
+        "similarities": {
+          "A": 0.4834166467189789,
+          "B": 0.5207750797271729,
+          "C": 0.45207059383392334,
+          "D": 0.9352306127548218
+        },
+        "gold_similarity": 0.5207750797271729,
+        "best_distractor_similarity": 0.9352306127548218,
+        "gold_margin": -0.4144555330276489,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Er is vo nach Norden ausgerichteten Klippen umgeben, de des ganze Jahr über's Sonnenlicht blockiern",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_017",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was is historisch bedeutsam an de unterirdischen Felsgäng unter Nürnberg?\n\nOptions:\nA: Sie wurden von de Römer als Teil einer antiken Militärbefestigung gebaut\nB: Sie wurden ursprünglich geschaffen, um Bier das ganze Jahr über bei kühlen Temperaturen zu lagern, und wuchsen auf 25.000 Quadratmeter an\nC: De san as geheime königliche Schatzkammal vo da Wittelsbacher Dynastie im Mittelalter gwen\nD: De san während em Zwoten Weltkriag ois Notunterkünfte fia de Zivilbevölkerung ausghobn worn.\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.29392009973526,
+        "B": 0.1402958333492279,
+        "C": 0.5970308780670166,
+        "D": 0.8617899417877197
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was is historisch bedeutsam an de unterirdischen Felsgäng unter Nürnberg?",
+        "semantic_anchor_text": "D: De san während em Zwoten Weltkriag ois Notunterkünfte fia de Zivilbevölkerung ausghob",
+        "semantic_candidate_texts": {
+          "A": "Sie wurden von de Römer als Teil einer antiken Militärbefestigung gebaut",
+          "B": "Sie wurden ursprünglich geschaffen, um Bier das ganze Jahr über bei kühlen Temperaturen zu lagern, und wuchsen auf 25.000 Quadratmeter an",
+          "C": "De san as geheime königliche Schatzkammal vo da Wittelsbacher Dynastie im Mittelalter gwen",
+          "D": "De san während em Zwoten Weltkriag ois Notunterkünfte fia de Zivilbevölkerung ausghobn worn."
+        },
+        "similarities": {
+          "A": 0.29392009973526,
+          "B": 0.1402958333492279,
+          "C": 0.5970308780670166,
+          "D": 0.8617899417877197
+        },
+        "gold_similarity": 0.1402958333492279,
+        "best_distractor_similarity": 0.8617899417877197,
+        "gold_margin": -0.7214941084384918,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: De san während em Zwoten Weltkriag ois Notunterkünfte fia de Zivilbevölkerung ausghob",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_018",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was is d'Breitachklamm und warum is sie im Sommer besonders reizvoll?\n\nOptions:\nA: A hochalpines Plateau bei Garmisch mit Panoramablick über Bayern\nB: A natürlicher See im Allgäu, der vo de Gletscherbächen gespeist wird und konstant kaltes Wasser hat\nC: De tieafste Schlucht Mitteleuropas, de kühle Temperaturen und a beeindruckende Naturlandschaft bietet\nD: A Flusstal in Niederbayern, bekannt fia seine schattigen Rad- und Wanderwege\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.6750354766845703,
+        "B": 0.648829460144043,
+        "C": 0.947528600692749,
+        "D": 0.6738424301147461
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was is d'Breitachklamm und warum is sie im Sommer besonders reizvoll?",
+        "semantic_anchor_text": "C: De tieafste Schlucht Mitteleuropas, de kühle Temperaturen und a beeindruckende Naturlandschaft",
+        "semantic_candidate_texts": {
+          "A": "A hochalpines Plateau bei Garmisch mit Panoramablick über Bayern",
+          "B": "A natürlicher See im Allgäu, der vo de Gletscherbächen gespeist wird und konstant kaltes Wasser hat",
+          "C": "De tieafste Schlucht Mitteleuropas, de kühle Temperaturen und a beeindruckende Naturlandschaft bietet",
+          "D": "A Flusstal in Niederbayern, bekannt fia seine schattigen Rad- und Wanderwege"
+        },
+        "similarities": {
+          "A": 0.6750354766845703,
+          "B": 0.648829460144043,
+          "C": 0.947528600692749,
+          "D": 0.6738424301147461
+        },
+        "gold_similarity": 0.947528600692749,
+        "best_distractor_similarity": 0.6750354766845703,
+        "gold_margin": 0.2724931240081787,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: De tieafste Schlucht Mitteleuropas, de kühle Temperaturen und a beeindruckende Naturlandschaft",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_019",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was macht'n Augsburger Stadtwald unter de bayerischen urbanen Grünflächen besonders bemerkenswert?\n\nOptions:\nA: Er beherbergt das größte Freilichttheater in Süddeutschland\nB: Er enthält die höchste Konzentration oida Eichn im gesamten Alpenvorland\nC: Augsburg is Bayerns griaßter kommunaler Waldbesitzer und sei Stadtwald is 2024 zum Wald vom Jahr gkürt worn\nD: Er is da einzige Stadtwald in Bayern mit aner geschützten UNESCO-Biosphärenreservat-Status\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.5410255789756775,
+        "B": 0.2820400893688202,
+        "C": 0.9829109311103821,
+        "D": 0.5762509107589722
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was macht'n Augsburger Stadtwald unter de bayerischen urbanen Grünflächen besonders bemerkenswert?",
+        "semantic_anchor_text": "C: Augsburg is Bayerns griaßter kommunaler Waldbesitzer und sei Stadtwald is 2024 zum Wald vom",
+        "semantic_candidate_texts": {
+          "A": "Er beherbergt das größte Freilichttheater in Süddeutschland",
+          "B": "Er enthält die höchste Konzentration oida Eichn im gesamten Alpenvorland",
+          "C": "Augsburg is Bayerns griaßter kommunaler Waldbesitzer und sei Stadtwald is 2024 zum Wald vom Jahr gkürt worn",
+          "D": "Er is da einzige Stadtwald in Bayern mit aner geschützten UNESCO-Biosphärenreservat-Status"
+        },
+        "similarities": {
+          "A": 0.5410255789756775,
+          "B": 0.2820400893688202,
+          "C": 0.9829109311103821,
+          "D": 0.5762509107589722
+        },
+        "gold_similarity": 0.9829109311103821,
+        "best_distractor_similarity": 0.5762509107589722,
+        "gold_margin": 0.4066600203514099,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Augsburg is Bayerns griaßter kommunaler Waldbesitzer und sei Stadtwald is 2024 zum Wald vom",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_020",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Was besitzt d'Schulerloch-Höhle bei Essing im Altmühltal, was koane andere Schauhöhle auf da ganzen Welt hat?\n\nOptions:\nA: A natürlicher unterirdischen Wasserfall, hinter dem Besucher sicher gehen können\nB: A Kolonie von über 500 Fledermäusen, die einzeln benannt und von Forschern verfolgt wurden\nC: Des einzige freistehende Wassabecken, des in ana öffentlich zugänglichn Schauhöhl auf da ganzn Welt z'finden is\nD: A prähistorische Begräbnisstätt mit Überresten vo sowohl Neandertalern ois aa von frühe moderne Mensche\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "C",
+      "correct": true,
+      "label_logprobs": {
+        "A": -0.012652956880629063,
+        "B": 0.0015636365860700607,
+        "C": 0.05869593471288681,
+        "D": 0.050382621586322784
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Was besitzt d'Schulerloch-Höhle bei Essing im Altmühltal, was koane andere Schauhöhle auf da ganzen Welt hat?",
+        "semantic_anchor_text": "C<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "A natürlicher unterirdischen Wasserfall, hinter dem Besucher sicher gehen können",
+          "B": "A Kolonie von über 500 Fledermäusen, die einzeln benannt und von Forschern verfolgt wurden",
+          "C": "Des einzige freistehende Wassabecken, des in ana öffentlich zugänglichn Schauhöhl auf da ganzn Welt z'finden is",
+          "D": "A prähistorische Begräbnisstätt mit Überresten vo sowohl Neandertalern ois aa von frühe moderne Mensche"
+        },
+        "similarities": {
+          "A": -0.012652956880629063,
+          "B": 0.0015636365860700607,
+          "C": 0.05869593471288681,
+          "D": 0.050382621586322784
+        },
+        "gold_similarity": 0.05869593471288681,
+        "best_distractor_similarity": 0.050382621586322784,
+        "gold_margin": 0.008313313126564026,
+        "predicted_label": "C",
+        "gold_label": "C",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_021",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wia nennt ma a kleinbäuerliche Grundeinheit in Bayern?\n\nOptions:\nA: Agrarbusiness\nB: Hof\nC: Bauernhof\nD: Farmhaus\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "C",
+      "parsed_answer": "C",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.03697774186730385,
+        "B": 0.2840799391269684,
+        "C": 0.7242088317871094,
+        "D": 0.27537956833839417
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia nennt ma a kleinbäuerliche Grundeinheit in Bayern?",
+        "semantic_anchor_text": "C: Bauernhof<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Agrarbusiness",
+          "B": "Hof",
+          "C": "Bauernhof",
+          "D": "Farmhaus"
+        },
+        "similarities": {
+          "A": 0.03697774186730385,
+          "B": 0.2840799391269684,
+          "C": 0.7242088317871094,
+          "D": 0.27537956833839417
+        },
+        "gold_similarity": 0.2840799391269684,
+        "best_distractor_similarity": 0.7242088317871094,
+        "gold_margin": -0.440128892660141,
+        "predicted_label": "C",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "C: Bauernhof<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_022",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Im Vergleich zu Australien, wöche Größe ham d'Bauernhöfe in da Region Bayern?\n\nOptions:\nA: Sehr kloa\nB: Kloa\nC: Groß\nD: Saugroß\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "A",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.31605038046836853,
+        "B": 0.2722471356391907,
+        "C": 0.35136163234710693,
+        "D": 0.5896704792976379
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Im Vergleich zu Australien, wöche Größe ham d'Bauernhöfe in da Region Bayern?",
+        "semantic_anchor_text": "D: Saugroß<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Sehr kloa",
+          "B": "Kloa",
+          "C": "Groß",
+          "D": "Saugroß"
+        },
+        "similarities": {
+          "A": 0.31605038046836853,
+          "B": 0.2722471356391907,
+          "C": 0.35136163234710693,
+          "D": 0.5896704792976379
+        },
+        "gold_similarity": 0.31605038046836853,
+        "best_distractor_similarity": 0.5896704792976379,
+        "gold_margin": -0.2736200988292694,
+        "predicted_label": "D",
+        "gold_label": "A",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Saugroß<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_023",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wia fühl'n si d'ländlichen Bayern nach da Zeit in da Natur?\n\nOptions:\nA: Erschöpft und überfordert\nB: Glücklicher und gesünder\nC: Gleichgültig und unverändert\nD: Ängstlich und unruhig\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "B",
+      "parsed_answer": "B",
+      "gold": "B",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.34146928787231445,
+        "B": 0.7950067520141602,
+        "C": 0.34721341729164124,
+        "D": 0.20558033883571625
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wia fühl'n si d'ländlichen Bayern nach da Zeit in da Natur?",
+        "semantic_anchor_text": "B: Glücklicher und gesünder<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Erschöpft und überfordert",
+          "B": "Glücklicher und gesünder",
+          "C": "Gleichgültig und unverändert",
+          "D": "Ängstlich und unruhig"
+        },
+        "similarities": {
+          "A": 0.34146928787231445,
+          "B": 0.7950067520141602,
+          "C": 0.34721341729164124,
+          "D": 0.20558033883571625
+        },
+        "gold_similarity": 0.7950067520141602,
+        "best_distractor_similarity": 0.34721341729164124,
+        "gold_margin": 0.4477933347225189,
+        "predicted_label": "B",
+        "gold_label": "B",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "B: Glücklicher und gesünder<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_024",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Ham d'Häuser in Oberbayern soziale Persönlichkeiten?\n\nOptions:\nA: Überhaupt ned\nB: Ja, weil de leit in der Gegend Interesse an 'Hausgeschichte' ham\nC: Jo, weil de Heiser so bunt bemoit san, dass es fascht so is, ois hättn sie verschiedene Persönlichkeiten\nD: Jo, weil sich de Dorfbewohner eher in de Heiser ois auf de Straßen zamfindn\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "B",
+      "correct": false,
+      "label_logprobs": {
+        "A": 0.32409220933914185,
+        "B": 0.6202071309089661,
+        "C": 0.6346161365509033,
+        "D": 0.9141888618469238
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Ham d'Häuser in Oberbayern soziale Persönlichkeiten?",
+        "semantic_anchor_text": "D: Jo, weil sich de Dorfbewohner eher in de Heiser ois auf de Straßen zamfindn<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Überhaupt ned",
+          "B": "Ja, weil de leit in der Gegend Interesse an 'Hausgeschichte' ham",
+          "C": "Jo, weil de Heiser so bunt bemoit san, dass es fascht so is, ois hättn sie verschiedene Persönlichkeiten",
+          "D": "Jo, weil sich de Dorfbewohner eher in de Heiser ois auf de Straßen zamfindn"
+        },
+        "similarities": {
+          "A": 0.32409220933914185,
+          "B": 0.6202071309089661,
+          "C": 0.6346161365509033,
+          "D": 0.9141888618469238
+        },
+        "gold_similarity": 0.6202071309089661,
+        "best_distractor_similarity": 0.9141888618469238,
+        "gold_margin": -0.29398173093795776,
+        "predicted_label": "D",
+        "gold_label": "B",
+        "correct": false,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Jo, weil sich de Dorfbewohner eher in de Heiser ois auf de Straßen zamfindn<|im_end|>",
+        "max_new_tokens": 32
+      }
+    },
+    {
+      "id": "landscape_bar_025",
+      "lang": "bar",
+      "type": "mcq",
+      "category": "landscape",
+      "bias": "cultural",
+      "prompt": "Wer lebt in bayerischen Gehöften?\n\nOptions:\nA: Überwiegend Singles\nB: Überwiegend Paare\nC: Meischtns kloane Familien\nD: Meischtens Mehrgenerationenfamilien\n\nAntwort bloß mit dem exakten Optionstext. Koane Erklärung.\nDo not repeat the question.\nAnswer:",
+      "answer": "D",
+      "parsed_answer": "D",
+      "gold": "D",
+      "correct": true,
+      "label_logprobs": {
+        "A": 0.19363103806972504,
+        "B": 0.27219530940055847,
+        "C": 0.6648316383361816,
+        "D": 0.7675588726997375
+      },
+      "diagnostics": {
+        "strategy": "semantic_embed_generated_answer",
+        "strategy_description": "Generate a short answer with the evaluated LLM, then use an external multilingual sentence embedding model to map it to the closest option text.",
+        "score_mode": "generated_answer_to_independent_option_cosine",
+        "semantic_embed_model": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "semantic_query_text": "Wer lebt in bayerischen Gehöften?",
+        "semantic_anchor_text": "D: Meischtens Mehrgenerationenfamilien<|im_end|>",
+        "semantic_candidate_texts": {
+          "A": "Überwiegend Singles",
+          "B": "Überwiegend Paare",
+          "C": "Meischtns kloane Familien",
+          "D": "Meischtens Mehrgenerationenfamilien"
+        },
+        "similarities": {
+          "A": 0.19363103806972504,
+          "B": 0.27219530940055847,
+          "C": 0.6648316383361816,
+          "D": 0.7675588726997375
+        },
+        "gold_similarity": 0.7675588726997375,
+        "best_distractor_similarity": 0.6648316383361816,
+        "gold_margin": 0.10272723436355591,
+        "predicted_label": "D",
+        "gold_label": "D",
+        "correct": true,
+        "skipped_empty_options": {},
+        "embedding_note": "These scores come from an external sentence-transformers model, not from the evaluated LLM's hidden states or token probabilities.",
+        "raw_generation": "D: Meischtens Mehrgenerationenfamilien<|im_end|>",
+        "max_new_tokens": 32
+      }
+    }
+  ]
+}
