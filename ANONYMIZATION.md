@@ -21,8 +21,8 @@ submitting the BavGround artifact with an anonymous paper.
 
 2. **Result metadata paths**
 
-   `results_allmodels/*.json` now stores `hf_dir` and `source` as
-   `model://<target>`. `results_genba_checkpoints/*.json` now stores them as
+   `results/allmodels/*.json` now stores `hf_dir` and `source` as
+   `model://<target>`. `results/genba_checkpoints/*.json` now stores them as
    `checkpoint://<checkpoint>` identifiers.
 
 3. **Run timestamps**
@@ -40,7 +40,7 @@ submitting the BavGround artifact with an anonymous paper.
 
 5. **Closed-model API metadata**
 
-   `results_closedmodels/*.json` stores API token usage totals. No API keys were
+   `results/closedmodels/*.json` stores API token usage totals. No API keys were
    found, but decide whether token counts should remain.
 
 6. **Source metadata**

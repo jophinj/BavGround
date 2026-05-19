@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bootstrap confidence intervals for BiaBav result comparisons.
 
-This script reads stored per-item JSON outputs from results_allmodels and
+This script reads stored per-item JSON outputs from results/allmodels and
 computes simple cluster/paired bootstrap intervals for the comparisons used in
 the paper. It does not run model inference.
 """
@@ -211,7 +211,7 @@ def fmt_triplet(observed: float, lo: float, hi: float) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--results-allmodels", type=Path, default=Path("results_allmodels"))
+    ap.add_argument("--results-allmodels", type=Path, default=Path("results/allmodels"))
     ap.add_argument("--n-boot", type=int, default=10_000)
     ap.add_argument("--seed", type=int, default=13)
     args = ap.parse_args()

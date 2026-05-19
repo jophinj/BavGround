@@ -602,7 +602,7 @@ def main() -> None:
         "OpenAI closed-model evaluator for BiaBav MCQ letter and generate_letter_and_text strategies"
     )
     parser.add_argument("--dataset", default="dataset")
-    parser.add_argument("--outdir", default="results_closedmodels")
+    parser.add_argument("--outdir", default="results/closedmodels")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument(
         "--mcq-strategies",

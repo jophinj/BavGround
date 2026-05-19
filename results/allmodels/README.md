@@ -97,12 +97,11 @@ This folder supports:
 Useful scripts:
 
 ```bash
-python code/bootstrap_biabav_ci.py --results-allmodels results_allmodels
-python code/label_prior_diagnostic.py --results-allmodels results_allmodels
+python code/bootstrap_biabav_ci.py --results-allmodels results/allmodels
+python code/label_prior_diagnostic.py --results-allmodels results/allmodels
 ```
 
 ## Anonymous-Review Notes
 
-The result files include local metadata fields such as `hf_dir` and `source`
-with relative paths to the machine used for evaluation. Replace those with
-public model IDs or placeholders before anonymous release if needed.
+The result files include anonymized metadata fields such as `hf_dir` and
+`source`, using stable `model://...` identifiers rather than local paths.

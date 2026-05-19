@@ -33,7 +33,7 @@ http://localhost:8501
 In the sidebar, enter one or more comma-separated folders:
 
 ```text
-results_allmodels,results_closedmodels,results_genba_checkpoints
+results/allmodels,results/closedmodels,results/genba_checkpoints
 ```
 
 You can also upload individual JSON files through the browser.

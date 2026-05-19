@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Answer-label prior diagnostics for BiaBav canonical letter scoring.
 
-Reads the stored results_allmodels JSON files and computes, for each model,
+Reads the stored results/allmodels JSON files and computes, for each model,
 the marginal predicted-label distribution under the canonical letter strategy.
 No model inference is run.
 """
@@ -143,7 +143,7 @@ def fmt_p(value: float | None) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results-allmodels", type=Path, default=Path("results_allmodels"))
+    parser.add_argument("--results-allmodels", type=Path, default=Path("results/allmodels"))
     args = parser.parse_args()
 
     rows_by_model = load_letter_rows(args.results_allmodels)

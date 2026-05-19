@@ -55,7 +55,7 @@ Generate checkpoint figures with:
 
 ```bash
 python code/plot_genba_checkpoint_trajectories.py \
-  --results-dir results_genba_checkpoints \
+  --results-dir results/genba_checkpoints \
   --out-dir images
 ```
 
@@ -81,7 +81,5 @@ strategy-specific diagnostics.
 
 ## Anonymous-Review Notes
 
-The `hf_dir` and `source` fields currently preserve relative checkpoint paths
-from the original evaluation environment. These should be replaced with
-anonymous placeholders or public checkpoint identifiers before artifact
-submission if the paths reveal private project structure.
+The `hf_dir` and `source` fields use anonymized `checkpoint://...` identifiers
+rather than local checkpoint paths.

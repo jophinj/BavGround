@@ -12,7 +12,7 @@ Example:
     python code/plot_genba_checkpoint_trajectories.py
 
 The script expects checkpoint result JSON files named like:
-    results_genba_checkpoints/answers_checkpoint41707_language_option_text_avg.json
+    results/genba_checkpoints/answers_checkpoint41707_language_option_text_avg.json
 """
 
 from __future__ import annotations
@@ -75,7 +75,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--results-dir",
         type=Path,
-        default=Path("results_genba_checkpoints"),
+        default=Path("results/genba_checkpoints"),
         help="Directory containing GENBA checkpoint JSON files.",
     )
     parser.add_argument(

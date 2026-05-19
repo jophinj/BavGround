@@ -8,15 +8,15 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 import pandas as pd
 
 
-DEFAULT_INPUTS = ["results_allmodels"]
+DEFAULT_INPUTS = ["results/allmodels"]
 PRESET_INPUTS = {
-    "Open-weight model results": ["results_allmodels"],
-    "Closed-model reference": ["results_closedmodels"],
-    "GENBA checkpoint results": ["results_genba_checkpoints"],
+    "Open-weight model results": ["results/allmodels"],
+    "Closed-model reference": ["results/closedmodels"],
+    "GENBA checkpoint results": ["results/genba_checkpoints"],
     "All paper result folders": [
-        "results_allmodels",
-        "results_closedmodels",
-        "results_genba_checkpoints",
+        "results/allmodels",
+        "results/closedmodels",
+        "results/genba_checkpoints",
     ],
 }
 

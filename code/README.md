@@ -18,9 +18,9 @@ paper artifact.
 | --- | --- |
 | `bootstrap_biabav_ci.py` | Computes paired nonparametric bootstrap intervals used in the paper. |
 | `label_prior_diagnostic.py` | Computes answer-label prior diagnostics for canonical `letter` scoring. |
-| `merge_allmodels_outputs.py` | Copies/renames open-model result files into the stable `results_allmodels/` layout. |
-| `merge_checkpoint_outputs.py` | Copies/renames checkpoint result files into the stable `results_genba_checkpoints/` layout. |
-| `plot_genba_checkpoint_trajectories.py` | Produces checkpoint trajectory figures from `results_genba_checkpoints/`. |
+| `merge_allmodels_outputs.py` | Copies/renames open-model result files into the stable `results/allmodels/` layout. |
+| `merge_checkpoint_outputs.py` | Copies/renames checkpoint result files into the stable `results/genba_checkpoints/` layout. |
+| `plot_genba_checkpoint_trajectories.py` | Produces checkpoint trajectory figures from `results/genba_checkpoints/`. |
 
 ## Job Scripts
 
@@ -47,21 +47,21 @@ Bootstrap intervals:
 
 ```bash
 python code/bootstrap_biabav_ci.py \
-  --results-allmodels results_allmodels
+  --results-allmodels results/allmodels
 ```
 
 Label-prior diagnostics:
 
 ```bash
 python code/label_prior_diagnostic.py \
-  --results-allmodels results_allmodels
+  --results-allmodels results/allmodels
 ```
 
 Checkpoint plots:
 
 ```bash
 python code/plot_genba_checkpoint_trajectories.py \
-  --results-dir results_genba_checkpoints \
+  --results-dir results/genba_checkpoints \
   --out-dir images
 ```
 

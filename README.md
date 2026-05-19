@@ -21,16 +21,9 @@ code/
   Evaluation runners and analysis scripts used to produce the reported tables,
   diagnostics, bootstrap intervals, and checkpoint plots.
 
-results_allmodels/
-  Item-level outputs for 15 open-weight instruction-tuned models across 12
-  evaluation protocols.
-
-results_closedmodels/
-  Item-level outputs for the closed-model reference run.
-
-results_genba_checkpoints/
-  Item-level outputs for GENBA-10B continued-pretraining checkpoints across
-  12 evaluation protocols.
+results/
+  Item-level model outputs, grouped into allmodels, closedmodels, and
+  genba_checkpoints.
 
 dashboard/
   Streamlit dashboard for browsing result files interactively.
@@ -46,10 +39,10 @@ The artifact supports the paper sections as follows:
 | Paper component | Artifact location |
 | --- | --- |
 | BavGround benchmark construction and category counts | `dataset/` |
-| Open-weight model comparison | `results_allmodels/` |
-| Closed-model reference | `results_closedmodels/` |
-| Protocol sensitivity analysis | `results_allmodels/`, `code/label_prior_diagnostic.py`, `code/bootstrap_biabav_ci.py` |
-| GENBA checkpoint trajectories | `results_genba_checkpoints/`, `code/plot_genba_checkpoint_trajectories.py` |
+| Open-weight model comparison | `results/allmodels/` |
+| Closed-model reference | `results/closedmodels/` |
+| Protocol sensitivity analysis | `results/allmodels/`, `code/label_prior_diagnostic.py`, `code/bootstrap_biabav_ci.py` |
+| GENBA checkpoint trajectories | `results/genba_checkpoints/`, `code/plot_genba_checkpoint_trajectories.py` |
 | Interactive error analysis dashboard | `dashboard/` |
 
 ## Quick Start for Reviewers
@@ -70,9 +63,9 @@ streamlit run dashboard/app.py
 
 In the sidebar, select one or more of:
 
-- `results_allmodels`
-- `results_closedmodels`
-- `results_genba_checkpoints`
+- `results/allmodels`
+- `results/closedmodels`
+- `results/genba_checkpoints`
 
 The result folders are large because they contain item-level outputs rather than
 only aggregate scores.

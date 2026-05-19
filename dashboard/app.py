@@ -750,8 +750,8 @@ def data_source_controls() -> tuple[str, Tuple[Tuple[str, str], ...]]:
 
     discovered_folders = discover_json_folders()
     discovered_paths = [folder for folder, _ in discovered_folders]
-    if "results_allmodels" in discovered_paths:
-        default_folders = ["results_allmodels"]
+    if "results/allmodels" in discovered_paths:
+        default_folders = ["results/allmodels"]
     else:
         default_folders = [
             folder
